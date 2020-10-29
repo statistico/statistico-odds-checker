@@ -1,0 +1,30 @@
+version: "3.3"
+services:
+  console:
+    build:
+      dockerfile: ./.docker/Dockerfile
+      context: .
+    volumes:
+      - .:/opt
+    environment:
+      DB_DRIVER: postgres
+      DB_HOST: postgres
+      DB_NAME: statistico_trader
+      DB_PASSWORD: password
+      DB_USER: statistico
+      DB_PORT: 5432
+    tty: true
+
+  test:
+    build:
+      dockerfile: ./.docker/test/Dockerfile
+      context: .
+    volumes:
+      - .:/opt
+    environment:
+      DB_DRIVER: postgres
+      DB_HOST: postgres
+      DB_PASSWORD: password
+      DB_NAME: statistico_trader
+      DB_USER: statistico
+      DB_PORT: 5432
