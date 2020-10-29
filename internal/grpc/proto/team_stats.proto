@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package proto;
+
+option go_package = "internal/app/grpc/proto";
+
+import "google/protobuf/wrappers.proto";
+import "internal/app/grpc/proto/requests.proto";
+
+service TeamStatsService {
+    rpc GetStatForTeam(TeamStatRequest) returns (stream TeamStat) {}
+}
+
+message TeamStat {
+    uint64 fixture_id = 1;
+    string stat = 2;
+    google.protobuf.UInt32Value value = 3;
+}
