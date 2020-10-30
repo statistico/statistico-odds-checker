@@ -22,9 +22,9 @@ func TestMarketRepository_Insert(t *testing.T) {
 			Market *market.Market
 			Count int8
 		}{
-			{newMarket(182981, time.Now()), 1},
-			{newMarket(182981, time.Now()), 2},
-			{newMarket(182981, time.Now()), 3},
+			{newMarket(182981, "OVER_UNDER_25", "BACK", time.Now()), 1},
+			{newMarket(182981, "OVER_UNDER_25", "BACK", time.Now()), 2},
+			{newMarket(182981, "OVER_UNDER_25", "BACK", time.Now()), 3},
 		}
 
 		for _, tc := range tradeCounts {
@@ -43,11 +43,72 @@ func TestMarketRepository_Insert(t *testing.T) {
 	})
 }
 
-func newMarket(eventID uint64, t time.Time) *market.Market {
+func TestMarketRepository_Get(t *testing.T) {
+	conn, cleanUp := test.GetConnection(t, "market")
+	repo := postgres.NewMarketRepository(conn)
+
+	t.Run("returns a slice of filtered market struct", func(t *testing.T) {
+		t.Helper()
+		defer cleanUp()
+
+		timestamp := time.Date(2020, 03, 12, 0, 0, 0, 0, &time.Location{})
+
+		marketOne := newMarket(1234, "OVER_UNDER_25", "BACK", timestamp)
+		marketTwo := newMarket(5678, "OVER_UNDER_15", "BACK", timestamp)
+		marketThree := newMarket(9999, "OVER_UNDER_25", "LAY", timestamp)
+
+		insertTrade(t, repo, marketOne)
+		insertTrade(t, repo, marketTwo)
+		insertTrade(t, repo, marketThree)
+
+		cases := []struct{
+			Query *market.RepositoryQuery
+			Markets []*market.Market
+		} {
+			{
+				Query: &market.RepositoryQuery{
+					EventID:    &marketOne.EventID,
+				},
+				Markets: []*market.Market{marketOne},
+			},
+			{
+				Query: &market.RepositoryQuery{
+					MarketName:    &marketOne.Name,
+				},
+				Markets: []*market.Market{marketOne, marketThree},
+			},
+			{
+				Query: &market.RepositoryQuery{
+					Side:    &marketThree.Side,
+				},
+				Markets: []*market.Market{marketThree},
+			},
+			{
+				Query: &market.RepositoryQuery{
+					EventID: &marketOne.EventID,
+					MarketName: &marketTwo.Name,
+					Side: &marketThree.Side,
+				},
+			},
+		}
+
+		for _, c := range cases {
+			markets, err := repo.Get(c.Query)
+
+			if err != nil {
+				t.Errorf("Error fetching markets from the database: %s", err.Error())
+			}
+
+			assert.Equal(t, c.Markets, markets)
+		}
+	})
+}
+
+func newMarket(eventID uint64, name, side string, t time.Time) *market.Market {
 	return &market.Market{
 		EventID:        eventID,
-		Name:           "OVER_UNDER_25",
-		Side:           "BACK",
+		Name:           name,
+		Side:           side,
 		Exchange:   "betfair",
 		ExchangeMarket: exchange.Market{
 			ID:      "1.2981871",
