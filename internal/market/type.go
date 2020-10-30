@@ -10,13 +10,13 @@ import (
 )
 
 type Market struct {
-	EventID        uint64           `json:"event_id"`
-	Name           string           `json:"name"`
-	Side           string           `json:"side"`
-	Exchange       string           `json:"exchange"`
-	ExchangeMarket exchange.Market  `json:"exchange_market"`
-	StatisticoOdds    []*grpc.Odds   `json:"statistico_odds"`
-	Timestamp      time.Time        `json:"timestamp"`
+	EventID        uint64          `json:"event_id"`
+	Name           string          `json:"name"`
+	Side           string          `json:"side"`
+	Exchange       string          `json:"exchange"`
+	ExchangeMarket exchange.Market `json:"exchange_market"`
+	StatisticoOdds []*grpc.Odds    `json:"statistico_odds"`
+	Timestamp      time.Time       `json:"timestamp"`
 }
 
 func (m Market) Value() (driver.Value, error) {

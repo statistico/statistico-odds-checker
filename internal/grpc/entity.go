@@ -7,8 +7,8 @@ import (
 )
 
 type Odds struct {
-	Price                float32  `json:"price"`
-	Selection            string   `json:"selection"`
+	Price     float32 `json:"price"`
+	Selection string  `json:"selection"`
 }
 
 func (o Odds) Value() (driver.Value, error) {
