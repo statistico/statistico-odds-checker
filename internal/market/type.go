@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"github.com/statistico/statistico-odds-checker/internal/exchange"
-	"github.com/statistico/statistico-odds-checker/internal/grpc"
+	"github.com/statistico/statistico-odds-checker/internal/grpc/proto"
 	"time"
 )
 
@@ -15,7 +15,7 @@ type Market struct {
 	Side           string          `json:"side"`
 	Exchange       string          `json:"exchange"`
 	ExchangeMarket exchange.Market `json:"exchange_market"`
-	StatisticoOdds []*grpc.Odds    `json:"statistico_odds"`
+	StatisticoOdds []*proto.Odds    `json:"statistico_odds"`
 	Timestamp      time.Time       `json:"timestamp"`
 }
 
