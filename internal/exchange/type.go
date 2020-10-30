@@ -32,7 +32,6 @@ func (m *Market) Scan(value interface{}) error {
 	return json.Unmarshal(b, &m)
 }
 
-
 type Runner struct {
 	ID     uint64      `json:"id"`
 	Name   string      `json:"name"`
