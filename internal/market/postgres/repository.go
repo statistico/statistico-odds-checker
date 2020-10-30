@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"database/sql"
+	"encoding/json"
 	sq "github.com/Masterminds/squirrel"
 	_ "github.com/lib/pq"
 	"github.com/statistico/statistico-odds-checker/internal/market"
@@ -14,24 +15,36 @@ type MarketRepository struct {
 func (r *MarketRepository) Insert(m *market.Market) error {
 	builder := r.queryBuilder()
 
-	_, err := builder.
-		Insert("trade").
+	e, err := json.Marshal(m.ExchangeMarket)
+
+	if err != nil {
+		return err
+	}
+
+	s, err := json.Marshal(m.StatisticoOdds)
+
+	if err != nil {
+		return err
+	}
+
+	_, err = builder.
+		Insert("market").
 		Columns(
 		"event_id",
 			"name",
 			"exchange",
 			"side",
-			"exchange_odds",
+			"exchange_market",
 			"statistico_odds",
 			"timestamp",
 		).
 		Values(
 			m.EventID,
 			m.Name,
-			m.ExchangeName,
+			m.Exchange,
 			m.Side,
-			m.ExchangeMarket,
-			m.ImpliedOdds,
+			string(e),
+			string(s),
 			m.Timestamp.Unix(),
 		).
 		Exec()
