@@ -26,16 +26,7 @@ func (o *oddsCompilerClient) GetEventMarket(ctx context.Context, eventId uint64,
 	if err != nil {
 		return odds, handleErrorResponse(err)
 	}
-
-	//for _, o := range response.Odds {
-	//	odd := &Odds{
-	//		Price:     o.Price,
-	//		Selection: o.Selection,
-	//	}
-	//
-	//	odds = append(odds, odd)
-	//}
-
+	
 	return response.Odds, nil
 }
 
