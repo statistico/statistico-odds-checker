@@ -64,7 +64,7 @@ func TestBuilder_Build(t *testing.T) {
 
 		a := assert.New(t)
 		a.Equal(uint64(1278121), one.EventID)
-		a.Equal(odds, one.ImpliedOdds)
+		a.Equal(odds, one.StatisticoOdds)
 		a.Equal(mk, &one.ExchangeMarket)
 		assert.Nil(t, hook.LastEntry())
 		mr.AssertExpectations(t)

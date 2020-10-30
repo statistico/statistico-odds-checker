@@ -14,6 +14,8 @@ type oddsCompilerClient struct {
 }
 
 func (o *oddsCompilerClient) GetEventMarket(ctx context.Context, eventId uint64, market string) ([]*proto.Odds, error) {
+	var odds []*proto.Odds
+
 	req := &proto.EventRequest{
 		EventId: eventId,
 		Market:  market,
@@ -22,9 +24,9 @@ func (o *oddsCompilerClient) GetEventMarket(ctx context.Context, eventId uint64,
 	response, err := o.client.GetEventMarket(ctx, req)
 
 	if err != nil {
-		return []*proto.Odds{}, handleErrorResponse(err)
+		return odds, handleErrorResponse(err)
 	}
-
+	
 	return response.Odds, nil
 }
 
