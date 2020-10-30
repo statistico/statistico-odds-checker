@@ -1,6 +1,17 @@
 version: "3.3"
 services:
-  console:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: statistico
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: statistico_odds_checker
+    volumes:
+      - .:/opt
+    ports:
+      - 5433:5432
+
+  console: &console
     build:
       dockerfile: ./.docker/Dockerfile
       context: .
@@ -9,11 +20,17 @@ services:
     environment:
       DB_DRIVER: postgres
       DB_HOST: postgres
-      DB_NAME: statistico_trader
+      DB_NAME: statistico_odds_checker
       DB_PASSWORD: password
       DB_USER: statistico
       DB_PORT: 5432
     tty: true
+    links:
+      - postgres
+
+  migrate:
+    <<: *console
+    command: [ "./bin/migrate" ]
 
   test:
     build:
@@ -25,6 +42,11 @@ services:
       DB_DRIVER: postgres
       DB_HOST: postgres
       DB_PASSWORD: password
-      DB_NAME: statistico_trader
+      DB_NAME: statistico_odds_checker
       DB_USER: statistico
       DB_PORT: 5432
+    links:
+      - postgres
+    depends_on:
+      - postgres
+
