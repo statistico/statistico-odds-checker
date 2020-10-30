@@ -2,6 +2,7 @@ package postgres_test
 
 import (
 	"github.com/statistico/statistico-odds-checker/internal/exchange"
+	"github.com/statistico/statistico-odds-checker/internal/grpc/proto"
 	"github.com/statistico/statistico-odds-checker/internal/market"
 	"github.com/statistico/statistico-odds-checker/internal/market/postgres"
 	"github.com/statistico/statistico-odds-checker/internal/test"
@@ -127,6 +128,16 @@ func newMarket(eventID uint64, name, side string, t time.Time) *market.Market {
 						},
 					},
 				},
+			},
+		},
+		StatisticoOdds: []*proto.Odds{
+			{
+				Price: 1.45,
+				Selection: "over",
+			},
+			{
+				Price: 2.95,
+				Selection: "under",
 			},
 		},
 		Timestamp:      t,

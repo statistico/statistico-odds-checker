@@ -6,15 +6,15 @@ import (
 )
 
 type OddsCompilerClient interface {
-	GetEventMarket(ctx context.Context, eventId uint64, market string) ([]*Odds, error)
+	GetEventMarket(ctx context.Context, eventId uint64, market string) ([]*proto.Odds, error)
 }
 
 type oddsCompilerClient struct {
 	client proto.OddsCompilerServiceClient
 }
 
-func (o *oddsCompilerClient) GetEventMarket(ctx context.Context, eventId uint64, market string) ([]*Odds, error) {
-	var odds []*Odds
+func (o *oddsCompilerClient) GetEventMarket(ctx context.Context, eventId uint64, market string) ([]*proto.Odds, error) {
+	var odds []*proto.Odds
 
 	req := &proto.EventRequest{
 		EventId: eventId,
@@ -27,16 +27,16 @@ func (o *oddsCompilerClient) GetEventMarket(ctx context.Context, eventId uint64,
 		return odds, handleErrorResponse(err)
 	}
 
-	for _, o := range response.Odds {
-		odd := &Odds{
-			Price:     o.Price,
-			Selection: o.Selection,
-		}
+	//for _, o := range response.Odds {
+	//	odd := &Odds{
+	//		Price:     o.Price,
+	//		Selection: o.Selection,
+	//	}
+	//
+	//	odds = append(odds, odd)
+	//}
 
-		odds = append(odds, odd)
-	}
-
-	return odds, nil
+	return response.Odds, nil
 }
 
 func NewOddsCompilerClient(c proto.OddsCompilerServiceClient) OddsCompilerClient {
