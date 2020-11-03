@@ -5,7 +5,7 @@ ENV GO111MODULE=on
 WORKDIR /app
 COPY . .
 
-RUN go get gotest.tools/gotestsum && go get -u github.com/pressly/goose/cmd/goose && go mod download
+RUN go mod download
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo ./cmd/console
 
@@ -15,7 +15,6 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /opt
 COPY ./bin ./bin
 COPY ./.docker/wait-for-it.sh .
-COPY --from=builder /go/bin/goose /usr/local/bin
 COPY --from=builder /app/console .
 
 CMD ["/bin/sh"]
