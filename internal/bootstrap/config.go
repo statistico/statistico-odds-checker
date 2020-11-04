@@ -1,7 +1,27 @@
 package bootstrap
 
+import "os"
+
 type Config struct {
+	AwsConfig
+	BetFair
 	FootballConfig
+	Publisher  string
+	StatisticoDataService
+	StatisticoOddsCompilerService
+}
+
+type AwsConfig struct {
+	Key      string
+	Secret   string
+	Region   string
+	TopicArn string
+}
+
+type BetFair struct {
+	Username string
+	Password string
+	Key      string
 }
 
 type FootballConfig struct {
@@ -9,8 +29,20 @@ type FootballConfig struct {
 	Markets          []string
 }
 
+type StatisticoDataService struct {
+	Host string
+	Port string
+}
+
+type StatisticoOddsCompilerService struct {
+	Host string
+	Port string
+}
+
 func BuildConfig() *Config {
 	config := Config{}
+
+	config.Publisher = os.Getenv("PUBLISHER")
 
 	config.FootballConfig = FootballConfig{
 		SupportedSeasons: []uint64{
@@ -21,6 +53,29 @@ func BuildConfig() *Config {
 		Markets:          []string{
 			"OVER_UNDER_25",
 		},
+	}
+
+	config.AwsConfig = AwsConfig{
+		Key:      os.Getenv("AWS_KEY"),
+		Secret:   os.Getenv("AWS_SECRET"),
+		Region:   os.Getenv("AWS_REGION"),
+		TopicArn: os.Getenv("AWS_TOPIC_ARN"),
+	}
+
+	config.BetFair = BetFair{
+		Username: os.Getenv("BETFAIR_USERNAME"),
+		Password: os.Getenv("BETFAIR_PASSWORD"),
+		Key:      os.Getenv("BETFAIR_KEY"),
+	}
+
+	config.StatisticoDataService = StatisticoDataService{
+		Host: os.Getenv("STATISTICO_DATA_SERVICE_HOST"),
+		Port: os.Getenv("STATISTICO_DATA_SERVICE_PORT"),
+	}
+
+	config.StatisticoOddsCompilerService = StatisticoOddsCompilerService{
+		Host: os.Getenv("STATISTICO_ODDS_COMPILER_SERVICE_HOST"),
+		Port: os.Getenv("STATISTICO_ODDS_COMPILER_SERVICE_PORT"),
 	}
 
 	return &config

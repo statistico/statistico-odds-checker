@@ -149,6 +149,6 @@ func buildRunnerBookRequest(marketID string, selectionID uint64) betfair.ListRun
 	}
 }
 
-func NewMarketRequester(c betfair.Client) MarketRequester {
-	return MarketRequester{betfairClient: c}
+func NewMarketRequester(c betfair.Client) exchange.MarketRequester {
+	return &MarketRequester{betfairClient: c}
 }
