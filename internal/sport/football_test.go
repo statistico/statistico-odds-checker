@@ -43,10 +43,10 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 			{
 				Id: 349811,
 				HomeTeam: &proto.Team{
-					Name:           "West Ham United",
+					Name: "West Ham United",
 				},
 				AwayTeam: &proto.Team{
-					Name:           "Arsenal",
+					Name: "Arsenal",
 				},
 				DateTime: &proto.Date{
 					Utc: 1547465400,
@@ -67,18 +67,18 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		marketSlice := []*market.Market{
 			{
-				EventID: 349811,
-				Name: "OVER_UNDER_25",
-				Side: "BACK",
-				Exchange: "betfair",
+				EventID:        349811,
+				Name:           "OVER_UNDER_25",
+				Side:           "BACK",
+				Exchange:       "betfair",
 				ExchangeMarket: exchange.Market{},
 				StatisticoOdds: []*proto.Odds{},
 			},
 			{
-				EventID: 349811,
-				Name: "1X2",
-				Side: "BACK",
-				Exchange: "betfair",
+				EventID:        349811,
+				Name:           "1X2",
+				Side:           "BACK",
+				Exchange:       "betfair",
 				ExchangeMarket: exchange.Market{},
 				StatisticoOdds: []*proto.Odds{},
 			},

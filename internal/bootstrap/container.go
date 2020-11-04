@@ -7,9 +7,9 @@ import (
 )
 
 type Container struct {
-	Config     *Config
-	Clock      clockwork.Clock
-	Logger     *logrus.Logger
+	Config *Config
+	Clock  clockwork.Clock
+	Logger *logrus.Logger
 }
 
 func BuildContainer(config *Config) Container {

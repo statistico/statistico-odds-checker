@@ -13,5 +13,3 @@ func (m *MockMarketBuilder) Build(ctx context.Context, q *BuilderQuery) <-chan *
 	args := m.Called(ctx, q)
 	return args.Get(0).(<-chan *Market)
 }
-
-
