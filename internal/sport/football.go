@@ -15,12 +15,12 @@ import (
 const football = "football"
 
 type footballEventMarketRequester struct {
-	fixtureClient    grpc.FixtureClient
-	builder          market.Builder
-	logger           *logrus.Logger
-	clock            clockwork.Clock
-	seasons          []uint64
-	markets          []string
+	fixtureClient grpc.FixtureClient
+	builder       market.Builder
+	logger        *logrus.Logger
+	clock         clockwork.Clock
+	seasons       []uint64
+	markets       []string
 }
 
 func (f *footballEventMarketRequester) FindEventMarkets(ctx context.Context, from, to time.Time) <-chan *EventMarket {

@@ -6,7 +6,7 @@ type Config struct {
 	AwsConfig
 	BetFair
 	FootballConfig
-	Publisher  string
+	Publisher string
 	StatisticoDataService
 	StatisticoOddsCompilerService
 }
@@ -50,7 +50,7 @@ func BuildConfig() *Config {
 			17420,
 			17488,
 		},
-		Markets:          []string{
+		Markets: []string{
 			"OVER_UNDER_25",
 		},
 	}
