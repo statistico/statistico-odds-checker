@@ -63,9 +63,13 @@ func TestBuilder_Build(t *testing.T) {
 		one := <-markets
 
 		a := assert.New(t)
+		a.Equal("1.2421", one.ID)
 		a.Equal(uint64(1278121), one.EventID)
+		a.Equal("betfair", one.Exchange)
+		a.Equal("OVER_UNDER_25", one.Name)
+		a.Equal("BACK", one.Side)
 		a.Equal(odds, one.StatisticoOdds)
-		a.Equal(mk, &one.ExchangeMarket)
+		a.Equal(mk.Runners, one.ExchangeRunners)
 		assert.Nil(t, hook.LastEntry())
 		mr.AssertExpectations(t)
 		oc.AssertExpectations(t)
@@ -174,5 +178,21 @@ func protoOdds(over, under float32) []*proto.Odds {
 }
 
 func bookmakerMarket(marketId string) *exchange.Market {
-	return &exchange.Market{ID: marketId}
+	return &exchange.Market{
+		ID: marketId,
+		ExchangeName: "betfair",
+		Side: "BACK",
+		Runners: []*exchange.Runner{
+			{
+				ID: 49792,
+				Name: "Over 2.5 Goals",
+				Prices: []exchange.PriceSize{
+					{
+						Price: 1.54,
+						Size: 1301.00,
+					},
+				},
+			},
+		},
+	}
 }

@@ -16,7 +16,9 @@ type Query struct {
 
 type Market struct {
 	ID      string   `json:"id"`
-	Runners []Runner `json:"runners"`
+	ExchangeName string `json:"exchange"`
+	Side        string `json:"side"`
+	Runners []*Runner `json:"runners"`
 }
 
 func (m Market) Value() (driver.Value, error) {

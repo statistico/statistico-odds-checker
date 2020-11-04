@@ -50,7 +50,11 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 		return nil, &multipleEventMarketsError{strings.Join(req.Filter.EventIDs,  ",")}
 	}
 
-	market := exchange.Market{ID: catalogue[0].MarketID}
+	market := exchange.Market{
+		ID: catalogue[0].MarketID,
+		ExchangeName: "betfair",
+		Side: "BACK",
+	}
 
 	for _, runner := range catalogue[0].Runners {
 		prices, err := m.parseRunnerPrices(ctx, buildRunnerBookRequest(market.ID, runner.SelectionID))
@@ -59,7 +63,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 			return nil, err
 		}
 
-		r := exchange.Runner{
+		r := &exchange.Runner{
 			ID:     runner.SelectionID,
 			Name:   runner.RunnerName,
 			Prices: prices,

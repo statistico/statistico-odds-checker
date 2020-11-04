@@ -65,9 +65,12 @@ func (b *builder) buildMarket(ctx context.Context, q *BuilderQuery, market strin
 	}
 
 	m := Market{
+		ID: bm.ID,
 		EventID:        q.EventID,
 		Name:           market,
-		ExchangeMarket: *bm,
+		Exchange:       bm.ExchangeName,
+		Side:          	bm.Side,
+		ExchangeRunners: bm.Runners,
 		StatisticoOdds: odds,
 	}
 

@@ -22,9 +22,9 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		publisher := paws.NewPublisher(client, topic)
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
-			ms := "{\"eventId\":129817121,\"sport\":\"football\",\"eventDate\":1604430000,\"name\":\"1X2\",\"side\":\"BACK\"," +
-				"\"exchange\":\"betfair\",\"exchangeMarket\":{\"id\":\"1.2817676712\",\"runners\":[{\"id\":14571761,\"name\":\"\"," +
-				"\"prices\":[{\"price\":1.95,\"size\":1461}]}]},\"statisticoOdds\":[{\"price\":1.45,\"selection\":\"over\"}," +
+			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"sport\":\"football\",\"eventDate\":1604430000,\"name\":\"1X2\",\"side\":\"BACK\"," +
+				"\"exchange\":\"betfair\",\"exchangeRunners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
+				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"statisticoOdds\":[{\"price\":1.45,\"selection\":\"over\"}," +
 				"{\"price\":2.78,\"selection\":\"under\"}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
@@ -50,9 +50,9 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		publisher := paws.NewPublisher(client, topic)
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
-			ms := "{\"eventId\":129817121,\"sport\":\"football\",\"eventDate\":1604430000,\"name\":\"1X2\",\"side\":\"BACK\"," +
-				"\"exchange\":\"betfair\",\"exchangeMarket\":{\"id\":\"1.2817676712\",\"runners\":[{\"id\":14571761,\"name\":\"\"," +
-				"\"prices\":[{\"price\":1.95,\"size\":1461}]}]},\"statisticoOdds\":[{\"price\":1.45,\"selection\":\"over\"}," +
+			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"sport\":\"football\",\"eventDate\":1604430000,\"name\":\"1X2\",\"side\":\"BACK\"," +
+				"\"exchange\":\"betfair\",\"exchangeRunners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
+				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"statisticoOdds\":[{\"price\":1.45,\"selection\":\"over\"}," +
 				"{\"price\":2.78,\"selection\":\"under\"}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
@@ -72,22 +72,21 @@ func TestPublisher_PublishMarket(t *testing.T) {
 
 func eventMarket() *sport.EventMarket {
 	return &sport.EventMarket{
+		ID:             "1.23712",
 		EventID:        129817121,
 		Sport:          "football",
 		EventDate:      1604430000,
 		MarketName:     "1X2",
 		Side:           "BACK",
 		Exchange:       "betfair",
-		ExchangeMarket: exchange.Market{
-			ID:      "1.2817676712",
-			Runners: []exchange.Runner{
-				{
-					ID: 14571761,
-					Prices: []exchange.PriceSize{
-						{
-							Price: 1.95,
-							Size: 1461.00,
-						},
+		ExchangeRunners: []*exchange.Runner{
+			{
+				ID: 14571761,
+				Name: "Over 2.5 Goals",
+				Prices: []exchange.PriceSize{
+					{
+						Price: 1.95,
+						Size: 1461.00,
 					},
 				},
 			},
