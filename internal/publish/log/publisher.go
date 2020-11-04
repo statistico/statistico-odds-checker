@@ -11,7 +11,7 @@ type Publisher struct {
 }
 
 func (p *Publisher) PublishMarket(m *sport.EventMarket) error {
-	p.logger.Infof("Pretending to publish market for event %d and market", m.EventID, m.MarketName)
+	p.logger.Infof("Pretending to publish market for event %d and market %s", m.EventID, m.MarketName)
 
 	return nil
 }
