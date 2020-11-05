@@ -31,7 +31,7 @@ func (f *fixtureClient) Search(ctx context.Context, req *proto.FixtureSearchRequ
 		}
 
 		if err != nil {
-			return fixtures, ErrorServerError
+			return fixtures, &errorServerError{err}
 		}
 
 		fixtures = append(fixtures, fixture)

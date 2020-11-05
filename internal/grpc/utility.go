@@ -9,11 +9,11 @@ func handleErrorResponse(err error) error {
 	if e, ok := status.FromError(err); ok {
 		switch e.Code() {
 		case codes.Internal:
-			return ErrorServerError
+			return &errorServerError{err}
 		default:
-			return ErrorBadGateway
+			return &errorBadGateWay{err}
 		}
 	}
 
-	return ErrorBadGateway
+	return &errorBadGateWay{err}
 }

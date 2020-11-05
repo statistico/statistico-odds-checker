@@ -61,7 +61,7 @@ func TestFixtureClient_Search(t *testing.T) {
 			t.Fatal("Expected errors, got nil")
 		}
 
-		assert.Error(t, err, gr.ErrorServerError)
+		assert.Equal(t, "Internal server error: rpc error: code = Internal desc = incorrect format", err.Error())
 		pc.AssertExpectations(t)
 	})
 
@@ -86,7 +86,7 @@ func TestFixtureClient_Search(t *testing.T) {
 			t.Fatal("Expected errors, got nil")
 		}
 
-		assert.Error(t, err, gr.ErrorBadGateway)
+		assert.Equal(t, "Bad gateway error: error occurred", err.Error())
 		pc.AssertExpectations(t)
 	})
 }

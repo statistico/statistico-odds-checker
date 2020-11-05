@@ -1,8 +1,21 @@
 package grpc
 
-import "errors"
+import (
+	"fmt"
+)
 
-var ErrorInvalidArgument = errors.New("invalid argument provided in request")
-var ErrorBadGateway = errors.New("error response returned from external service")
-var ErrorServerError = errors.New("internal server error")
-var ErrorNotFound = errors.New("the resource requested does not exist")
+type errorBadGateWay struct {
+	err error
+}
+
+func (e *errorBadGateWay) Error() string {
+	return fmt.Sprintf("Bad gateway error: %s", e.err.Error())
+}
+
+type errorServerError struct {
+	err error
+}
+
+func (e *errorServerError) Error() string {
+	return fmt.Sprintf("Internal server error: %s", e.err.Error())
+}
