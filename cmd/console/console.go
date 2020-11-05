@@ -6,9 +6,12 @@ import (
 	"fmt"
 	"github.com/jonboulle/clockwork"
 	"github.com/statistico/statistico-odds-checker/internal/bootstrap"
+	sp "github.com/statistico/statistico-odds-checker/internal/sport"
 	"os"
 	"time"
 )
+
+const Football = "football"
 
 var sport = flag.String("sport", "", "The sport to check odds for")
 var dateFrom = flag.String("dateFrom", "", "Date range to begin from")
@@ -24,16 +27,28 @@ func main() {
 	from := parseDateFrom(clock)
 	to := parseDateTo(clock)
 
-	fmt.Println("Building and publishing markets...")
+	var markets <-chan *sp.EventMarket
 
-	err := app.Processor().Process(ctx, *sport, from, to)
-
-	if err != nil {
-		fmt.Printf("Error %s", err)
+	switch *sport {
+	case Football:
+		markets = app.FootballEventMarketRequester().FindEventMarkets(ctx, from, to)
+		break
+	default:
+		fmt.Println("Sport provided is not supported")
 		os.Exit(1)
 	}
 
-	fmt.Println("Complete")
+	fmt.Println("[INFO] Building and publishing markets...")
+
+	for m := range markets {
+		err := app.Publisher().PublishMarket(m)
+
+		if err != nil {
+			app.Logger.Errorf("Error publishing market %q", err)
+		}
+	}
+
+	fmt.Println("[INFO] Complete")
 	os.Exit(0)
 }
 

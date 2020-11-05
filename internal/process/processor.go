@@ -12,9 +12,9 @@ import (
 const Football = "football"
 
 type Processor struct {
-	football sp.EventMarketRequester
+	football  sp.EventMarketRequester
 	publisher publish.Publisher
-	logger *logrus.Logger
+	logger    *logrus.Logger
 }
 
 func (p *Processor) Process(ctx context.Context, sport string, from, to time.Time) error {
