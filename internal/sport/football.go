@@ -66,16 +66,16 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 
 func convertToEventMarket(m *market.Market, date int64, timestamp time.Time) *EventMarket {
 	return &EventMarket{
-		ID: m.ID,
-		EventID:        m.EventID,
-		Sport:          football,
-		EventDate:      date,
-		MarketName:     m.Name,
-		Side:           m.Side,
-		Exchange:       m.Exchange,
+		ID:              m.ID,
+		EventID:         m.EventID,
+		Sport:           football,
+		EventDate:       date,
+		MarketName:      m.Name,
+		Side:            m.Side,
+		Exchange:        m.Exchange,
 		ExchangeRunners: m.ExchangeRunners,
-		StatisticoOdds: m.StatisticoOdds,
-		Timestamp:      timestamp.Unix(),
+		StatisticoOdds:  m.StatisticoOdds,
+		Timestamp:       timestamp.Unix(),
 	}
 }
 

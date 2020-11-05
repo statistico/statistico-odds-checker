@@ -67,22 +67,22 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		marketSlice := []*market.Market{
 			{
-				ID:             "1.254912",
-				EventID:        349811,
-				Name:           "OVER_UNDER_25",
-				Side:           "BACK",
-				Exchange:       "betfair",
+				ID:              "1.254912",
+				EventID:         349811,
+				Name:            "OVER_UNDER_25",
+				Side:            "BACK",
+				Exchange:        "betfair",
 				ExchangeRunners: []*exchange.Runner{},
-				StatisticoOdds: []*proto.Odds{},
+				StatisticoOdds:  []*proto.Odds{},
 			},
 			{
-				ID:             "1.3410292",
-				EventID:        349811,
-				Name:           "1X2",
-				Side:           "BACK",
-				Exchange:       "betfair",
+				ID:              "1.3410292",
+				EventID:         349811,
+				Name:            "1X2",
+				Side:            "BACK",
+				Exchange:        "betfair",
 				ExchangeRunners: []*exchange.Runner{},
-				StatisticoOdds: []*proto.Odds{},
+				StatisticoOdds:  []*proto.Odds{},
 			},
 		}
 

@@ -179,17 +179,17 @@ func protoOdds(over, under float32) []*proto.Odds {
 
 func bookmakerMarket(marketId string) *exchange.Market {
 	return &exchange.Market{
-		ID: marketId,
+		ID:           marketId,
 		ExchangeName: "betfair",
-		Side: "BACK",
+		Side:         "BACK",
 		Runners: []*exchange.Runner{
 			{
-				ID: 49792,
+				ID:   49792,
 				Name: "Over 2.5 Goals",
 				Prices: []exchange.PriceSize{
 					{
 						Price: 1.54,
-						Size: 1301.00,
+						Size:  1301.00,
 					},
 				},
 			},
