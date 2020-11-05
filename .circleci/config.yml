@@ -18,7 +18,7 @@ workflows:
 
 jobs:
   build-and-test:
-    working_directory: ~/go/src/github.com/statistico/statistico-odds-compiler
+    working_directory: ~/go/src/github.com/statistico/statistico-odds-checker
     machine: true
     environment:
       GOPATH: /home/circleci/go
