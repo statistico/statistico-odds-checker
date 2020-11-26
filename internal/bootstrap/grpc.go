@@ -21,19 +21,3 @@ func (c Container) GrpcFixtureClient() sg.FixtureClient {
 
 	return sg.NewFixtureClient(client)
 }
-
-func (c Container) GrpcOddsCompilerClient() sg.OddsCompilerClient {
-	config := c.Config
-
-	address := config.StatisticoOddsCompilerService.Host + ":" + config.StatisticoOddsCompilerService.Port
-
-	conn, err := grpc.Dial(address, grpc.WithInsecure())
-
-	if err != nil {
-		c.Logger.Warnf("Error initializing statistico data service grpc client %s", err.Error())
-	}
-
-	client := proto.NewOddsCompilerServiceClient(conn)
-
-	return sg.NewOddsCompilerClient(client)
-}

@@ -3,7 +3,6 @@ package sport
 import (
 	"context"
 	"github.com/statistico/statistico-odds-checker/internal/exchange"
-	"github.com/statistico/statistico-odds-checker/internal/grpc/proto"
 	"time"
 )
 
@@ -19,7 +18,6 @@ type EventMarket struct {
 	MarketName      string             `json:"name"`
 	Side            string             `json:"side"`
 	Exchange        string             `json:"exchange"`
-	ExchangeRunners []*exchange.Runner `json:"exchangeRunners"`
-	StatisticoOdds  []*proto.Odds      `json:"statisticoOdds"`
+	Runners         []*exchange.Runner `json:"runners"`
 	Timestamp       int64              `json:"timestamp"`
 }

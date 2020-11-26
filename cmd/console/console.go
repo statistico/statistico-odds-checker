@@ -69,7 +69,7 @@ func parseDateFrom(clock clockwork.Clock) time.Time {
 
 func parseDateTo(clock clockwork.Clock) time.Time {
 	if *dateTo == "" {
-		return clock.Now().Add(time.Hour * 3)
+		return clock.Now().Add(time.Hour * 72)
 	}
 
 	to, err := time.Parse(time.RFC3339, *dateTo)

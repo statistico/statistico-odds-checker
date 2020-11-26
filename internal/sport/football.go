@@ -73,8 +73,7 @@ func convertToEventMarket(m *market.Market, date int64, timestamp time.Time) *Ev
 		MarketName:      m.Name,
 		Side:            m.Side,
 		Exchange:        m.Exchange,
-		ExchangeRunners: m.ExchangeRunners,
-		StatisticoOdds:  m.StatisticoOdds,
+		Runners:         m.ExchangeRunners,
 		Timestamp:       timestamp.Unix(),
 	}
 }
