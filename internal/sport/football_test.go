@@ -73,7 +73,6 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 				Side:            "BACK",
 				Exchange:        "betfair",
 				ExchangeRunners: []*exchange.Runner{},
-				StatisticoOdds:  []*proto.Odds{},
 			},
 			{
 				ID:              "1.3410292",
@@ -82,7 +81,6 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 				Side:            "BACK",
 				Exchange:        "betfair",
 				ExchangeRunners: []*exchange.Runner{},
-				StatisticoOdds:  []*proto.Odds{},
 			},
 		}
 
@@ -105,8 +103,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		a.Equal("OVER_UNDER_25", emOne.MarketName)
 		a.Equal("BACK", emOne.Side)
 		a.Equal("betfair", emOne.Exchange)
-		a.Equal([]*exchange.Runner{}, emOne.ExchangeRunners)
-		a.Equal([]*proto.Odds{}, emOne.StatisticoOdds)
+		a.Equal([]*exchange.Runner{}, emOne.Runners)
 		a.Equal(int64(1547465100), emOne.Timestamp)
 
 		a.Equal("1.3410292", emTwo.ID)
@@ -116,8 +113,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		a.Equal("1X2", emTwo.MarketName)
 		a.Equal("BACK", emTwo.Side)
 		a.Equal("betfair", emTwo.Exchange)
-		a.Equal([]*exchange.Runner{}, emTwo.ExchangeRunners)
-		a.Equal([]*proto.Odds{}, emTwo.StatisticoOdds)
+		a.Equal([]*exchange.Runner{}, emTwo.Runners)
 		a.Equal(int64(1547465100), emTwo.Timestamp)
 	})
 

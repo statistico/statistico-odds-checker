@@ -7,8 +7,6 @@ import (
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/statistico/statistico-odds-checker/internal/exchange"
 	"github.com/statistico/statistico-odds-checker/internal/exchange/betfair"
-	"github.com/statistico/statistico-odds-checker/internal/grpc"
-	"github.com/statistico/statistico-odds-checker/internal/grpc/proto"
 	"github.com/statistico/statistico-odds-checker/internal/market"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
@@ -21,10 +19,9 @@ func TestBuilder_Build(t *testing.T) {
 		t.Helper()
 
 		mr := new(betfair.MockMarketRequester)
-		oc := new(grpc.MockOddsCompilerGrpcClient)
 		logger, hook := test.NewNullLogger()
 
-		builder := market.NewBuilder(oc, mr, logger)
+		builder := market.NewBuilder(mr, logger)
 
 		date, err := time.Parse(time.RFC3339, "2020-03-12T00:00:00+00:00")
 
@@ -41,10 +38,6 @@ func TestBuilder_Build(t *testing.T) {
 		}
 
 		ctx := context.Background()
-
-		odds := protoOdds(1.25, 11)
-
-		oc.On("GetEventMarket", ctx, uint64(1278121), "OVER_UNDER_25").Return(odds, nil)
 
 		exQuery := mock.MatchedBy(func(r *exchange.Query) bool {
 			assert.Equal(t, "West Ham United vs Chelsea", r.Event)
@@ -68,60 +61,18 @@ func TestBuilder_Build(t *testing.T) {
 		a.Equal("betfair", one.Exchange)
 		a.Equal("OVER_UNDER_25", one.Name)
 		a.Equal("BACK", one.Side)
-		a.Equal(odds, one.StatisticoOdds)
 		a.Equal(mk.Runners, one.ExchangeRunners)
 		assert.Nil(t, hook.LastEntry())
 		mr.AssertExpectations(t)
-		oc.AssertExpectations(t)
-	})
-
-	t.Run("logs error if error returned when fetching odds compiler event market", func(t *testing.T) {
-		t.Helper()
-
-		mr := new(betfair.MockMarketRequester)
-		oc := new(grpc.MockOddsCompilerGrpcClient)
-		logger, hook := test.NewNullLogger()
-
-		builder := market.NewBuilder(oc, mr, logger)
-
-		date, err := time.Parse(time.RFC3339, "2020-03-12T00:00:00+00:00")
-
-		if err != nil {
-			t.Fatalf("Error parsing date %s", err.Error())
-		}
-
-		query := market.BuilderQuery{
-			Date:    date,
-			Event:   "West Ham United vs Chelsea",
-			EventID: 1278121,
-			Sport:   "football",
-			Markets: []string{"OVER_UNDER_25"},
-		}
-
-		ctx := context.Background()
-
-		oc.On("GetEventMarket", ctx, uint64(1278121), "OVER_UNDER_25").Return([]*proto.Odds{}, errors.New("error occurred"))
-
-		mr.AssertNotCalled(t, "Fetch")
-
-		markets := builder.Build(ctx, &query)
-
-		<-markets
-
-		assert.Equal(t, 0, len(markets))
-		assert.Equal(t, 1, len(hook.Entries))
-		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-		assert.Equal(t, "Error when calling client 'error occurred' for event 1278121 and market OVER_UNDER_25", hook.LastEntry().Message)
 	})
 
 	t.Run("logs error if error returned when fetching market via market requester", func(t *testing.T) {
 		t.Helper()
 
 		mr := new(betfair.MockMarketRequester)
-		oc := new(grpc.MockOddsCompilerGrpcClient)
 		logger, hook := test.NewNullLogger()
 
-		builder := market.NewBuilder(oc, mr, logger)
+		builder := market.NewBuilder(mr, logger)
 
 		date, err := time.Parse(time.RFC3339, "2020-03-12T00:00:00+00:00")
 
@@ -138,10 +89,6 @@ func TestBuilder_Build(t *testing.T) {
 		}
 
 		ctx := context.Background()
-
-		odds := protoOdds(1.25, 11)
-
-		oc.On("GetEventMarket", ctx, uint64(1278121), "OVER_UNDER_25").Return(odds, nil)
 
 		exQuery := mock.MatchedBy(func(r *exchange.Query) bool {
 			assert.Equal(t, "West Ham United vs Chelsea", r.Event)
@@ -162,19 +109,6 @@ func TestBuilder_Build(t *testing.T) {
 		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 		assert.Equal(t, "Error when calling client 'error occurred' for event 1278121 and market OVER_UNDER_25", hook.LastEntry().Message)
 	})
-}
-
-func protoOdds(over, under float32) []*proto.Odds {
-	return []*proto.Odds{
-		{
-			Selection: "over",
-			Price:     over,
-		},
-		{
-			Selection: "over",
-			Price:     under,
-		},
-	}
 }
 
 func bookmakerMarket(marketId string) *exchange.Market {

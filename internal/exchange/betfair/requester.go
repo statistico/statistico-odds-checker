@@ -29,11 +29,11 @@ func (m *MarketRequester) getEvent(ctx context.Context, q *exchange.Query) (*bet
 	events, err := m.betfairClient.ListEvents(ctx, req)
 
 	if err != nil {
-		return nil, &clientError{"list events", err}
+		return nil, &exchange.ClientError{Context: "list events", E: err}
 	}
 
 	if len(events) == 0 {
-		return nil, &noEventError{req.Filter.TextQuery}
+		return nil, &exchange.NoEventError{Event: req.Filter.TextQuery}
 	}
 
 	return &events[0].Event, nil
@@ -43,11 +43,15 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	catalogue, err := m.betfairClient.ListMarketCatalogue(ctx, req)
 
 	if err != nil {
-		return nil, &clientError{"market catalogue", err}
+		return nil, &exchange.ClientError{Context: "market catalogue", E:err}
+	}
+
+	if len(catalogue) == 0 {
+		return nil, &exchange.NoEventMarketError{}
 	}
 
 	if len(catalogue) > 1 {
-		return nil, &multipleEventMarketsError{strings.Join(req.Filter.EventIDs,  ",")}
+		return nil, &exchange.MultipleEventMarketsError{EventID: strings.Join(req.Filter.EventIDs,  ",")}
 	}
 
 	market := exchange.Market{
@@ -79,11 +83,11 @@ func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.Lis
 	response, err := m.betfairClient.ListRunnerBook(ctx, req)
 
 	if err != nil {
-		return nil, &clientError{"list runner book", err}
+		return nil, &exchange.ClientError{Context: "list runner book", E:err}
 	}
 
 	if len(response) > 1 {
-		return nil, &multipleMarketSelectionError{req.MarketID, req.SelectionID}
+		return nil, &exchange.MultipleMarketSelectionError{EventID: req.MarketID, SelectionID: req.SelectionID}
 	}
 
 	prices := []exchange.PriceSize{}

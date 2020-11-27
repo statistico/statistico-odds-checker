@@ -86,7 +86,17 @@ func (b *builder) fetchExchangeMarket(ctx context.Context, q *BuilderQuery, mark
 }
 
 func (b *builder) logError(e error, eventID uint64, market string) {
-	b.logger.Errorf("Error when calling client '%s' for event %d and market %s", e.Error(), eventID, market)
+	switch e.(type) {
+	case *exchange.NoEventMarketError:
+		return
+	default:
+		b.logger.Errorf(
+			"Error when calling client '%s' for event %d and market %s",
+			e.Error(),
+			eventID,
+			market,
+		)
+	}
 }
 
 func NewBuilder(m exchange.MarketRequester, l *logrus.Logger) Builder {

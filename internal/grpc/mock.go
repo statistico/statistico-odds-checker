@@ -44,21 +44,3 @@ func (f *MockFixtureProtoClient) Search(ctx context.Context, in *proto.FixtureSe
 	args := f.Called(ctx, in, opts)
 	return args.Get(0).(proto.FixtureService_SearchClient), args.Error(1)
 }
-
-type MockOddsCompilerProtoClient struct {
-	mock.Mock
-}
-
-func (o *MockOddsCompilerProtoClient) GetEventMarket(ctx context.Context, in *proto.EventRequest, opts ...grpc.CallOption) (*proto.EventMarket, error) {
-	args := o.Called(ctx, in, opts)
-	return args.Get(0).(*proto.EventMarket), args.Error(1)
-}
-
-type MockOddsCompilerGrpcClient struct {
-	mock.Mock
-}
-
-func (m *MockOddsCompilerGrpcClient) GetEventMarket(ctx context.Context, eventId uint64, market string) ([]*proto.Odds, error) {
-	args := m.Called(ctx, eventId, market)
-	return args.Get(0).([]*proto.Odds), args.Error(1)
-}
