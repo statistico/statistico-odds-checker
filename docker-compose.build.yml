@@ -4,6 +4,8 @@ services:
     build:
       dockerfile: ./.docker/Dockerfile
       context: .
+    networks:
+      - statistico-data_default
     tty: true
 
   test:
@@ -12,3 +14,7 @@ services:
       context: .
     volumes:
       - .:/opt
+
+networks:
+  statistico-data_default:
+    external: true

@@ -57,19 +57,21 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 		}
 
 		for m := range f.builder.Build(ctx, &q) {
-			ch <- convertToEventMarket(m, fx.DateTime.Utc, f.clock.Now())
+			ch <- convertToEventMarket(m, fx, f.clock.Now())
 		}
 	}
 
 	close(ch)
 }
 
-func convertToEventMarket(m *market.Market, date int64, timestamp time.Time) *EventMarket {
+func convertToEventMarket(m *market.Market, fix *proto.Fixture, timestamp time.Time) *EventMarket {
 	return &EventMarket{
 		ID:              m.ID,
 		EventID:         m.EventID,
+		CompetitionID:   fix.Competition.Id,
+		SeasonID:        fix.Season.Id,
 		Sport:           football,
-		EventDate:       date,
+		EventDate:       fix.DateTime.Rfc,
 		MarketName:      m.Name,
 		Side:            m.Side,
 		Exchange:        m.Exchange,

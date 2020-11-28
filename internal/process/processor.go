@@ -3,7 +3,6 @@ package process
 import (
 	"context"
 	"errors"
-	"fmt"
 	"github.com/sirupsen/logrus"
 	"github.com/statistico/statistico-odds-checker/internal/publish"
 	sp "github.com/statistico/statistico-odds-checker/internal/sport"
@@ -28,8 +27,6 @@ func (p *Processor) Process(ctx context.Context, sport string, from, to time.Tim
 	default:
 		return errors.New("sport provided is not supported")
 	}
-
-	fmt.Printf("Number of markets: %d", len(markets))
 
 	for m := range markets {
 		err := p.publisher.PublishMarket(m)

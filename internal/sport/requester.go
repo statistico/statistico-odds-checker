@@ -13,8 +13,10 @@ type EventMarketRequester interface {
 type EventMarket struct {
 	ID              string             `json:"id"`
 	EventID         uint64             `json:"eventId"`
+	CompetitionID   uint64             `json:"competitionId"`
+	SeasonID        uint64             `json:"seasonId"`
 	Sport           string             `json:"sport"`
-	EventDate       int64              `json:"eventDate"`
+	EventDate       string             `json:"date"`
 	MarketName      string             `json:"name"`
 	Side            string             `json:"side"`
 	Exchange        string             `json:"exchange"`
