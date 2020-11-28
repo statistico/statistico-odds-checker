@@ -50,7 +50,10 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 				},
 				DateTime: &proto.Date{
 					Utc: 1547465400,
+					Rfc: "2019-01-14T11:00:00Z",
 				},
+				Competition: &proto.Competition{Id: 8},
+				Season: &proto.Season{Id: 17420},
 			},
 		}
 
@@ -77,7 +80,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 			{
 				ID:              "1.3410292",
 				EventID:         349811,
-				Name:            "1X2",
+				Name:            "MATCH_ODDS",
 				Side:            "BACK",
 				Exchange:        "betfair",
 				ExchangeRunners: []*exchange.Runner{},
@@ -98,8 +101,10 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		a.Equal("1.254912", emOne.ID)
 		a.Equal(uint64(349811), emOne.EventID)
+		a.Equal(uint64(8), emOne.CompetitionID)
+		a.Equal(uint64(17420), emOne.SeasonID)
 		a.Equal("football", emOne.Sport)
-		a.Equal(int64(1547465400), emOne.EventDate)
+		a.Equal("2019-01-14T11:00:00Z", emOne.EventDate)
 		a.Equal("OVER_UNDER_25", emOne.MarketName)
 		a.Equal("BACK", emOne.Side)
 		a.Equal("betfair", emOne.Exchange)
@@ -108,9 +113,11 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		a.Equal("1.3410292", emTwo.ID)
 		a.Equal(uint64(349811), emTwo.EventID)
+		a.Equal(uint64(8), emOne.CompetitionID)
+		a.Equal(uint64(17420), emOne.SeasonID)
 		a.Equal("football", emTwo.Sport)
-		a.Equal(int64(1547465400), emTwo.EventDate)
-		a.Equal("1X2", emTwo.MarketName)
+		a.Equal("2019-01-14T11:00:00Z", emTwo.EventDate)
+		a.Equal("MATCH_ODDS", emTwo.MarketName)
 		a.Equal("BACK", emTwo.Side)
 		a.Equal("betfair", emTwo.Exchange)
 		a.Equal([]*exchange.Runner{}, emTwo.Runners)

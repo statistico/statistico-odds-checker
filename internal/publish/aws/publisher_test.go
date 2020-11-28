@@ -21,7 +21,8 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		publisher := paws.NewPublisher(client, topic)
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
-			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"sport\":\"football\",\"eventDate\":1604430000,\"name\":\"1X2\",\"side\":\"BACK\"," +
+			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
+				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\",\"side\":\"BACK\"," +
 				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
 				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
@@ -48,7 +49,8 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		publisher := paws.NewPublisher(client, topic)
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
-			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"sport\":\"football\",\"eventDate\":1604430000,\"name\":\"1X2\",\"side\":\"BACK\"," +
+			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
+				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\",\"side\":\"BACK\"," +
 				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
 				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
@@ -71,8 +73,10 @@ func eventMarket() *sport.EventMarket {
 	return &sport.EventMarket{
 		ID:             "1.23712",
 		EventID:        129817121,
+		CompetitionID:  8,
+		SeasonID:       17420,
 		Sport:          "football",
-		EventDate:      1604430000,
+		EventDate:      "2019-01-14T11:00:00Z",
 		MarketName:     "1X2",
 		Side:           "BACK",
 		Exchange:       "betfair",
