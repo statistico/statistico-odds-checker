@@ -7,8 +7,8 @@ type Config struct {
 	BetFair
 	FootballConfig
 	Publisher string
+	Sentry
 	StatisticoDataService
-	StatisticoOddsCompilerService
 }
 
 type AwsConfig struct {
@@ -29,12 +29,11 @@ type FootballConfig struct {
 	Markets          []string
 }
 
-type StatisticoDataService struct {
-	Host string
-	Port string
+type Sentry struct {
+	DSN string
 }
 
-type StatisticoOddsCompilerService struct {
+type StatisticoDataService struct {
 	Host string
 	Port string
 }
@@ -82,14 +81,11 @@ func BuildConfig() *Config {
 		Key:      os.Getenv("BETFAIR_KEY"),
 	}
 
+	config.Sentry = Sentry{DSN: os.Getenv("SENTRY_DSN")}
+
 	config.StatisticoDataService = StatisticoDataService{
 		Host: os.Getenv("STATISTICO_DATA_SERVICE_HOST"),
 		Port: os.Getenv("STATISTICO_DATA_SERVICE_PORT"),
-	}
-
-	config.StatisticoOddsCompilerService = StatisticoOddsCompilerService{
-		Host: os.Getenv("STATISTICO_ODDS_COMPILER_SERVICE_HOST"),
-		Port: os.Getenv("STATISTICO_ODDS_COMPILER_SERVICE_PORT"),
 	}
 
 	return &config
