@@ -55,7 +55,7 @@ func parseDateFrom(clock clockwork.Clock) time.Time {
 
 func parseDateTo(clock clockwork.Clock) time.Time {
 	if *dateTo == "" {
-		return clock.Now().Add(time.Hour * 72)
+		return clock.Now().Add(time.Hour * 24)
 	}
 
 	to, err := time.Parse(time.RFC3339, *dateTo)
