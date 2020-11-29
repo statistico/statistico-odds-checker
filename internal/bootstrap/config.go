@@ -48,6 +48,7 @@ func BuildConfig() *Config {
 			17160, // Ligue 1
 			17361, // Bundesliga
 			17420, // Premier League
+			17463, // Primeira Liga
 			17488, // Serie A
 		},
 		Markets: []string{
