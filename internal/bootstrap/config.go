@@ -50,6 +50,7 @@ func BuildConfig() *Config {
 			17228, // Holland - Eredivisie,
 			17361, // Germany - Bundesliga
 			17420, // England - Premier League
+			17427, // England - League Two
 			17463, // Portugal - Primeira Liga
 			17480, // Spain - La Liga
 			17488, // Italy - Serie A
