@@ -46,6 +46,7 @@ func BuildConfig() *Config {
 	config.FootballConfig = FootballConfig{
 		SupportedSeasons: []uint64{
 			17160, // France - Ligue 1
+			17228, // Holland - Eredivisie,
 			17361, // Germany - Bundesliga
 			17420, // England - Premier League
 			17463, // Portugal - Primeira Liga
