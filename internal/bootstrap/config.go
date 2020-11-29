@@ -47,6 +47,7 @@ func BuildConfig() *Config {
 		SupportedSeasons: []uint64{
 			16838, // Sweden - Allsvenskan
 			17138, // Belgium - Pro League
+			17141, // Scotland - Premier League
 			17160, // France - Ligue 1
 			17228, // Holland - Eredivisie,
 			17361, // Germany - Bundesliga
