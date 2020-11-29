@@ -45,9 +45,10 @@ func BuildConfig() *Config {
 
 	config.FootballConfig = FootballConfig{
 		SupportedSeasons: []uint64{
-			17361,
-			17420,
-			17488,
+			17160, // Ligue 1
+			17361, // Bundesliga
+			17420, // Premier League
+			17488, // Serie A
 		},
 		Markets: []string{
 			"BOTH_TEAMS_TO_SCORE",
