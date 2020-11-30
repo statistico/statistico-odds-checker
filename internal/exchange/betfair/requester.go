@@ -70,6 +70,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 		r := &exchange.Runner{
 			ID:     runner.SelectionID,
 			Name:   runner.RunnerName,
+			Sort:   runner.SortPriority,
 			Prices: prices,
 		}
 
