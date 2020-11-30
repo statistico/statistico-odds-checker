@@ -81,6 +81,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 		a.Equal("1.173887003", market.ID)
 		a.Equal(uint64(47972), market.Runners[0].ID)
 		a.Equal("Under 2.5 Goals", market.Runners[0].Name)
+		a.Equal(1, market.Runners[0].Sort)
 		a.Equal(float32(2.96), market.Runners[0].Prices[0].Price)
 		a.Equal(float32(152.84), market.Runners[0].Prices[0].Size)
 		a.Equal(float32(2.9), market.Runners[0].Prices[1].Price)
@@ -90,6 +91,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 
 		a.Equal(uint64(47973), market.Runners[1].ID)
 		a.Equal("Over 2.5 Goals", market.Runners[1].Name)
+		a.Equal(2, market.Runners[1].Sort)
 		a.Equal(float32(2.96), market.Runners[1].Prices[0].Price)
 		a.Equal(float32(152.84), market.Runners[1].Prices[0].Size)
 		a.Equal(float32(2.9), market.Runners[1].Prices[1].Price)

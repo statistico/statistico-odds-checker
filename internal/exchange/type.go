@@ -37,6 +37,7 @@ func (m *Market) Scan(value interface{}) error {
 type Runner struct {
 	ID     uint64      `json:"id"`
 	Name   string      `json:"name"`
+	Sort   int         `json:"sort"`
 	Prices []PriceSize `json:"prices"`
 }
 

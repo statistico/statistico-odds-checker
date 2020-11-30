@@ -23,7 +23,7 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
 			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
 				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\",\"side\":\"BACK\"," +
-				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
+				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\",\"sort\":1," +
 				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
@@ -51,7 +51,7 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
 			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
 				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\",\"side\":\"BACK\"," +
-				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
+				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\",\"sort\":1,"+
 				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
@@ -84,6 +84,7 @@ func eventMarket() *sport.EventMarket {
 			{
 				ID: 14571761,
 				Name: "Over 2.5 Goals",
+				Sort: 1,
 				Prices: []exchange.PriceSize{
 					{
 						Price: 1.95,
