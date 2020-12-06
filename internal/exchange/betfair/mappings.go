@@ -143,7 +143,7 @@ var teams = map[string]string{
 	"IFK Göteborg": "IFK Goteborg",
 	"Sirius": "IK Sirius",
 	"Östersunds FK": "Ostersunds FK",
-	"Helsingborg": "Helsingborgs IF",
+	"Helsingborg": "Helsingborgs",
 	"Falkenberg": "Falkenbergs FF",
 	"Kalmar": "Kalmar FF",
 	"Malmö FF": "Malmo",
