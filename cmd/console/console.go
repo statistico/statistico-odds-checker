@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"github.com/jonboulle/clockwork"
-	"github.com/statistico/statistico-odds-checker/internal/bootstrap"
+	"github.com/statistico/statistico-odds-checker/internal/app/bootstrap"
 	"os"
 	"time"
 )
