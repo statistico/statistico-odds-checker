@@ -8,6 +8,7 @@ COPY . .
 RUN go mod download
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo ./cmd/console
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo ./cmd/csv
 
 # Step 2
 FROM alpine
@@ -17,5 +18,6 @@ COPY ./bin ./bin
 COPY ./.docker/crontab /etc/crontabs/root
 COPY ./.docker/wait-for-it.sh .
 COPY --from=builder /app/console .
+COPY --from=builder /app/csv .
 
 CMD ["/bin/sh"]
