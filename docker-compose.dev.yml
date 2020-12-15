@@ -5,3 +5,7 @@ services:
   console:
     env_file:
       - .env
+
+  csv:
+    env_file:
+      - .env
