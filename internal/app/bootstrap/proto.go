@@ -1,12 +1,11 @@
 package bootstrap
 
 import (
-	sg "github.com/statistico/statistico-odds-checker/internal/app/grpc"
-	statisticoproto "github.com/statistico/statistico-proto/statistico-data/go"
+	"github.com/statistico/statistico-proto/go"
 	"google.golang.org/grpc"
 )
 
-func (c Container) GrpcFixtureClient() sg.FixtureClient {
+func (c Container) GrpcFixtureClient() statistico.FixtureServiceClient {
 	config := c.Config
 
 	address := config.StatisticoDataService.Host + ":" + config.StatisticoDataService.Port
@@ -17,7 +16,5 @@ func (c Container) GrpcFixtureClient() sg.FixtureClient {
 		c.Logger.Warnf("Error initializing statistico data service grpc client %s", err.Error())
 	}
 
-	client := statisticoproto.NewFixtureServiceClient(conn)
-
-	return sg.NewFixtureClient(client)
+	return statistico.NewFixtureServiceClient(conn)
 }

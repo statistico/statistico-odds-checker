@@ -6,16 +6,16 @@ import (
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/jonboulle/clockwork"
 	"github.com/sirupsen/logrus"
-	"github.com/statistico/statistico-odds-checker/internal/app/grpc"
+	"github.com/statistico/statistico-data-go-grpc-client"
 	"github.com/statistico/statistico-odds-checker/internal/app/market"
-	"github.com/statistico/statistico-proto/statistico-data/go"
+	"github.com/statistico/statistico-proto/go"
 	"time"
 )
 
 const football = "football"
 
 type footballEventMarketRequester struct {
-	fixtureClient grpc.FixtureClient
+	fixtureClient statisticodata.FixtureClient
 	builder       market.Builder
 	logger        *logrus.Logger
 	clock         clockwork.Clock
@@ -24,7 +24,7 @@ type footballEventMarketRequester struct {
 }
 
 func (f *footballEventMarketRequester) FindEventMarkets(ctx context.Context, from, to time.Time) <-chan *EventMarket {
-	req := statisticoproto.FixtureSearchRequest{
+	req := statistico.FixtureSearchRequest{
 		SeasonIds:  f.seasons,
 		DateBefore: &wrappers.StringValue{Value: to.Format(time.RFC3339)},
 		DateAfter:  &wrappers.StringValue{Value: from.Format(time.RFC3339)},
@@ -44,7 +44,7 @@ func (f *footballEventMarketRequester) FindEventMarkets(ctx context.Context, fro
 	return ch
 }
 
-func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fixtures []*statisticoproto.Fixture, ch chan<- *EventMarket) {
+func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket) {
 	for _, fx := range fixtures {
 		date := time.Unix(fx.DateTime.Utc, 0)
 
@@ -64,7 +64,7 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 	close(ch)
 }
 
-func convertToEventMarket(m *market.Market, fix *statisticoproto.Fixture, timestamp time.Time) *EventMarket {
+func convertToEventMarket(m *market.Market, fix *statistico.Fixture, timestamp time.Time) *EventMarket {
 	return &EventMarket{
 		ID:            m.ID,
 		EventID:       m.EventID,
@@ -80,7 +80,14 @@ func convertToEventMarket(m *market.Market, fix *statisticoproto.Fixture, timest
 	}
 }
 
-func NewFootballEventMarketRequester(f grpc.FixtureClient, b market.Builder, l *logrus.Logger, c clockwork.Clock, s []uint64, m []string) EventMarketRequester {
+func NewFootballEventMarketRequester(
+	f statisticodata.FixtureClient,
+	b market.Builder,
+	l *logrus.Logger,
+	c clockwork.Clock,
+	s []uint64,
+	m []string,
+) EventMarketRequester {
 	return &footballEventMarketRequester{
 		fixtureClient: f,
 		builder:       b,
