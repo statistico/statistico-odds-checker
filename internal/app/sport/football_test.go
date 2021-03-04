@@ -7,10 +7,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
-	"github.com/statistico/statistico-odds-checker/internal/app/grpc"
 	"github.com/statistico/statistico-odds-checker/internal/app/market"
 	"github.com/statistico/statistico-odds-checker/internal/app/sport"
-	"github.com/statistico/statistico-proto/statistico-data/go"
+	"github.com/statistico/statistico-proto/go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
@@ -21,7 +20,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 	t.Run("parses fixtures and markets and pushes them into the provided channel", func(t *testing.T) {
 		t.Helper()
 
-		fixClient := new(grpc.MockFixtureGrpcClient)
+		fixClient := new(MockFixtureClient)
 		builder := new(market.MockMarketBuilder)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
@@ -32,28 +31,28 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		ctx := context.Background()
 
-		fixReq := mock.MatchedBy(func(r *statisticoproto.FixtureSearchRequest) bool {
+		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
 			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
 		})
 
-		fixtures := []*statisticoproto.Fixture{
+		fixtures := []*statistico.Fixture{
 			{
 				Id: 349811,
-				HomeTeam: &statisticoproto.Team{
+				HomeTeam: &statistico.Team{
 					Name: "West Ham United",
 				},
-				AwayTeam: &statisticoproto.Team{
+				AwayTeam: &statistico.Team{
 					Name: "Arsenal",
 				},
-				DateTime: &statisticoproto.Date{
+				DateTime: &statistico.Date{
 					Utc: 1547465400,
 					Rfc: "2019-01-14T11:00:00Z",
 				},
-				Competition: &statisticoproto.Competition{Id: 8},
-				Season: &statisticoproto.Season{Id: 17420},
+				Competition: &statistico.Competition{Id: 8},
+				Season: &statistico.Season{Id: 17420},
 			},
 		}
 
@@ -127,7 +126,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 	t.Run("returns nil if error fetching fixtures via fixture client", func(t *testing.T) {
 		t.Helper()
 
-		fixClient := new(grpc.MockFixtureGrpcClient)
+		fixClient := new(MockFixtureClient)
 		builder := new(market.MockMarketBuilder)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
@@ -136,7 +135,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		r := sport.NewFootballEventMarketRequester(fixClient, builder, logger, clock, seasons, markets)
 
-		fixReq := mock.MatchedBy(func(r *statisticoproto.FixtureSearchRequest) bool {
+		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
 			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
@@ -145,7 +144,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		ctx := context.Background()
 
-		fixClient.On("Search", ctx, fixReq).Return([]*statisticoproto.Fixture{}, errors.New("error fetching fixtures"))
+		fixClient.On("Search", ctx, fixReq).Return([]*statistico.Fixture{}, errors.New("error fetching fixtures"))
 
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
@@ -171,4 +170,13 @@ func marketChannel(markets []*market.Market) <-chan *market.Market {
 	close(ch)
 
 	return ch
+}
+
+type MockFixtureClient struct {
+	mock.Mock
+}
+
+func (m *MockFixtureClient) Search(ctx context.Context, req *statistico.FixtureSearchRequest) ([]*statistico.Fixture, error) {
+	args := m.Called(ctx, req)
+	return args.Get(0).([]*statistico.Fixture), args.Error(1)
 }

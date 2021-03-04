@@ -6,7 +6,7 @@ func (c Container) FootballEventMarketRequester() sport.EventMarketRequester {
 	config := c.Config.FootballConfig
 
 	return sport.NewFootballEventMarketRequester(
-		c.GrpcFixtureClient(),
+		c.DataServiceResultClient(),
 		c.MarketBuilder(),
 		c.Logger,
 		c.Clock,
