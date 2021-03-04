@@ -90,13 +90,13 @@ func buildEventMarket(row []string) *sport.EventMarket {
 		panic(err)
 	}
 
-	date, err := strconv.Atoi(row[2])
+	date, err := strconv.Atoi(row[3])
 
 	if err != nil {
 		panic(err)
 	}
 
-	compID, err := strconv.Atoi(row[6])
+	compID, err := strconv.Atoi(row[2])
 
 	if err != nil {
 		panic(err)
@@ -117,19 +117,19 @@ func buildEventMarket(row []string) *sport.EventMarket {
 func buildMatchOdds(row []string) *sport.EventMarket {
  	m := buildEventMarket(row)
 
- 	home, err := strconv.ParseFloat(row[7], 32)
+ 	home, err := strconv.ParseFloat(row[6], 32)
 
 	if err != nil {
 		panic(err)
 	}
 
-	away, err := strconv.ParseFloat(row[9], 32)
+	away, err := strconv.ParseFloat(row[8], 32)
 
 	if err != nil {
 		panic(err)
 	}
 
-	draw, err := strconv.ParseFloat(row[8], 32)
+	draw, err := strconv.ParseFloat(row[7], 32)
 
 	if err != nil {
 		panic(err)
@@ -176,13 +176,13 @@ func buildMatchOdds(row []string) *sport.EventMarket {
 func buildOverUnder(row []string) *sport.EventMarket {
 	m := buildEventMarket(row)
 
-	over, err := strconv.ParseFloat(row[10], 32)
+	over, err := strconv.ParseFloat(row[9], 32)
 
 	if err != nil {
 		panic(err)
 	}
 
-	under, err := strconv.ParseFloat(row[11], 32)
+	under, err := strconv.ParseFloat(row[10], 32)
 
 	if err != nil {
 		panic(err)

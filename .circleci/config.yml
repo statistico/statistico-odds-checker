@@ -79,4 +79,3 @@ jobs:
           cluster-name: 'statistico-production'
           container-image-name-updates: >
             container=cron,image-and-tag=${AWS_ECR_ACCOUNT_URL}/statistico-odds-checker:${CIRCLE_SHA1},
-            container=console,image-and-tag=${AWS_ECR_ACCOUNT_URL}/statistico-odds-checker:${CIRCLE_SHA1}
