@@ -6,12 +6,6 @@ services:
       context: .
     tty: true
 
-  csv:
-    build:
-      dockerfile: ./.docker/Dockerfile
-      context: .
-    tty: true
-
   test:
     build:
       dockerfile: ./.docker/test/Dockerfile
