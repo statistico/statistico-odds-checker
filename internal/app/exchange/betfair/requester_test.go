@@ -88,6 +88,12 @@ func TestMarketRequester_Fetch(t *testing.T) {
 		a.Equal(float32(34.5), market.Runners[0].BackPrices[1].Size)
 		a.Equal(float32(2.88), market.Runners[0].BackPrices[2].Price)
 		a.Equal(float32(91.04), market.Runners[0].BackPrices[2].Size)
+		a.Equal(float32(2.96), market.Runners[0].LayPrices[0].Price)
+		a.Equal(float32(152.84), market.Runners[0].LayPrices[0].Size)
+		a.Equal(float32(2.9), market.Runners[0].LayPrices[1].Price)
+		a.Equal(float32(34.5), market.Runners[0].LayPrices[1].Size)
+		a.Equal(float32(2.88), market.Runners[0].LayPrices[2].Price)
+		a.Equal(float32(91.04), market.Runners[0].LayPrices[2].Size)
 
 		a.Equal(uint64(47973), market.Runners[1].ID)
 		a.Equal("Over 2.5 Goals", market.Runners[1].Name)
@@ -98,6 +104,12 @@ func TestMarketRequester_Fetch(t *testing.T) {
 		a.Equal(float32(34.5), market.Runners[0].BackPrices[1].Size)
 		a.Equal(float32(2.88), market.Runners[0].BackPrices[2].Price)
 		a.Equal(float32(91.04), market.Runners[0].BackPrices[2].Size)
+		a.Equal(float32(2.96), market.Runners[0].LayPrices[0].Price)
+		a.Equal(float32(152.84), market.Runners[0].LayPrices[0].Size)
+		a.Equal(float32(2.9), market.Runners[0].LayPrices[1].Price)
+		a.Equal(float32(34.5), market.Runners[0].LayPrices[1].Size)
+		a.Equal(float32(2.88), market.Runners[0].LayPrices[2].Price)
+		a.Equal(float32(91.04), market.Runners[0].LayPrices[2].Size)
 	})
 
 	t.Run("returns no event error if events response is empty", func(t *testing.T) {
