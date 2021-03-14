@@ -10,8 +10,8 @@ import (
 )
 
 type Publisher struct {
-	client snsiface.SNSAPI
-	topicArn  string
+	client   snsiface.SNSAPI
+	topicArn string
 }
 
 func (p *Publisher) PublishMarket(m *sport.EventMarket) error {

@@ -52,7 +52,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 					Rfc: "2019-01-14T11:00:00Z",
 				},
 				Competition: &statistico.Competition{Id: 8},
-				Season: &statistico.Season{Id: 17420},
+				Season:      &statistico.Season{Id: 17420},
 			},
 		}
 

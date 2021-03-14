@@ -53,7 +53,7 @@ func (b *builder) buildMarket(ctx context.Context, q *BuilderQuery, market strin
 		wg.Done()
 		return
 	}
-	
+
 	m := Market{
 		ID:              bm.ID,
 		EventID:         q.EventID,
@@ -100,7 +100,7 @@ func (b *builder) logError(e error, eventID uint64, market string) {
 
 func NewBuilder(m exchange.MarketRequester, l *logrus.Logger) Builder {
 	return &builder{
-		exchange:       m,
-		logger:         l,
+		exchange: m,
+		logger:   l,
 	}
 }

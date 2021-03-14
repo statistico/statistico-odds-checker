@@ -15,16 +15,16 @@ import (
 
 func TestMarketRequester_Fetch(t *testing.T) {
 	url := betfair.BaseURLs{
-		Accounts:  "https://mock.com",
-		Betting:   "https://mock.com",
-		Login:     "https://mock.com/login",
+		Accounts: "https://mock.com",
+		Betting:  "https://mock.com",
+		Login:    "https://mock.com/login",
 	}
 
 	q := exchange.Query{
-		Event: "West Ham United v Manchester City",
-		Date:          time.Date(2020, 10, 24, 12, 30, 00, 0, time.UTC),
-		Market:        "OVER_UNDER_25",
-		Sport: "football",
+		Event:  "West Ham United v Manchester City",
+		Date:   time.Date(2020, 10, 24, 12, 30, 00, 0, time.UTC),
+		Market: "OVER_UNDER_25",
+		Sport:  "football",
 	}
 
 	t.Run("calls betfair service using client and returns a exchange market struct", func(t *testing.T) {

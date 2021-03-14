@@ -11,14 +11,14 @@ type EventMarketRequester interface {
 }
 
 type EventMarket struct {
-	ID              string             `json:"id"`
-	EventID         uint64             `json:"eventId"`
-	CompetitionID   uint64             `json:"competitionId"`
-	SeasonID        uint64             `json:"seasonId"`
-	Sport           string             `json:"sport"`
-	EventDate       string             `json:"date"`
-	MarketName      string             `json:"name"`
-	Exchange        string             `json:"exchange"`
-	Runners         []*exchange.Runner `json:"runners"`
-	Timestamp       int64              `json:"timestamp"`
+	ID            string             `json:"id"`
+	EventID       uint64             `json:"eventId"`
+	CompetitionID uint64             `json:"competitionId"`
+	SeasonID      uint64             `json:"seasonId"`
+	Sport         string             `json:"sport"`
+	EventDate     string             `json:"date"`
+	MarketName    string             `json:"name"`
+	Exchange      string             `json:"exchange"`
+	Runners       []*exchange.Runner `json:"runners"`
+	Timestamp     int64              `json:"timestamp"`
 }

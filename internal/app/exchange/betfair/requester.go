@@ -43,7 +43,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	catalogue, err := m.betfairClient.ListMarketCatalogue(ctx, req)
 
 	if err != nil {
-		return nil, &exchange.ClientError{Context: "market catalogue", E:err}
+		return nil, &exchange.ClientError{Context: "market catalogue", E: err}
 	}
 
 	if len(catalogue) == 0 {
@@ -51,11 +51,11 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	}
 
 	if len(catalogue) > 1 {
-		return nil, &exchange.MultipleEventMarketsError{EventID: strings.Join(req.Filter.EventIDs,  ",")}
+		return nil, &exchange.MultipleEventMarketsError{EventID: strings.Join(req.Filter.EventIDs, ",")}
 	}
 
 	market := exchange.Market{
-		ID: catalogue[0].MarketID,
+		ID:           catalogue[0].MarketID,
 		ExchangeName: "betfair",
 	}
 
@@ -67,11 +67,11 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 		}
 
 		r := &exchange.Runner{
-			ID:     runner.SelectionID,
-			Name:   runner.RunnerName,
-			Sort:   runner.SortPriority,
+			ID:         runner.SelectionID,
+			Name:       runner.RunnerName,
+			Sort:       runner.SortPriority,
 			BackPrices: back,
-			LayPrices: lay,
+			LayPrices:  lay,
 		}
 
 		market.Runners = append(market.Runners, r)
@@ -84,7 +84,7 @@ func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.Lis
 	response, err := m.betfairClient.ListRunnerBook(ctx, req)
 
 	if err != nil {
-		return nil, nil, &exchange.ClientError{Context: "list runner book", E:err}
+		return nil, nil, &exchange.ClientError{Context: "list runner book", E: err}
 	}
 
 	if len(response) != 1 {
@@ -130,12 +130,12 @@ func buildEventsRequest(q *exchange.Query) betfair.ListEventsRequest {
 
 	dates := betfair.TimeRange{
 		From: from.Format(time.RFC3339),
-		To: to.Format(time.RFC3339),
+		To:   to.Format(time.RFC3339),
 	}
 
 	filter := betfair.MarketFilter{
-		TextQuery:          text,
-		MarketStartTime:    dates,
+		TextQuery:       text,
+		MarketStartTime: dates,
 	}
 
 	return betfair.ListEventsRequest{Filter: filter}
@@ -147,14 +147,14 @@ func buildMarketCatalogueRequest(eventID string, q *exchange.Query) betfair.List
 	projection := []string{"RUNNER_METADATA"}
 
 	filter := betfair.MarketFilter{
-		EventIDs: eventIDs,
+		EventIDs:        eventIDs,
 		MarketTypeCodes: codes,
 	}
 
 	return betfair.ListMarketCatalogueRequest{
-		Filter: filter,
+		Filter:           filter,
 		MarketProjection: projection,
-		MaxResults: 1,
+		MaxResults:       1,
 	}
 }
 
@@ -162,9 +162,9 @@ func buildRunnerBookRequest(marketID string, selectionID uint64) betfair.ListRun
 	projection := betfair.PriceProjection{PriceData: []string{"EX_BEST_OFFERS"}}
 
 	return betfair.ListRunnerBookRequest{
-		MarketID:         marketID,
-		SelectionID:      selectionID,
-		PriceProjection:  projection,
+		MarketID:        marketID,
+		SelectionID:     selectionID,
+		PriceProjection: projection,
 	}
 }
 

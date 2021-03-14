@@ -4,7 +4,7 @@ import "fmt"
 
 type ClientError struct {
 	Context string
-	E error
+	E       error
 }
 
 func (c *ClientError) Error() string {
@@ -20,7 +20,7 @@ func (m *MultipleEventMarketsError) Error() string {
 }
 
 type MultipleMarketSelectionError struct {
-	EventID string
+	EventID     string
 	SelectionID uint64
 }
 
@@ -28,7 +28,7 @@ func (m *MultipleMarketSelectionError) Error() string {
 	return fmt.Sprintf("Multiple selections returned for market %s and selection %d", m.EventID, m.SelectionID)
 }
 
-type NoEventMarketError struct {}
+type NoEventMarketError struct{}
 
 func (m *NoEventMarketError) Error() string {
 	return fmt.Sprintf("No markets returned for event and market")
