@@ -73,7 +73,6 @@ func convertToEventMarket(m *market.Market, fix *statistico.Fixture, timestamp t
 		Sport:         football,
 		EventDate:     fix.DateTime.Rfc,
 		MarketName:    m.Name,
-		Side:          m.Side,
 		Exchange:      m.Exchange,
 		Runners:       m.ExchangeRunners,
 		Timestamp:     timestamp.Unix(),

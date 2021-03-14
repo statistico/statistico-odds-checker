@@ -82,22 +82,22 @@ func TestMarketRequester_Fetch(t *testing.T) {
 		a.Equal(uint64(47972), market.Runners[0].ID)
 		a.Equal("Under 2.5 Goals", market.Runners[0].Name)
 		a.Equal(1, market.Runners[0].Sort)
-		a.Equal(float32(2.96), market.Runners[0].Prices[0].Price)
-		a.Equal(float32(152.84), market.Runners[0].Prices[0].Size)
-		a.Equal(float32(2.9), market.Runners[0].Prices[1].Price)
-		a.Equal(float32(34.5), market.Runners[0].Prices[1].Size)
-		a.Equal(float32(2.88), market.Runners[0].Prices[2].Price)
-		a.Equal(float32(91.04), market.Runners[0].Prices[2].Size)
+		a.Equal(float32(2.96), market.Runners[0].BackPrices[0].Price)
+		a.Equal(float32(152.84), market.Runners[0].BackPrices[0].Size)
+		a.Equal(float32(2.9), market.Runners[0].BackPrices[1].Price)
+		a.Equal(float32(34.5), market.Runners[0].BackPrices[1].Size)
+		a.Equal(float32(2.88), market.Runners[0].BackPrices[2].Price)
+		a.Equal(float32(91.04), market.Runners[0].BackPrices[2].Size)
 
 		a.Equal(uint64(47973), market.Runners[1].ID)
 		a.Equal("Over 2.5 Goals", market.Runners[1].Name)
 		a.Equal(2, market.Runners[1].Sort)
-		a.Equal(float32(2.96), market.Runners[1].Prices[0].Price)
-		a.Equal(float32(152.84), market.Runners[1].Prices[0].Size)
-		a.Equal(float32(2.9), market.Runners[1].Prices[1].Price)
-		a.Equal(float32(34.5), market.Runners[1].Prices[1].Size)
-		a.Equal(float32(2.88), market.Runners[1].Prices[2].Price)
-		a.Equal(float32(91.04), market.Runners[1].Prices[2].Size)
+		a.Equal(float32(2.96), market.Runners[0].BackPrices[0].Price)
+		a.Equal(float32(152.84), market.Runners[0].BackPrices[0].Size)
+		a.Equal(float32(2.9), market.Runners[0].BackPrices[1].Price)
+		a.Equal(float32(34.5), market.Runners[0].BackPrices[1].Size)
+		a.Equal(float32(2.88), market.Runners[0].BackPrices[2].Price)
+		a.Equal(float32(91.04), market.Runners[0].BackPrices[2].Size)
 	})
 
 	t.Run("returns no event error if events response is empty", func(t *testing.T) {
@@ -304,6 +304,20 @@ var runnersResponse = `[
         "totalMatched": 0.0,
         "ex": {
           "availableToBack": [
+            {
+              "price": 2.96,
+              "size": 152.84
+            },
+            {
+              "price": 2.9,
+              "size": 34.5
+            },
+            {
+              "price": 2.88,
+              "size": 91.04
+            }
+          ],
+          "availableToLay": [
             {
               "price": 2.96,
               "size": 152.84

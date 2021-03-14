@@ -17,7 +17,6 @@ type Query struct {
 type Market struct {
 	ID           string    `json:"id"`
 	ExchangeName string    `json:"exchange"`
-	Side         string    `json:"side"`
 	Runners      []*Runner `json:"runners"`
 }
 
@@ -38,11 +37,11 @@ type Runner struct {
 	ID     uint64      `json:"id"`
 	Name   string      `json:"name"`
 	Sort   int         `json:"sort"`
-	Prices []PriceSize `json:"prices"`
+	BackPrices   []PriceSize `json:"backPrices"`
+	LayPrices   []PriceSize `json:"layPrices"`
 }
 
 type PriceSize struct {
 	Price float32 `json:"price"`
 	Size  float32 `json:"size"`
-	Side  string  `json:"side"`
 }

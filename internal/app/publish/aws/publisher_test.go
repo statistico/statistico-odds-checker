@@ -22,9 +22,9 @@ func TestPublisher_PublishMarket(t *testing.T) {
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
 			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
-				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\",\"side\":\"BACK\"," +
+				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\"," +
 				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\",\"sort\":1," +
-				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
+				"\"backPrices\":[{\"price\":1.95,\"size\":1461}],\"layPrices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
 			assert.Equal(t, "my-topic-arn", *i.TopicArn)
@@ -50,9 +50,9 @@ func TestPublisher_PublishMarket(t *testing.T) {
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
 			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
-				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\",\"side\":\"BACK\"," +
+				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\"," +
 				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\",\"sort\":1,"+
-				"\"prices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
+				"\"backPrices\":[{\"price\":1.95,\"size\":1461}],\"layPrices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
 			assert.Equal(t, "my-topic-arn", *i.TopicArn)
@@ -78,14 +78,19 @@ func eventMarket() *sport.EventMarket {
 		Sport:          "football",
 		EventDate:      "2019-01-14T11:00:00Z",
 		MarketName:     "1X2",
-		Side:           "BACK",
 		Exchange:       "betfair",
 		Runners: []*exchange.Runner{
 			{
 				ID: 14571761,
 				Name: "Over 2.5 Goals",
 				Sort: 1,
-				Prices: []exchange.PriceSize{
+				BackPrices: []exchange.PriceSize{
+					{
+						Price: 1.95,
+						Size: 1461.00,
+					},
+				},
+				LayPrices: []exchange.PriceSize{
 					{
 						Price: 1.95,
 						Size: 1461.00,

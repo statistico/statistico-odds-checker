@@ -60,7 +60,6 @@ func TestBuilder_Build(t *testing.T) {
 		a.Equal(uint64(1278121), one.EventID)
 		a.Equal("betfair", one.Exchange)
 		a.Equal("OVER_UNDER_25", one.Name)
-		a.Equal("BACK", one.Side)
 		a.Equal(mk.Runners, one.ExchangeRunners)
 		assert.Nil(t, hook.LastEntry())
 		mr.AssertExpectations(t)
@@ -115,12 +114,11 @@ func bookmakerMarket(marketId string) *exchange.Market {
 	return &exchange.Market{
 		ID:           marketId,
 		ExchangeName: "betfair",
-		Side:         "BACK",
 		Runners: []*exchange.Runner{
 			{
 				ID:   49792,
 				Name: "Over 2.5 Goals",
-				Prices: []exchange.PriceSize{
+				BackPrices: []exchange.PriceSize{
 					{
 						Price: 1.54,
 						Size:  1301.00,

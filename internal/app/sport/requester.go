@@ -18,7 +18,6 @@ type EventMarket struct {
 	Sport           string             `json:"sport"`
 	EventDate       string             `json:"date"`
 	MarketName      string             `json:"name"`
-	Side            string             `json:"side"`
 	Exchange        string             `json:"exchange"`
 	Runners         []*exchange.Runner `json:"runners"`
 	Timestamp       int64              `json:"timestamp"`
