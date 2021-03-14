@@ -43,7 +43,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	catalogue, err := m.betfairClient.ListMarketCatalogue(ctx, req)
 
 	if err != nil {
-		return nil, &exchange.ClientError{Context: "market catalogue", E:err}
+		return nil, &exchange.ClientError{Context: "market catalogue", E: err}
 	}
 
 	if len(catalogue) == 0 {
@@ -51,27 +51,27 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	}
 
 	if len(catalogue) > 1 {
-		return nil, &exchange.MultipleEventMarketsError{EventID: strings.Join(req.Filter.EventIDs,  ",")}
+		return nil, &exchange.MultipleEventMarketsError{EventID: strings.Join(req.Filter.EventIDs, ",")}
 	}
 
 	market := exchange.Market{
-		ID: catalogue[0].MarketID,
+		ID:           catalogue[0].MarketID,
 		ExchangeName: "betfair",
-		Side: "BACK",
 	}
 
 	for _, runner := range catalogue[0].Runners {
-		prices, err := m.parseRunnerPrices(ctx, buildRunnerBookRequest(market.ID, runner.SelectionID))
+		back, lay, err := m.parseRunnerPrices(ctx, buildRunnerBookRequest(market.ID, runner.SelectionID))
 
 		if err != nil {
 			return nil, err
 		}
 
 		r := &exchange.Runner{
-			ID:     runner.SelectionID,
-			Name:   runner.RunnerName,
-			Sort:   runner.SortPriority,
-			Prices: prices,
+			ID:         runner.SelectionID,
+			Name:       runner.RunnerName,
+			Sort:       runner.SortPriority,
+			BackPrices: back,
+			LayPrices:  lay,
 		}
 
 		market.Runners = append(market.Runners, r)
@@ -80,18 +80,19 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	return &market, nil
 }
 
-func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.ListRunnerBookRequest) ([]exchange.PriceSize, error) {
+func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.ListRunnerBookRequest) ([]exchange.PriceSize, []exchange.PriceSize, error) {
 	response, err := m.betfairClient.ListRunnerBook(ctx, req)
 
 	if err != nil {
-		return nil, &exchange.ClientError{Context: "list runner book", E:err}
+		return nil, nil, &exchange.ClientError{Context: "list runner book", E: err}
 	}
 
-	if len(response) > 1 {
-		return nil, &exchange.MultipleMarketSelectionError{EventID: req.MarketID, SelectionID: req.SelectionID}
+	if len(response) != 1 {
+		return nil, nil, &exchange.MultipleMarketSelectionError{EventID: req.MarketID, SelectionID: req.SelectionID}
 	}
 
-	prices := []exchange.PriceSize{}
+	back := []exchange.PriceSize{}
+	lay := []exchange.PriceSize{}
 
 	for _, runner := range response[0].Runners {
 		for _, price := range runner.EX.AvailableToBack {
@@ -100,11 +101,20 @@ func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.Lis
 				Size:  price.Size,
 			}
 
-			prices = append(prices, ps)
+			back = append(back, ps)
+		}
+
+		for _, price := range runner.EX.AvailableToLay {
+			ps := exchange.PriceSize{
+				Price: price.Price,
+				Size:  price.Size,
+			}
+
+			lay = append(lay, ps)
 		}
 	}
 
-	return prices, nil
+	return back, lay, nil
 }
 
 func buildEventsRequest(q *exchange.Query) betfair.ListEventsRequest {
@@ -120,12 +130,12 @@ func buildEventsRequest(q *exchange.Query) betfair.ListEventsRequest {
 
 	dates := betfair.TimeRange{
 		From: from.Format(time.RFC3339),
-		To: to.Format(time.RFC3339),
+		To:   to.Format(time.RFC3339),
 	}
 
 	filter := betfair.MarketFilter{
-		TextQuery:          text,
-		MarketStartTime:    dates,
+		TextQuery:       text,
+		MarketStartTime: dates,
 	}
 
 	return betfair.ListEventsRequest{Filter: filter}
@@ -137,14 +147,14 @@ func buildMarketCatalogueRequest(eventID string, q *exchange.Query) betfair.List
 	projection := []string{"RUNNER_METADATA"}
 
 	filter := betfair.MarketFilter{
-		EventIDs: eventIDs,
+		EventIDs:        eventIDs,
 		MarketTypeCodes: codes,
 	}
 
 	return betfair.ListMarketCatalogueRequest{
-		Filter: filter,
+		Filter:           filter,
 		MarketProjection: projection,
-		MaxResults: 1,
+		MaxResults:       1,
 	}
 }
 
@@ -152,9 +162,9 @@ func buildRunnerBookRequest(marketID string, selectionID uint64) betfair.ListRun
 	projection := betfair.PriceProjection{PriceData: []string{"EX_BEST_OFFERS"}}
 
 	return betfair.ListRunnerBookRequest{
-		MarketID:         marketID,
-		SelectionID:      selectionID,
-		PriceProjection:  projection,
+		MarketID:        marketID,
+		SelectionID:     selectionID,
+		PriceProjection: projection,
 	}
 }
 

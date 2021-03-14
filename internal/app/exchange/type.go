@@ -17,7 +17,6 @@ type Query struct {
 type Market struct {
 	ID           string    `json:"id"`
 	ExchangeName string    `json:"exchange"`
-	Side         string    `json:"side"`
 	Runners      []*Runner `json:"runners"`
 }
 
@@ -35,10 +34,11 @@ func (m *Market) Scan(value interface{}) error {
 }
 
 type Runner struct {
-	ID     uint64      `json:"id"`
-	Name   string      `json:"name"`
-	Sort   int         `json:"sort"`
-	Prices []PriceSize `json:"prices"`
+	ID         uint64      `json:"id"`
+	Name       string      `json:"name"`
+	Sort       int         `json:"sort"`
+	BackPrices []PriceSize `json:"backPrices"`
+	LayPrices  []PriceSize `json:"layPrices"`
 }
 
 type PriceSize struct {
