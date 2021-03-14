@@ -44,4 +44,5 @@ type Runner struct {
 type PriceSize struct {
 	Price float32 `json:"price"`
 	Size  float32 `json:"size"`
+	Side  string  `json:"side"`
 }
