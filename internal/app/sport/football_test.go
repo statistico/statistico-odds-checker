@@ -49,7 +49,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 				},
 				DateTime: &statistico.Date{
 					Utc: 1547465400,
-					Rfc: "2019-01-14T11:00:00Z",
+					Rfc: "2019-01-14T12:00:00Z",
 				},
 				Competition: &statistico.Competition{Id: 8},
 				Season:      &statistico.Season{Id: 17420},
@@ -101,7 +101,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		a.Equal(uint64(8), emOne.CompetitionID)
 		a.Equal(uint64(17420), emOne.SeasonID)
 		a.Equal("football", emOne.Sport)
-		a.Equal("2019-01-14T11:00:00Z", emOne.EventDate)
+		a.Equal("2019-01-14T12:00:00Z", emOne.EventDate)
 		a.Equal("OVER_UNDER_25", emOne.MarketName)
 		a.Equal("betfair", emOne.Exchange)
 		a.Equal([]*exchange.Runner{}, emOne.Runners)
@@ -112,11 +112,115 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		a.Equal(uint64(8), emOne.CompetitionID)
 		a.Equal(uint64(17420), emOne.SeasonID)
 		a.Equal("football", emTwo.Sport)
-		a.Equal("2019-01-14T11:00:00Z", emTwo.EventDate)
+		a.Equal("2019-01-14T12:00:00Z", emTwo.EventDate)
 		a.Equal("MATCH_ODDS", emTwo.MarketName)
 		a.Equal("betfair", emTwo.Exchange)
 		a.Equal([]*exchange.Runner{}, emTwo.Runners)
 		a.Equal(int64(1547465100), emTwo.Timestamp)
+	})
+
+	t.Run("builder is not called if fixture date and current date difference is greater than three hours", func(t *testing.T) {
+		t.Helper()
+
+		fixClient := new(MockFixtureClient)
+		builder := new(market.MockMarketBuilder)
+		logger, _ := test.NewNullLogger()
+		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
+		seasons := []uint64{1234, 5678}
+		markets := []string{"OVER_UNDER_25", "1X2"}
+
+		r := sport.NewFootballEventMarketRequester(fixClient, builder, logger, clock, seasons, markets)
+
+		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
+			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
+			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
+			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
+			return true
+		})
+
+		fixtures := []*statistico.Fixture{
+			{
+				Id: 349811,
+				HomeTeam: &statistico.Team{
+					Name: "West Ham United",
+				},
+				AwayTeam: &statistico.Team{
+					Name: "Arsenal",
+				},
+				DateTime: &statistico.Date{
+					Utc: 1547496000,
+					Rfc: "2019-01-14T20:00:00Z",
+				},
+				Competition: &statistico.Competition{Id: 8},
+				Season:      &statistico.Season{Id: 17420},
+			},
+		}
+
+		ctx := context.Background()
+		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
+		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
+
+		fixClient.On("Search", ctx, fixReq).Return(fixtures, nil)
+
+		builder.AssertNotCalled(t, "Build")
+
+		ch := r.FindEventMarkets(ctx, from, to)
+
+		one := <-ch
+
+		assert.Nil(t, one)
+	})
+
+	t.Run("build is not called if fixture date and current date difference is less than zero", func(t *testing.T) {
+		t.Helper()
+
+		fixClient := new(MockFixtureClient)
+		builder := new(market.MockMarketBuilder)
+		logger, _ := test.NewNullLogger()
+		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
+		seasons := []uint64{1234, 5678}
+		markets := []string{"OVER_UNDER_25", "1X2"}
+
+		r := sport.NewFootballEventMarketRequester(fixClient, builder, logger, clock, seasons, markets)
+
+		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
+			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
+			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
+			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
+			return true
+		})
+
+		fixtures := []*statistico.Fixture{
+			{
+				Id: 349811,
+				HomeTeam: &statistico.Team{
+					Name: "West Ham United",
+				},
+				AwayTeam: &statistico.Team{
+					Name: "Arsenal",
+				},
+				DateTime: &statistico.Date{
+					Utc: 1547496000,
+					Rfc: "2019-01-14T10:00:00Z",
+				},
+				Competition: &statistico.Competition{Id: 8},
+				Season:      &statistico.Season{Id: 17420},
+			},
+		}
+
+		ctx := context.Background()
+		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
+		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
+
+		fixClient.On("Search", ctx, fixReq).Return(fixtures, nil)
+
+		builder.AssertNotCalled(t, "Build")
+
+		ch := r.FindEventMarkets(ctx, from, to)
+
+		one := <-ch
+
+		assert.Nil(t, one)
 	})
 
 	t.Run("returns nil if error fetching fixtures via fixture client", func(t *testing.T) {

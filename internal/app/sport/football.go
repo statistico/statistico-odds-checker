@@ -48,6 +48,12 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 	for _, fx := range fixtures {
 		date := time.Unix(fx.DateTime.Utc, 0)
 
+		diff := date.Sub(f.clock.Now()).Hours()
+
+		if diff >= 3 || diff < 0 {
+			continue
+		}
+
 		q := market.BuilderQuery{
 			Date:    date,
 			Event:   fmt.Sprintf("%s v %s", fx.HomeTeam.Name, fx.AwayTeam.Name),
