@@ -48,7 +48,9 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 	for _, fx := range fixtures {
 		date := time.Unix(fx.DateTime.Utc, 0)
 
-		if date.Sub(f.clock.Now()).Hours() >= 3 {
+		diff := date.Sub(f.clock.Now()).Hours()
+
+		if diff >= 3 || diff < 0 {
 			continue
 		}
 
