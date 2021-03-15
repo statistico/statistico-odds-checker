@@ -13,11 +13,11 @@ require (
 	github.com/sirupsen/logrus v1.7.0
 	github.com/statistico/statistico-betfair-go-client v0.0.0-20201023150329-c5c14d4fe285
 	github.com/statistico/statistico-data-go-grpc-client v0.0.0-20210304111754-06d36f5426e2
-	github.com/statistico/statistico-proto/go v0.0.0-20210127141535-19abef3f9457
+	github.com/statistico/statistico-proto/go v0.0.0-20210314191446-a6cf7fca9658
 	github.com/stretchr/testify v1.7.0
 	golang.org/x/net v0.0.0-20210226172049-e18ecbb05110 // indirect
-	golang.org/x/sys v0.0.0-20210303074136-134d130e1a04 // indirect
-	google.golang.org/genproto v0.0.0-20210303154014-9728d6b83eeb // indirect
+	golang.org/x/sys v0.0.0-20210314195730-07df6a141424 // indirect
+	google.golang.org/genproto v0.0.0-20210312152112-fc591d9ea70f // indirect
 	google.golang.org/grpc v1.36.0
 	google.golang.org/protobuf v1.25.1-0.20201208041424-160c7477e0e8 // indirect
 	gopkg.in/yaml.v2 v2.3.0 // indirect
