@@ -119,7 +119,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		a.Equal(int64(1547465100), emTwo.Timestamp)
 	})
 
-	t.Run("builder is not called if fixture date and current date difference is greater than three hours", func(t *testing.T) {
+	t.Run("builder is not called if fixture date and current date difference is greater than two hours", func(t *testing.T) {
 		t.Helper()
 
 		fixClient := new(MockFixtureClient)
