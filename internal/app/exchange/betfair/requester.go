@@ -20,7 +20,9 @@ func (m *MarketRequester) Fetch(ctx context.Context, q *exchange.Query) (*exchan
 		return nil, err
 	}
 
-	return m.parseMarket(ctx, buildMarketCatalogueRequest(event.ID, q))
+	req := buildMarketCatalogueRequest(event.ID, q)
+
+	return m.parseMarket(ctx, req, q)
 }
 
 func (m *MarketRequester) getEvent(ctx context.Context, q *exchange.Query) (*betfair.Event, error) {
@@ -39,7 +41,7 @@ func (m *MarketRequester) getEvent(ctx context.Context, q *exchange.Query) (*bet
 	return &events[0].Event, nil
 }
 
-func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarketCatalogueRequest) (*exchange.Market, error) {
+func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarketCatalogueRequest, q *exchange.Query) (*exchange.Market, error) {
 	catalogue, err := m.betfairClient.ListMarketCatalogue(ctx, req)
 
 	if err != nil {
@@ -56,6 +58,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 
 	market := exchange.Market{
 		ID:           catalogue[0].MarketID,
+		Name:         q.Market,
 		ExchangeName: "betfair",
 	}
 
@@ -68,8 +71,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 
 		r := &exchange.Runner{
 			ID:         runner.SelectionID,
-			Name:       runner.RunnerName,
-			Sort:       runner.SortPriority,
+			Name:       parseRunnerName(&runner, q.Market),
 			BackPrices: back,
 			LayPrices:  lay,
 		}

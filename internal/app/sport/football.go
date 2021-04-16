@@ -50,7 +50,7 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 
 		diff := date.Sub(f.clock.Now()).Hours()
 
-		if diff >= 3 || diff < 0 {
+		if diff >= 2 || diff < 0 {
 			continue
 		}
 

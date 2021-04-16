@@ -119,7 +119,7 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		a.Equal(int64(1547465100), emTwo.Timestamp)
 	})
 
-	t.Run("builder is not called if fixture date and current date difference is greater than three hours", func(t *testing.T) {
+	t.Run("builder is not called if fixture date and current date difference is greater than two hours", func(t *testing.T) {
 		t.Helper()
 
 		fixClient := new(MockFixtureClient)
@@ -279,4 +279,9 @@ type MockFixtureClient struct {
 func (m *MockFixtureClient) Search(ctx context.Context, req *statistico.FixtureSearchRequest) ([]*statistico.Fixture, error) {
 	args := m.Called(ctx, req)
 	return args.Get(0).([]*statistico.Fixture), args.Error(1)
+}
+
+func (m *MockFixtureClient) ByID(ctx context.Context, fixtureID uint64) (*statistico.Fixture, error) {
+	args := m.Called(ctx, fixtureID)
+	return args.Get(0).(*statistico.Fixture), args.Error(1)
 }
