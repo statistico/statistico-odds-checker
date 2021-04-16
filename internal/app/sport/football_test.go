@@ -280,3 +280,8 @@ func (m *MockFixtureClient) Search(ctx context.Context, req *statistico.FixtureS
 	args := m.Called(ctx, req)
 	return args.Get(0).([]*statistico.Fixture), args.Error(1)
 }
+
+func (m *MockFixtureClient) ByID(ctx context.Context, fixtureID uint64) (*statistico.Fixture, error) {
+	args := m.Called(ctx, fixtureID)
+	return args.Get(0).(*statistico.Fixture), args.Error(1)
+}

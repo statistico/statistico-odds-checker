@@ -113,6 +113,7 @@ func TestBuilder_Build(t *testing.T) {
 func bookmakerMarket(marketId string) *exchange.Market {
 	return &exchange.Market{
 		ID:           marketId,
+		Name:         "OVER_UNDER_25",
 		ExchangeName: "betfair",
 		Runners: []*exchange.Runner{
 			{
