@@ -45,19 +45,17 @@ func BuildConfig() *Config {
 
 	config.FootballConfig = FootballConfig{
 		SupportedSeasons: []uint64{
-			16838, // Sweden - Allsvenskan
-			17138, // Belgium - Pro League
-			17141, // Scotland - Premier League
-			17160, // France - Ligue 1
-			17228, // Holland - Eredivisie,
-			17361, // Germany - Bundesliga
-			17420, // England - Premier League
-			17428, // England - Championship
-			17426, // England - League One
-			17427, // England - League Two
-			17463, // Portugal - Primeira Liga
-			17480, // Spain - La Liga
-			17488, // Italy - Serie A
+			17894, // Sweden - Allsvenskan
+			18348, // Belgium - Pro League
+			18369, // Scotland - Premier League
+			18441, // France - Ligue 1
+			18350, // Holland - Eredivisie,
+			18444, // Germany - Bundesliga
+			18378, // England - Premier League
+			18432, // England - Championship
+			18529, // Portugal - Primeira Liga
+			18462, // Spain - La Liga
+			18608, // Italy - Serie A
 		},
 		Markets: []string{
 			"BOTH_TEAMS_TO_SCORE",
