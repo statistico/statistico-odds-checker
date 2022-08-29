@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const Football = "football"
+const Football = "FOOTBALL"
 
 type Processor struct {
 	football  sp.EventMarketRequester

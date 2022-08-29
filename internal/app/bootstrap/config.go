@@ -8,7 +8,7 @@ type Config struct {
 	FootballConfig
 	Publisher string
 	Sentry
-	StatisticoDataService
+	StatisticoFootballDataService
 }
 
 type AwsConfig struct {
@@ -33,7 +33,7 @@ type Sentry struct {
 	DSN string
 }
 
-type StatisticoDataService struct {
+type StatisticoFootballDataService struct {
 	Host string
 	Port string
 }
@@ -45,21 +45,16 @@ func BuildConfig() *Config {
 
 	config.FootballConfig = FootballConfig{
 		SupportedSeasons: []uint64{
-			17894, // Sweden - Allsvenskan
-			18348, // Belgium - Pro League
-			18369, // Scotland - Premier League
-			18441, // France - Ligue 1
-			18350, // Holland - Eredivisie,
-			18444, // Germany - Bundesliga
-			18378, // England - Premier League
-			18432, // England - Championship
-			18529, // Portugal - Primeira Liga
-			18462, // Spain - La Liga
-			18608, // Italy - Serie A
+			19734, // England - Premier League
+			19793, // England - Championship
+			19794, // England - League One
+			19795, // England - League Two
+			19917, // England - National League,
 		},
 		Markets: []string{
 			"BOTH_TEAMS_TO_SCORE",
 			"MATCH_ODDS",
+			"MATCH_SHOTS",
 			"OVER_UNDER_05",
 			"OVER_UNDER_15",
 			"OVER_UNDER_25",
@@ -91,9 +86,9 @@ func BuildConfig() *Config {
 
 	config.Sentry = Sentry{DSN: os.Getenv("SENTRY_DSN")}
 
-	config.StatisticoDataService = StatisticoDataService{
-		Host: os.Getenv("STATISTICO_DATA_SERVICE_HOST"),
-		Port: os.Getenv("STATISTICO_DATA_SERVICE_PORT"),
+	config.StatisticoFootballDataService = StatisticoFootballDataService{
+		Host: os.Getenv("STATISTICO_FOOTBALL_DATA_SERVICE_HOST"),
+		Port: os.Getenv("STATISTICO_FOOTBALL_DATA_SERVICE_PORT"),
 	}
 
 	return &config
