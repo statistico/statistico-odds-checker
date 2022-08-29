@@ -2,68 +2,84 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
-	"github.com/jonboulle/clockwork"
 	"github.com/statistico/statistico-odds-checker/internal/app/bootstrap"
+	"github.com/urfave/cli"
 	"os"
 	"time"
 )
 
-var sport = flag.String("sport", "", "The sport to check odds for")
-var dateFrom = flag.String("dateFrom", "", "Date range to begin from")
-var dateTo = flag.String("dateTo", "", "Date range to end at")
-
 func main() {
 	app := bootstrap.BuildContainer(bootstrap.BuildConfig())
+
 	processor := app.Processor()
 	clock := app.Clock
 
-	flag.Parse()
+	console := &cli.App{
+		Name: "Statistico Odds Checker - Command Line Application",
+		Commands: []cli.Command{
+			{
+				Name:      "market:fetch",
+				Usage:     "Fetch and parse markets for supported competitions",
+				UsageText: "Fetch and parse markets for supported competitions",
+				Before: func(c *cli.Context) error {
+					fmt.Println("[INFO] Building and publishing markets")
+					return nil
+				},
+				After: func(c *cli.Context) error {
+					fmt.Println("[INFO] Complete")
+					return nil
+				},
+				Action: func(c *cli.Context) error {
+					from, err := time.Parse(time.RFC3339, c.String("from"))
 
-	ctx := context.Background()
-	from := parseDateFrom(clock)
-	to := parseDateTo(clock)
+					if err != nil {
+						return err
+					}
 
-	fmt.Println("[INFO] Building and publishing markets...")
+					to, err := time.Parse(time.RFC3339, c.String("to"))
 
-	err := processor.Process(ctx, *sport, from, to)
+					if err != nil {
+						return err
+					}
+
+					ctx := context.Background()
+
+					if err = processor.Process(ctx, c.String("sport"), from, to); err != nil {
+						return err
+					}
+
+					return nil
+				},
+				Flags: []cli.Flag{
+					&cli.StringFlag{
+						Name:     "sport",
+						Usage:    "Sport to fetch events and markets for",
+						Required: true,
+					},
+					&cli.StringFlag{
+						Name:     "from",
+						Usage:    "Find events with start date/time after value provided",
+						Value:    clock.Now().Format(time.RFC3339),
+						Required: false,
+					},
+					&cli.StringFlag{
+						Name:     "to",
+						Usage:    "Find events with start date/time before value provided",
+						Value:    clock.Now().Add(time.Minute * 70).Format(time.RFC3339),
+						Required: false,
+					},
+				},
+			},
+		},
+	}
+
+	err := console.Run(os.Args)
 
 	if err != nil {
-		fmt.Printf("Error parsing markets: %s", err.Error())
+		fmt.Printf("Error in executing command: %s\n", err.Error())
 		os.Exit(1)
 	}
 
-	fmt.Println("[INFO] Complete")
 	os.Exit(0)
-}
-
-func parseDateFrom(clock clockwork.Clock) time.Time {
-	if *dateFrom == "" {
-		return clock.Now()
-	}
-
-	from, err := time.Parse(time.RFC3339, *dateFrom)
-
-	if err != nil {
-		fmt.Printf("Error parsing date from %q", err)
-		os.Exit(1)
-	}
-
-	return from
-}
-
-func parseDateTo(clock clockwork.Clock) time.Time {
-	if *dateTo == "" {
-		return clock.Now().Add(time.Hour * 12)
-	}
-
-	to, err := time.Parse(time.RFC3339, *dateTo)
-
-	if err != nil {
-		fmt.Printf("Error parsing date to %q", err)
-		os.Exit(1)
-	}
-
-	return to
 }

@@ -8,7 +8,7 @@ import (
 func (c Container) GrpcFixtureClient() statistico.FixtureServiceClient {
 	config := c.Config
 
-	address := config.StatisticoDataService.Host + ":" + config.StatisticoDataService.Port
+	address := config.StatisticoFootballDataService.Host + ":" + config.StatisticoFootballDataService.Port
 
 	conn, err := grpc.Dial(address, grpc.WithInsecure())
 

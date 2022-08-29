@@ -4,6 +4,9 @@ services:
     build:
       dockerfile: ./.docker/Dockerfile
       context: .
+    networks:
+      - statistico-odds-checker_default
+      - statistico_internal
     tty: true
 
   test:
@@ -12,3 +15,9 @@ services:
       context: .
     volumes:
       - .:/opt
+
+networks:
+  statistico-odds-checker_default:
+    external: false
+  statistico_internal:
+    external: true
