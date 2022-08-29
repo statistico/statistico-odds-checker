@@ -59,7 +59,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	market := exchange.Market{
 		ID:           catalogue[0].MarketID,
 		Name:         q.Market,
-		ExchangeName: "betfair",
+		ExchangeName: "BETFAIR",
 	}
 
 	for _, runner := range catalogue[0].Runners {
