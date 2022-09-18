@@ -66,7 +66,7 @@ func main() {
 					&cli.StringFlag{
 						Name:     "to",
 						Usage:    "Find events with start date/time before value provided",
-						Value:    clock.Now().Add(time.Minute * 70).Format(time.RFC3339),
+						Value:    clock.Now().Add(time.Hour * 12).Format(time.RFC3339),
 						Required: false,
 					},
 				},
