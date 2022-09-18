@@ -133,8 +133,8 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
 			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
-			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
-			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
+			assert.Equal(t, "2019-01-14T06:00:00Z", r.DateAfter.GetValue())
+			assert.Equal(t, "2019-01-14T23:00:00Z", r.DateBefore.GetValue())
 			return true
 		})
 
@@ -157,8 +157,8 @@ func TestFootballEventMarketRequester_FindEventMarkets(t *testing.T) {
 		}
 
 		ctx := context.Background()
-		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
-		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
+		from := time.Date(2019, 01, 14, 06, 00, 00, 00, time.UTC)
+		to := time.Date(2019, 01, 14, 23, 00, 00, 00, time.UTC)
 
 		fixClient.On("Search", ctx, fixReq).Return(fixtures, nil)
 
