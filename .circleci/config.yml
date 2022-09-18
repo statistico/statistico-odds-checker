@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   aws-cli: circleci/aws-cli@0.1.20
-  aws-ecs: circleci/aws-ecs@1.1.0
+  aws-ecs: circleci/aws-ecs@3.1.0
 
 references:
   workspace_root: &workspace_root
@@ -22,14 +22,14 @@ workflows:
           filters:
             branches:
               only: master
-#      - deploy-to-production:
-#          context: aws
-#          requires:
-#            - build-and-test
-#            - release-images
-#          filters:
-#            branches:
-#              only: main
+      - deploy-to-production:
+          context: aws
+          requires:
+            - build-and-test
+            - release-images
+          filters:
+            branches:
+              only: master
 
 jobs:
   build-and-test:
