@@ -51,6 +51,9 @@ func BuildConfig() *Config {
 			19795, // England - League Two
 			19917, // England - National League,
 		},
+		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
+		// other supported exchanges markets using Betfair as a base i.e. OVER_UNDER_25 refers to Over/Under 2.5 goals.
+		// Some markets may refer to this market a different way, so this needs to be handled that internally.
 		Markets: []string{
 			"BOTH_TEAMS_TO_SCORE",
 			"MATCH_ODDS",
@@ -66,8 +69,11 @@ func BuildConfig() *Config {
 			"OVER_UNDER_45_CARDS",
 			"OVER_UNDER_65_CARDS",
 			"OVER_UNDER_55_CORNR",
+			"OVER_UNDER_95_CORNR",
 			"OVER_UNDER_85_CORNR",
 			"OVER_UNDER_105_CORNR",
+			"OVER_UNDER_115_CORNR",
+			"OVER_UNDER_125_CORNR",
 			"OVER_UNDER_135_CORNR",
 		},
 	}
