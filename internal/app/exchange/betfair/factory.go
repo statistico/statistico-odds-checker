@@ -9,11 +9,11 @@ import (
 	"time"
 )
 
-type MarketRequester struct {
+type marketFactory struct {
 	betfairClient betfair.Client
 }
 
-func (m *MarketRequester) Fetch(ctx context.Context, q *exchange.Query) (*exchange.Market, error) {
+func (m *marketFactory) CreateMarket(ctx context.Context, q *exchange.Event) (*exchange.Market, error) {
 	event, err := m.getEvent(ctx, q)
 
 	if err != nil {
@@ -25,7 +25,7 @@ func (m *MarketRequester) Fetch(ctx context.Context, q *exchange.Query) (*exchan
 	return m.parseMarket(ctx, req, q)
 }
 
-func (m *MarketRequester) getEvent(ctx context.Context, q *exchange.Query) (*betfair.Event, error) {
+func (m *marketFactory) getEvent(ctx context.Context, q *exchange.Event) (*betfair.Event, error) {
 	req := buildEventsRequest(q)
 
 	events, err := m.betfairClient.ListEvents(ctx, req)
@@ -41,7 +41,7 @@ func (m *MarketRequester) getEvent(ctx context.Context, q *exchange.Query) (*bet
 	return &events[0].Event, nil
 }
 
-func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarketCatalogueRequest, q *exchange.Query) (*exchange.Market, error) {
+func (m *marketFactory) parseMarket(ctx context.Context, req betfair.ListMarketCatalogueRequest, q *exchange.Event) (*exchange.Market, error) {
 	catalogue, err := m.betfairClient.ListMarketCatalogue(ctx, req)
 
 	if err != nil {
@@ -82,7 +82,7 @@ func (m *MarketRequester) parseMarket(ctx context.Context, req betfair.ListMarke
 	return &market, nil
 }
 
-func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.ListRunnerBookRequest) ([]exchange.PriceSize, []exchange.PriceSize, error) {
+func (m *marketFactory) parseRunnerPrices(ctx context.Context, req betfair.ListRunnerBookRequest) ([]exchange.PriceSize, []exchange.PriceSize, error) {
 	response, err := m.betfairClient.ListRunnerBook(ctx, req)
 
 	if err != nil {
@@ -119,16 +119,11 @@ func (m *MarketRequester) parseRunnerPrices(ctx context.Context, req betfair.Lis
 	return back, lay, nil
 }
 
-func buildEventsRequest(q *exchange.Query) betfair.ListEventsRequest {
-	from := q.Date.AddDate(0, 0, -1)
-	to := q.Date.AddDate(0, 0, 1)
+func buildEventsRequest(e *exchange.Event) betfair.ListEventsRequest {
+	from := e.Date.AddDate(0, 0, -1)
+	to := e.Date.AddDate(0, 0, 1)
 
-	text := q.Event
-
-	if q.Sport == "football" {
-		split := strings.Split(q.Event, " v ")
-		text = fmt.Sprintf("%s v %s", teams[split[0]], teams[split[1]])
-	}
+	split := strings.Split(e.Name, " v ")
 
 	dates := betfair.TimeRange{
 		From: from.Format(time.RFC3339),
@@ -136,16 +131,16 @@ func buildEventsRequest(q *exchange.Query) betfair.ListEventsRequest {
 	}
 
 	filter := betfair.MarketFilter{
-		TextQuery:       text,
+		TextQuery:       fmt.Sprintf("%s v %s", teams[split[0]], teams[split[1]]),
 		MarketStartTime: dates,
 	}
 
 	return betfair.ListEventsRequest{Filter: filter}
 }
 
-func buildMarketCatalogueRequest(eventID string, q *exchange.Query) betfair.ListMarketCatalogueRequest {
+func buildMarketCatalogueRequest(eventID string, e *exchange.Event) betfair.ListMarketCatalogueRequest {
 	eventIDs := []string{eventID}
-	codes := []string{q.Market}
+	codes := []string{e.Market}
 	projection := []string{"RUNNER_METADATA"}
 
 	filter := betfair.MarketFilter{
@@ -170,6 +165,6 @@ func buildRunnerBookRequest(marketID string, selectionID uint64) betfair.ListRun
 	}
 }
 
-func NewMarketRequester(c betfair.Client) exchange.MarketRequester {
-	return &MarketRequester{betfairClient: c}
+func NewMarketFactory(c betfair.Client) exchange.MarketFactory {
+	return &marketFactory{betfairClient: c}
 }

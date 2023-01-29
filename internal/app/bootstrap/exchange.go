@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c Container) MarketRequester() exchange.MarketRequester {
+func (c Container) MarketRequester() exchange.MarketFactory {
 	config := c.Config.BetFair
 
 	creds := bfc.InteractiveCredentials{
@@ -27,5 +27,5 @@ func (c Container) MarketRequester() exchange.MarketRequester {
 		Credentials: creds,
 		BaseURLs:    urls,
 	}
-	return betfair.NewMarketRequester(client)
+	return betfair.NewMarketFactory(client)
 }

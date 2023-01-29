@@ -4,6 +4,6 @@ import (
 	"context"
 )
 
-type MarketRequester interface {
-	Fetch(ctx context.Context, q *Query) (*Market, error)
+type MarketFactory interface {
+	CreateMarket(ctx context.Context, q *Event) (*Market, error)
 }

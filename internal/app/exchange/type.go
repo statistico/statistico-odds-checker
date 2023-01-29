@@ -7,11 +7,10 @@ import (
 	"time"
 )
 
-type Query struct {
-	Event  string
+type Event struct {
+	Name   string
 	Date   time.Time
 	Market string
-	Sport  string
 }
 
 type Market struct {
