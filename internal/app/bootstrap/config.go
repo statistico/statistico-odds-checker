@@ -53,7 +53,7 @@ func BuildConfig() *Config {
 		},
 		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
 		// other supported exchanges markets using Betfair as a base i.e. OVER_UNDER_25 refers to Over/Under 2.5 goals.
-		// Some markets may refer to this market a different way, so we need to handle that internally.
+		// Some markets may refer to this market a different way, so this needs to be handled that internally.
 		Markets: []string{
 			"BOTH_TEAMS_TO_SCORE",
 			"MATCH_ODDS",
