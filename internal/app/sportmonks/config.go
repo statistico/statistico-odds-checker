@@ -1,6 +1,4 @@
-package pinnacle
-
-import "fmt"
+package sportmonks
 
 var markets = map[int][]string{
 	1: {
@@ -25,22 +23,10 @@ var markets = map[int][]string{
 		"OVER_UNDER_125_CORNR",
 		"OVER_UNDER_135_CORNR",
 	},
-	136704529: {
-		"MATCH_SHOTS_TARGET",
-	},
-	136704537: {
-		"MATCH_SHOTS",
-	},
-}
-
-func parseMarketId(market string) (int, error) {
-	for id, m := range markets {
-		for _, mk := range m {
-			if mk == market {
-				return id, nil
-			}
-		}
-	}
-
-	return 0, fmt.Errorf("market '%s' is not supported", market)
+	//136704529: {
+	//	"MATCH_SHOTS_TARGET",
+	//},
+	//136704537: {
+	//	"MATCH_SHOTS",
+	//},
 }

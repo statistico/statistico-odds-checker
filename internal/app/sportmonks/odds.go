@@ -31,13 +31,13 @@ func (m *oddsParser) ParseMarketOdds(ctx context.Context, fixtureID, exchangeID 
 		return nil, nil
 	}
 
-	ex := parseExchange(exchangeID, markets)
+	odds := parseExchangeOdds(exchangeID, markets)
 
-	if ex == nil {
+	if odds == nil || len(odds) == 0 {
 		return nil, nil
 	}
 
-	return parseMarketRunners(market, exchangeID, ex.Odds())
+	return parseMarketRunners(market, exchangeID, odds)
 }
 
 func NewOddsParser(c *sportmonks.HTTPClient) OddsParser {

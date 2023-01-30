@@ -8,6 +8,7 @@ import (
 )
 
 type Event struct {
+	ID     uint64
 	Name   string
 	Date   time.Time
 	Market string
