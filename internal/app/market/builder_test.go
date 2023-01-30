@@ -18,7 +18,7 @@ func TestBuilder_Build(t *testing.T) {
 	t.Run("returns a channel of Market struct", func(t *testing.T) {
 		t.Helper()
 
-		mr := new(betfair.MockMarketRequester)
+		mr := new(betfair.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 
 		builder := market.NewBuilder(mr, logger)
@@ -39,9 +39,8 @@ func TestBuilder_Build(t *testing.T) {
 
 		ctx := context.Background()
 
-		exQuery := mock.MatchedBy(func(r *exchange.Query) bool {
-			assert.Equal(t, "West Ham United vs Chelsea", r.Event)
-			assert.Equal(t, "football", r.Sport)
+		exQuery := mock.MatchedBy(func(r *exchange.Event) bool {
+			assert.Equal(t, "West Ham United vs Chelsea", r.Name)
 			assert.Equal(t, date, r.Date)
 			assert.Equal(t, "OVER_UNDER_25", r.Market)
 			return true
@@ -49,7 +48,7 @@ func TestBuilder_Build(t *testing.T) {
 
 		mk := bookmakerMarket("1.2421")
 
-		mr.On("Fetch", ctx, exQuery).Once().Return(mk, nil)
+		mr.On("CreateMarket", ctx, exQuery).Once().Return(mk, nil)
 
 		markets := builder.Build(ctx, &query)
 
@@ -68,7 +67,7 @@ func TestBuilder_Build(t *testing.T) {
 	t.Run("logs error if error returned when fetching market via market requester", func(t *testing.T) {
 		t.Helper()
 
-		mr := new(betfair.MockMarketRequester)
+		mr := new(betfair.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 
 		builder := market.NewBuilder(mr, logger)
@@ -89,15 +88,14 @@ func TestBuilder_Build(t *testing.T) {
 
 		ctx := context.Background()
 
-		exQuery := mock.MatchedBy(func(r *exchange.Query) bool {
-			assert.Equal(t, "West Ham United vs Chelsea", r.Event)
-			assert.Equal(t, "football", r.Sport)
+		exQuery := mock.MatchedBy(func(r *exchange.Event) bool {
+			assert.Equal(t, "West Ham United vs Chelsea", r.Name)
 			assert.Equal(t, date, r.Date)
 			assert.Equal(t, "OVER_UNDER_25", r.Market)
 			return true
 		})
 
-		mr.On("Fetch", ctx, exQuery).Once().Return(&exchange.Market{}, errors.New("error occurred"))
+		mr.On("CreateMarket", ctx, exQuery).Once().Return(&exchange.Market{}, errors.New("error occurred"))
 
 		markets := builder.Build(ctx, &query)
 

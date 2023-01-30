@@ -21,7 +21,7 @@ type BuilderQuery struct {
 }
 
 type builder struct {
-	exchange exchange.MarketRequester
+	exchange exchange.MarketFactory
 	logger   *logrus.Logger
 }
 
@@ -68,14 +68,13 @@ func (b *builder) buildMarket(ctx context.Context, q *BuilderQuery, market strin
 }
 
 func (b *builder) fetchExchangeMarket(ctx context.Context, q *BuilderQuery, market string) (*exchange.Market, error) {
-	eq := exchange.Query{
-		Event:  q.Event,
+	eq := exchange.Event{
+		Name:   q.Event,
 		Date:   q.Date,
 		Market: market,
-		Sport:  q.Sport,
 	}
 
-	mk, err := b.exchange.Fetch(ctx, &eq)
+	mk, err := b.exchange.CreateMarket(ctx, &eq)
 
 	if err != nil {
 		return nil, err
@@ -98,7 +97,7 @@ func (b *builder) logError(e error, eventID uint64, market string) {
 	}
 }
 
-func NewBuilder(m exchange.MarketRequester, l *logrus.Logger) Builder {
+func NewBuilder(m exchange.MarketFactory, l *logrus.Logger) Builder {
 	return &builder{
 		exchange: m,
 		logger:   l,

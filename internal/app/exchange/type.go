@@ -1,17 +1,18 @@
 package exchange
 
 import (
+	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
 	"time"
 )
 
-type Query struct {
-	Event  string
+type Event struct {
+	ID     uint64
+	Name   string
 	Date   time.Time
 	Market string
-	Sport  string
 }
 
 type Market struct {
@@ -44,4 +45,8 @@ type Runner struct {
 type PriceSize struct {
 	Price float32 `json:"price"`
 	Size  float32 `json:"size"`
+}
+
+type MarketFactory interface {
+	CreateMarket(ctx context.Context, q *Event) (*Market, error)
 }

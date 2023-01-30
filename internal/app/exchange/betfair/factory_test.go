@@ -20,11 +20,10 @@ func TestMarketRequester_Fetch(t *testing.T) {
 		Login:    "https://mock.com/login",
 	}
 
-	q := exchange.Query{
-		Event:  "West Ham United v Manchester City",
+	e := exchange.Event{
+		Name:   "West Ham United v Manchester City",
 		Date:   time.Date(2020, 10, 24, 12, 30, 00, 0, time.UTC),
 		Market: "OVER_UNDER_25",
-		Sport:  "football",
 	}
 
 	t.Run("calls betfair service using client and returns a exchange market struct", func(t *testing.T) {
@@ -68,9 +67,9 @@ func TestMarketRequester_Fetch(t *testing.T) {
 
 		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
 
-		requester := bf.NewMarketRequester(client)
+		factory := bf.NewMarketFactory(client)
 
-		market, err := requester.Fetch(context.Background(), &q)
+		market, err := factory.CreateMarket(context.Background(), &e)
 
 		if err != nil {
 			t.Fatalf("Error: %s", err.Error())
@@ -135,9 +134,9 @@ func TestMarketRequester_Fetch(t *testing.T) {
 
 		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
 
-		requester := bf.NewMarketRequester(client)
+		factory := bf.NewMarketFactory(client)
 
-		_, err := requester.Fetch(context.Background(), &q)
+		_, err := factory.CreateMarket(context.Background(), &e)
 
 		if err == nil {
 			t.Fatalf("Expected error got nil")
@@ -179,9 +178,9 @@ func TestMarketRequester_Fetch(t *testing.T) {
 
 		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
 
-		requester := bf.NewMarketRequester(client)
+		factory := bf.NewMarketFactory(client)
 
-		_, err := requester.Fetch(context.Background(), &q)
+		_, err := factory.CreateMarket(context.Background(), &e)
 
 		if err == nil {
 			t.Fatalf("Expected error got nil")
@@ -231,9 +230,9 @@ func TestMarketRequester_Fetch(t *testing.T) {
 
 		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
 
-		requester := bf.NewMarketRequester(client)
+		factory := bf.NewMarketFactory(client)
 
-		_, err := requester.Fetch(context.Background(), &q)
+		_, err := factory.CreateMarket(context.Background(), &e)
 
 		if err == nil {
 			t.Fatalf("Expected error got nil")

@@ -6,11 +6,11 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-type MockMarketRequester struct {
+type MockMarketFactory struct {
 	mock.Mock
 }
 
-func (m *MockMarketRequester) Fetch(ctx context.Context, q *exchange.Query) (*exchange.Market, error) {
-	args := m.Called(ctx, q)
+func (m *MockMarketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
+	args := m.Called(ctx, e)
 	return args.Get(0).(*exchange.Market), args.Error(1)
 }
