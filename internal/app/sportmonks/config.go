@@ -23,10 +23,4 @@ var markets = map[int][]string{
 		"OVER_UNDER_125_CORNR",
 		"OVER_UNDER_135_CORNR",
 	},
-	//136704529: {
-	//	"MATCH_SHOTS_TARGET",
-	//},
-	//136704537: {
-	//	"MATCH_SHOTS",
-	//},
 }
