@@ -11,7 +11,9 @@ require (
 	github.com/statistico/statistico-betfair-go-client v0.0.0-20201023150329-c5c14d4fe285
 	github.com/statistico/statistico-data-go-grpc-client v0.0.0-20210317184121-2d206ae02b3e
 	github.com/statistico/statistico-proto/go v0.0.0-20210404061231-83b5035e8b94
+	github.com/statistico/statistico-sportmonks-go-client v0.1.6
 	github.com/stretchr/testify v1.7.0
+	github.com/urfave/cli v1.22.9
 	google.golang.org/grpc v1.37.0
 )
 
@@ -21,13 +23,10 @@ require (
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/getsentry/raven-go v0.2.0 // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
-	github.com/kr/pretty v0.2.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/stretchr/objx v0.2.0 // indirect
-	github.com/urfave/cli v1.22.9 // indirect
 	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d // indirect
 	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
 	golang.org/x/text v0.3.6 // indirect
