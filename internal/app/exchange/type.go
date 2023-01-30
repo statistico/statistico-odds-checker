@@ -1,6 +1,7 @@
 package exchange
 
 import (
+	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
@@ -44,4 +45,8 @@ type Runner struct {
 type PriceSize struct {
 	Price float32 `json:"price"`
 	Size  float32 `json:"size"`
+}
+
+type MarketFactory interface {
+	CreateMarket(ctx context.Context, q *Event) (*Market, error)
 }
