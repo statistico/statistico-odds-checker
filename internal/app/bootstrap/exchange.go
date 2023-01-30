@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func (c Container) MarketRequester() exchange.MarketFactory {
+func (c Container) MarketFactory() exchange.MarketFactory {
 	config := c.Config.BetFair
 
 	creds := bfc.InteractiveCredentials{

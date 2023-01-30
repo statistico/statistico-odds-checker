@@ -20,7 +20,7 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 		return nil, err
 	}
 
-	runners, err := ConvertOddsToRunners(odds)
+	runners, err := exchange.ConvertOddsToRunners(odds)
 
 	if err != nil {
 		return nil, fmt.Errorf("error converting odds to runners in Pinnacle exchange: %s", err.Error())

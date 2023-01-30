@@ -1,14 +1,13 @@
-package pinnacle
+package exchange
 
 import (
 	"fmt"
-	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-sportmonks-go-client"
 	"strconv"
 )
 
-func ConvertOddsToRunners(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
-	runners := []*exchange.Runner{}
+func ConvertOddsToRunners(odds []sportmonks.Odds) ([]*Runner, error) {
+	runners := []*Runner{}
 
 	for _, o := range odds {
 		price, err := strconv.ParseFloat(o.Dp3, 32)
@@ -17,9 +16,9 @@ func ConvertOddsToRunners(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
 			return nil, fmt.Errorf("value '%s' is not a valid decimal", o.Dp3)
 		}
 
-		runners = append(runners, &exchange.Runner{
+		runners = append(runners, &Runner{
 			Name: o.Label,
-			BackPrices: []exchange.PriceSize{
+			BackPrices: []PriceSize{
 				{
 					Price: float32(price),
 					Size:  0,
