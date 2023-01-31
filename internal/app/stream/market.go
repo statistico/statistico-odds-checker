@@ -58,11 +58,12 @@ func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []
 func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.Fixture, wg *sync.WaitGroup, ch chan<- *EventMarket) {
 	date := time.Unix(f.DateTime.Utc, 0)
 
-	//diff := date.Sub(f.clock.Now()).Minutes()
+	diff := date.Sub(e.clock.Now()).Minutes()
 
-	//if diff >= 70 || diff < 0 {
-	//	continue
-	//}
+	if diff >= 70 || diff < 0 {
+		wg.Done()
+		return
+	}
 
 	for _, market := range e.markets {
 		wg.Add(1)
