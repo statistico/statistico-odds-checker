@@ -1,4 +1,4 @@
-package market_test
+package exchange_test
 
 import (
 	"context"
@@ -6,22 +6,21 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/sirupsen/logrus/hooks/test"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
-	"github.com/statistico/statistico-odds-checker/internal/app/exchange/betfair"
-	"github.com/statistico/statistico-odds-checker/internal/app/market"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/mock"
 	"testing"
 	"time"
 )
 
-func TestBuilder_Build(t *testing.T) {
+func TestMarketBuilder_Build(t *testing.T) {
 	t.Run("returns a channel of Market struct", func(t *testing.T) {
 		t.Helper()
 
-		mr := new(betfair.MockMarketFactory)
+		factoryOne := new(exchange.MockMarketFactory)
+		factoryTwo := new(exchange.MockMarketFactory)
+		factories := []exchange.MarketFactory{factoryOne, factoryTwo}
 		logger, hook := test.NewNullLogger()
 
-		builder := market.NewBuilder(mr, logger)
+		builder := exchange.NewMarketBuilder(factories, logger)
 
 		date, err := time.Parse(time.RFC3339, "2020-03-12T00:00:00+00:00")
 
@@ -29,48 +28,64 @@ func TestBuilder_Build(t *testing.T) {
 			t.Fatalf("Error parsing date %s", err.Error())
 		}
 
-		query := market.BuilderQuery{
-			Date:    date,
-			Event:   "West Ham United vs Chelsea",
-			EventID: 1278121,
-			Sport:   "football",
-			Markets: []string{"OVER_UNDER_25"},
+		event := exchange.Event{
+			Date:   date,
+			Name:   "West Ham United vs Chelsea",
+			ID:     1278121,
+			Market: "OVER_UNDER_25",
 		}
 
 		ctx := context.Background()
 
-		exQuery := mock.MatchedBy(func(r *exchange.Event) bool {
-			assert.Equal(t, "West Ham United vs Chelsea", r.Name)
-			assert.Equal(t, date, r.Date)
-			assert.Equal(t, "OVER_UNDER_25", r.Market)
-			return true
-		})
+		mkOne := bookmakerMarket("1.5670", "PINNACLE")
+		mkTwo := bookmakerMarket("1.2421", "BETFAIR")
 
-		mk := bookmakerMarket("1.2421")
+		factoryOne.On("CreateMarket", ctx, &event).Once().Return(&mkOne, nil)
+		factoryTwo.On("CreateMarket", ctx, &event).Once().Return(&mkTwo, nil)
 
-		mr.On("CreateMarket", ctx, exQuery).Once().Return(mk, nil)
-
-		markets := builder.Build(ctx, &query)
+		markets := builder.Build(ctx, &event)
 
 		one := <-markets
+		two := <-markets
+
+		expectedRunners := []*exchange.Runner{
+			{
+				ID:   49792,
+				Name: "Over 2.5 Goals",
+				BackPrices: []exchange.PriceSize{
+					{
+						Price: 1.54,
+						Size:  1301.00,
+					},
+				},
+			},
+		}
 
 		a := assert.New(t)
 		a.Equal("1.2421", one.ID)
 		a.Equal(uint64(1278121), one.EventID)
-		a.Equal("betfair", one.Exchange)
+		a.Equal("BETFAIR", one.Exchange)
 		a.Equal("OVER_UNDER_25", one.Name)
-		a.Equal(mk.Runners, one.ExchangeRunners)
-		assert.Nil(t, hook.LastEntry())
-		mr.AssertExpectations(t)
+		a.Equal(expectedRunners, one.Runners)
+		a.Equal("1.5670", two.ID)
+		a.Equal(uint64(1278121), two.EventID)
+		a.Equal("PINNACLE", two.Exchange)
+		a.Equal("OVER_UNDER_25", one.Name)
+		a.Equal(expectedRunners, one.Runners)
+		a.Nil(hook.LastEntry())
+		factoryOne.AssertExpectations(t)
+		factoryTwo.AssertExpectations(t)
 	})
 
-	t.Run("logs error if error returned when fetching market via market requester", func(t *testing.T) {
+	t.Run("logs error if error returned when creating market via market factory implementation", func(t *testing.T) {
 		t.Helper()
 
-		mr := new(betfair.MockMarketFactory)
+		factoryOne := new(exchange.MockMarketFactory)
+		factoryTwo := new(exchange.MockMarketFactory)
+		factories := []exchange.MarketFactory{factoryOne, factoryTwo}
 		logger, hook := test.NewNullLogger()
 
-		builder := market.NewBuilder(mr, logger)
+		builder := exchange.NewMarketBuilder(factories, logger)
 
 		date, err := time.Parse(time.RFC3339, "2020-03-12T00:00:00+00:00")
 
@@ -78,26 +93,21 @@ func TestBuilder_Build(t *testing.T) {
 			t.Fatalf("Error parsing date %s", err.Error())
 		}
 
-		query := market.BuilderQuery{
-			Date:    date,
-			Event:   "West Ham United vs Chelsea",
-			EventID: 1278121,
-			Sport:   "football",
-			Markets: []string{"OVER_UNDER_25"},
+		event := exchange.Event{
+			Date:   date,
+			Name:   "West Ham United vs Chelsea",
+			ID:     1278121,
+			Market: "OVER_UNDER_25",
 		}
 
 		ctx := context.Background()
 
-		exQuery := mock.MatchedBy(func(r *exchange.Event) bool {
-			assert.Equal(t, "West Ham United vs Chelsea", r.Name)
-			assert.Equal(t, date, r.Date)
-			assert.Equal(t, "OVER_UNDER_25", r.Market)
-			return true
-		})
+		mkOne := bookmakerMarket("1.5670", "PINNACLE")
 
-		mr.On("CreateMarket", ctx, exQuery).Once().Return(&exchange.Market{}, errors.New("error occurred"))
+		factoryOne.On("CreateMarket", ctx, &event).Once().Return(&mkOne, nil)
+		factoryTwo.On("CreateMarket", ctx, &event).Once().Return(&exchange.Market{}, errors.New("error occurred"))
 
-		markets := builder.Build(ctx, &query)
+		markets := builder.Build(ctx, &event)
 
 		<-markets
 
@@ -108,11 +118,12 @@ func TestBuilder_Build(t *testing.T) {
 	})
 }
 
-func bookmakerMarket(marketId string) *exchange.Market {
-	return &exchange.Market{
-		ID:           marketId,
-		Name:         "OVER_UNDER_25",
-		ExchangeName: "betfair",
+func bookmakerMarket(marketId, ex string) exchange.Market {
+	return exchange.Market{
+		ID:       marketId,
+		Name:     "OVER_UNDER_25",
+		EventID:  uint64(1278121),
+		Exchange: ex,
 		Runners: []*exchange.Runner{
 			{
 				ID:   49792,

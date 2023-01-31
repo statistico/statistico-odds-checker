@@ -57,9 +57,9 @@ func (m *marketFactory) parseMarket(ctx context.Context, req betfair.ListMarketC
 	}
 
 	market := exchange.Market{
-		ID:           catalogue[0].MarketID,
-		Name:         q.Market,
-		ExchangeName: "BETFAIR",
+		ID:       catalogue[0].MarketID,
+		Name:     q.Market,
+		Exchange: "BETFAIR",
 	}
 
 	for _, runner := range catalogue[0].Runners {
