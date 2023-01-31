@@ -8,6 +8,7 @@ type Config struct {
 	FootballConfig
 	Publisher string
 	Sentry
+	SportsMonks
 	StatisticoFootballDataService
 }
 
@@ -31,6 +32,10 @@ type FootballConfig struct {
 
 type Sentry struct {
 	DSN string
+}
+
+type SportsMonks struct {
+	ApiKey string
 }
 
 type StatisticoFootballDataService struct {
@@ -88,6 +93,10 @@ func BuildConfig() *Config {
 	}
 
 	config.Sentry = Sentry{DSN: os.Getenv("SENTRY_DSN")}
+
+	config.SportsMonks = SportsMonks{
+		ApiKey: os.Getenv("SPORTMONKS_API_KEY"),
+	}
 
 	config.StatisticoFootballDataService = StatisticoFootballDataService{
 		Host: os.Getenv("STATISTICO_FOOTBALL_DATA_SERVICE_HOST"),
