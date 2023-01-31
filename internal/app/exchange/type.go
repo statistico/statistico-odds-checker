@@ -1,7 +1,6 @@
 package exchange
 
 import (
-	"context"
 	"database/sql/driver"
 	"encoding/json"
 	"errors"
@@ -16,10 +15,11 @@ type Event struct {
 }
 
 type Market struct {
-	ID           string    `json:"id"`
-	Name         string    `json:"name"`
-	ExchangeName string    `json:"exchange"`
-	Runners      []*Runner `json:"runners"`
+	ID       string    `json:"id"`
+	Exchange string    `json:"exchange"`
+	Name     string    `json:"name"`
+	EventID  uint64    `json:"event_id"`
+	Runners  []*Runner `json:"runners"`
 }
 
 func (m Market) Value() (driver.Value, error) {
@@ -45,8 +45,4 @@ type Runner struct {
 type PriceSize struct {
 	Price float32 `json:"price"`
 	Size  float32 `json:"size"`
-}
-
-type MarketFactory interface {
-	CreateMarket(ctx context.Context, q *Event) (*Market, error)
 }

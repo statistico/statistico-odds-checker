@@ -7,7 +7,7 @@ import (
 	"github.com/jonboulle/clockwork"
 	"github.com/sirupsen/logrus"
 	"github.com/statistico/statistico-data-go-grpc-client"
-	"github.com/statistico/statistico-odds-checker/internal/app/market"
+	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-proto/go"
 	"time"
 )
@@ -16,7 +16,7 @@ const football = "football"
 
 type footballEventMarketRequester struct {
 	fixtureClient statisticodata.FixtureClient
-	builder       market.Builder
+	builder       exchange.MarketBuilder
 	logger        *logrus.Logger
 	clock         clockwork.Clock
 	seasons       []uint64
@@ -54,12 +54,11 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 		//	continue
 		//}
 
-		q := market.BuilderQuery{
-			Date:    date,
-			Event:   fmt.Sprintf("%s v %s", fx.HomeTeam.Name, fx.AwayTeam.Name),
-			EventID: uint64(fx.Id),
-			Sport:   football,
-			Markets: f.markets,
+		q := exchange.Event{
+			Date:   date,
+			Name:   fmt.Sprintf("%s v %s", fx.HomeTeam.Name, fx.AwayTeam.Name),
+			ID:     uint64(fx.Id),
+			Market: f.markets[0],
 		}
 
 		for m := range f.builder.Build(ctx, &q) {
@@ -70,7 +69,7 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 	close(ch)
 }
 
-func convertToEventMarket(m *market.Market, fix *statistico.Fixture, timestamp time.Time) *EventMarket {
+func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp time.Time) *EventMarket {
 	return &EventMarket{
 		ID:            m.ID,
 		EventID:       m.EventID,
@@ -80,14 +79,14 @@ func convertToEventMarket(m *market.Market, fix *statistico.Fixture, timestamp t
 		EventDate:     fix.DateTime.Rfc,
 		MarketName:    m.Name,
 		Exchange:      m.Exchange,
-		Runners:       m.ExchangeRunners,
+		Runners:       m.Runners,
 		Timestamp:     timestamp.Unix(),
 	}
 }
 
 func NewFootballEventMarketRequester(
 	f statisticodata.FixtureClient,
-	b market.Builder,
+	b exchange.MarketBuilder,
 	l *logrus.Logger,
 	c clockwork.Clock,
 	s []uint64,

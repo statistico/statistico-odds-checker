@@ -5,9 +5,9 @@ import (
 )
 
 const (
-	Away = "Away"
-	Draw = "Draw"
-	Home = "Home"
+	Away      = "Away"
+	Draw      = "Draw"
+	Home      = "Home"
 	MatchOdds = "MATCH_ODDS"
 )
 
