@@ -12,7 +12,7 @@ import (
 )
 
 func TestOddsParser_ParseMarketOdds(t *testing.T) {
-	t.Run("calls sportmonks api and parses odds for fixture, exchange and market", func(t *testing.T) {
+	t.Run("calls sportmonks api and parses odds for event, exchange and market", func(t *testing.T) {
 		t.Helper()
 
 		server := httpClient(func(req *http.Request) (*http.Response, error) {
@@ -128,7 +128,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 		assert.Equal(t, "error fetching markets for exchange '1': Request failed with message: The requested endpoint does not exist!, code: 404", err.Error())
 	})
 
-	t.Run("returns nil if no markets are returned for fixture", func(t *testing.T) {
+	t.Run("returns nil if no markets are returned for event", func(t *testing.T) {
 		server := httpClient(func(req *http.Request) (*http.Response, error) {
 			return &http.Response{
 				StatusCode: 200,

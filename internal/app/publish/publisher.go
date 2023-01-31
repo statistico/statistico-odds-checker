@@ -1,7 +1,9 @@
 package publish
 
-import "github.com/statistico/statistico-odds-checker/internal/app/sport"
+import (
+	"github.com/statistico/statistico-odds-checker/internal/app/stream"
+)
 
 type Publisher interface {
-	PublishMarket(m *sport.EventMarket) error
+	PublishMarket(m *stream.EventMarket) error
 }

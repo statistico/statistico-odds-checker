@@ -45,18 +45,13 @@ func main() {
 
 					ctx := context.Background()
 
-					if err = processor.Process(ctx, c.String("sport"), from, to); err != nil {
+					if err = processor.Process(ctx, from, to); err != nil {
 						return err
 					}
 
 					return nil
 				},
 				Flags: []cli.Flag{
-					&cli.StringFlag{
-						Name:     "sport",
-						Usage:    "Sport to fetch events and markets for",
-						Required: true,
-					},
 					&cli.StringFlag{
 						Name:     "from",
 						Usage:    "Find events with start date/time after value provided",
