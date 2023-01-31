@@ -15,9 +15,7 @@ type Processor struct {
 }
 
 func (p *Processor) Process(ctx context.Context, from, to time.Time) error {
-	var markets <-chan *stream.EventMarket
-
-	markets = p.streamer.Stream(ctx, from, to)
+	markets := p.streamer.Stream(ctx, from, to)
 
 	for m := range markets {
 		err := p.publisher.PublishMarket(m)

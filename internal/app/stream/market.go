@@ -9,6 +9,7 @@ import (
 	"github.com/statistico/statistico-data-go-grpc-client"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-proto/go"
+	"sync"
 	"time"
 )
 
@@ -21,55 +22,69 @@ type eventMarketStreamer struct {
 	markets       []string
 }
 
-func (f *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time) <-chan *EventMarket {
+func (e *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time) <-chan *EventMarket {
 	req := statistico.FixtureSearchRequest{
-		SeasonIds:  f.seasons,
+		SeasonIds:  e.seasons,
 		DateBefore: &wrappers.StringValue{Value: to.Format(time.RFC3339)},
 		DateAfter:  &wrappers.StringValue{Value: from.Format(time.RFC3339)},
 	}
 
-	fixtures, err := f.fixtureClient.Search(ctx, &req)
+	fixtures, err := e.fixtureClient.Search(ctx, &req)
 
 	if err != nil {
-		f.logger.Errorf("Error %q fetching fixtures in football market requester", err.Error())
+		e.logger.Errorf("Error %q fetching fixtures in football market requester", err.Error())
 		return nil
 	}
 
 	ch := make(chan *EventMarket, len(fixtures))
 
-	go f.buildEventMarkets(ctx, fixtures, ch)
+	go e.buildEventMarkets(ctx, fixtures, ch)
 
 	return ch
 }
 
-func (f *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket) {
+func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket) {
+	defer close(ch)
+	var wg sync.WaitGroup
+
 	for _, fx := range fixtures {
-		fmt.Printf("Fixture %d\n", fx.Id)
-		date := time.Unix(fx.DateTime.Utc, 0)
-
-		//diff := date.Sub(f.clock.Now()).Minutes()
-
-		//if diff >= 70 || diff < 0 {
-		//	continue
-		//}
-
-		for _, market := range f.markets {
-			e := exchange.Event{
-				Date:   date,
-				Name:   fmt.Sprintf("%s v %s", fx.HomeTeam.Name, fx.AwayTeam.Name),
-				ID:     uint64(fx.Id),
-				Market: market,
-			}
-
-			fmt.Printf("Market %s\n", e.Market)
-
-			for m := range f.builder.Build(ctx, &e) {
-				ch <- convertToEventMarket(m, fx, f.clock.Now())
-			}
-		}
+		wg.Add(1)
+		go e.handleFixture(ctx, fx, &wg, ch)
 	}
 
-	close(ch)
+	wg.Wait()
+}
+
+func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.Fixture, wg *sync.WaitGroup, ch chan<- *EventMarket) {
+	date := time.Unix(f.DateTime.Utc, 0)
+
+	diff := date.Sub(e.clock.Now()).Minutes()
+
+	if diff >= 70 || diff < 0 {
+		wg.Done()
+		return
+	}
+
+	for _, market := range e.markets {
+		wg.Add(1)
+
+		ev := exchange.Event{
+			Date:   date,
+			Name:   fmt.Sprintf("%s v %s", f.HomeTeam.Name, f.AwayTeam.Name),
+			ID:     uint64(f.Id),
+			Market: market,
+		}
+
+		go func(wg *sync.WaitGroup) {
+			for m := range e.builder.Build(ctx, &ev) {
+				ch <- convertToEventMarket(m, f, e.clock.Now())
+			}
+
+			wg.Done()
+		}(wg)
+	}
+
+	wg.Done()
 }
 
 func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp time.Time) *EventMarket {

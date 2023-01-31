@@ -44,6 +44,11 @@ func (b *marketBuilder) buildMarkets(ctx context.Context, e *Event, factory Mark
 		return
 	}
 
+	if len(mk.Runners) == 0 {
+		wg.Done()
+		return
+	}
+
 	ch <- mk
 
 	wg.Done()

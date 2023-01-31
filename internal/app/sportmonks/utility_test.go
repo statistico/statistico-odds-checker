@@ -1,7 +1,7 @@
 package sportmonks
 
 import (
-	sportmonks "github.com/statistico/statistico-sportmonks-go-client"
+	"github.com/statistico/statistico-sportmonks-go-client"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -97,6 +97,8 @@ func Test_parseMarketId(t *testing.T) {
 }
 
 func Test_parseExchangeOdds(t *testing.T) {
+	f := sportmonks.FlexFloat(2.80)
+
 	exchange := sportmonks.MatchOdds{
 		ID:        1,
 		Name:      "3Way Result",
@@ -108,7 +110,7 @@ func Test_parseExchangeOdds(t *testing.T) {
 				OddsData: sportmonks.OddsData{
 					Data: []sportmonks.Odds{
 						{
-							Value:            "2.80",
+							Value:            &f,
 							Handicap:         nil,
 							Total:            "",
 							Label:            "1",
@@ -118,7 +120,7 @@ func Test_parseExchangeOdds(t *testing.T) {
 							Fractional:       nil,
 							Winning:          nil,
 							Stop:             false,
-							BookmakerEventID: "",
+							BookmakerEventID: nil,
 							LastUpdate:       sportmonks.DateTime{},
 						},
 					},
@@ -147,12 +149,14 @@ func Test_parseExchangeOdds(t *testing.T) {
 }
 
 func Test_parseMarketRunners(t *testing.T) {
+	f := sportmonks.FlexFloat(2.80)
+
 	t.Run("parses odds for both teams to score market", func(t *testing.T) {
 		t.Helper()
 
 		odds := []sportmonks.Odds{
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "",
 				Label:            "Yes",
@@ -162,7 +166,7 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 		}
@@ -181,7 +185,7 @@ func Test_parseMarketRunners(t *testing.T) {
 
 		odds := []sportmonks.Odds{
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "",
 				Label:            "X",
@@ -191,7 +195,7 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 		}
@@ -210,7 +214,7 @@ func Test_parseMarketRunners(t *testing.T) {
 
 		odds := []sportmonks.Odds{
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "2.25",
 				Label:            "Under",
@@ -220,11 +224,11 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "2.25",
 				Label:            "Over",
@@ -234,11 +238,11 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "1.50",
 				Label:            "Under",
@@ -248,7 +252,7 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 		}
@@ -269,7 +273,7 @@ func Test_parseMarketRunners(t *testing.T) {
 
 		odds := []sportmonks.Odds{
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "2.5",
 				Label:            "Under",
@@ -279,11 +283,11 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "2.5",
 				Label:            "Over",
@@ -293,11 +297,11 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 			{
-				Value:            "2.80",
+				Value:            &f,
 				Handicap:         nil,
 				Total:            "1.50",
 				Label:            "Under",
@@ -307,7 +311,7 @@ func Test_parseMarketRunners(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             false,
-				BookmakerEventID: "",
+				BookmakerEventID: nil,
 				LastUpdate:       sportmonks.DateTime{},
 			},
 		}

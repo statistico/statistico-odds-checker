@@ -11,7 +11,7 @@ require (
 	github.com/statistico/statistico-betfair-go-client v0.0.0-20201023150329-c5c14d4fe285
 	github.com/statistico/statistico-data-go-grpc-client v0.0.0-20210317184121-2d206ae02b3e
 	github.com/statistico/statistico-proto/go v0.0.0-20210404061231-83b5035e8b94
-	github.com/statistico/statistico-sportmonks-go-client v0.1.6
+	github.com/statistico/statistico-sportmonks-go-client v0.1.7
 	github.com/stretchr/testify v1.7.0
 	github.com/urfave/cli v1.22.9
 	google.golang.org/grpc v1.37.0

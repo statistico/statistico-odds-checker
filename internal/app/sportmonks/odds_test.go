@@ -36,9 +36,12 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 			t.Fatalf("Expected nil, got %s", err.Error())
 		}
 
+		underOdds := spClient.FlexFloat(1.91)
+		overOdds := spClient.FlexFloat(2.65)
+
 		expectedOdds := []spClient.Odds{
 			{
-				Value:            "1.91",
+				Value:            &underOdds,
 				Handicap:         nil,
 				Total:            "2.5",
 				Label:            "Under",
@@ -48,7 +51,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             true,
-				BookmakerEventID: "40054117",
+				BookmakerEventID: nil,
 				LastUpdate: spClient.DateTime{
 					Date:         "2019-10-05 13:01:00.227530",
 					TimezoneType: 3,
@@ -56,7 +59,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 				},
 			},
 			{
-				Value:            "2.65",
+				Value:            &overOdds,
 				Handicap:         nil,
 				Total:            "2.5",
 				Label:            "Over",
@@ -66,7 +69,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 				Fractional:       nil,
 				Winning:          nil,
 				Stop:             true,
-				BookmakerEventID: "40054117",
+				BookmakerEventID: nil,
 				LastUpdate: spClient.DateTime{
 					Date:         "2019-10-05 13:01:00.227530",
 					TimezoneType: 2,
@@ -198,7 +201,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 1, "OVER_UNDER_45")
+		odds, err := parser.ParseMarketOdds(context.Background(), 152, 123, "OVER_UNDER_45")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -234,7 +237,7 @@ var overUnderGoalsOddsResponse = `{
 									"factional": null,
 									"winning": null,
 									"stop": true,
-									"bookmaker_event_id": "40054117",
+									"bookmaker_event_id": null,
 									"last_update": {
 										"date": "2019-10-05 13:01:00.227530",
 										"timezone_type": 3,
@@ -252,7 +255,7 @@ var overUnderGoalsOddsResponse = `{
 									"factional": null,
 									"winning": null,
 									"stop": true,
-									"bookmaker_event_id": "40054117",
+									"bookmaker_event_id": null,
 									"last_update": {
 										"date": "2019-10-05 13:01:00.227530",
 										"timezone_type": 2,
