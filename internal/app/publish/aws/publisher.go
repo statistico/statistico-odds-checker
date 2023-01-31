@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/aws/aws-sdk-go/service/sns/snsiface"
 	"github.com/statistico/statistico-odds-checker/internal/app/publish"
-	"github.com/statistico/statistico-odds-checker/internal/app/sport"
+	"github.com/statistico/statistico-odds-checker/internal/app/stream"
 )
 
 type Publisher struct {
@@ -14,7 +14,7 @@ type Publisher struct {
 	topicArn string
 }
 
-func (p *Publisher) PublishMarket(m *sport.EventMarket) error {
+func (p *Publisher) PublishMarket(m *stream.EventMarket) error {
 	js, err := json.Marshal(m)
 
 	if err != nil {

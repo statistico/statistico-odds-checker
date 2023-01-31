@@ -1,4 +1,4 @@
-package sport
+package stream
 
 import (
 	"context"
@@ -6,8 +6,8 @@ import (
 	"time"
 )
 
-type EventMarketRequester interface {
-	FindEventMarkets(ctx context.Context, from, to time.Time) <-chan *EventMarket
+type EventMarketStreamer interface {
+	Stream(ctx context.Context, from, to time.Time) <-chan *EventMarket
 }
 
 type EventMarket struct {
@@ -15,7 +15,6 @@ type EventMarket struct {
 	EventID       uint64             `json:"eventId"`
 	CompetitionID uint64             `json:"competitionId"`
 	SeasonID      uint64             `json:"seasonId"`
-	Sport         string             `json:"sport"`
 	EventDate     string             `json:"date"`
 	MarketName    string             `json:"name"`
 	Exchange      string             `json:"exchange"`

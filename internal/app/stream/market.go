@@ -1,4 +1,4 @@
-package sport
+package stream
 
 import (
 	"context"
@@ -12,9 +12,7 @@ import (
 	"time"
 )
 
-const football = "football"
-
-type footballEventMarketRequester struct {
+type eventMarketStreamer struct {
 	fixtureClient statisticodata.FixtureClient
 	builder       exchange.MarketBuilder
 	logger        *logrus.Logger
@@ -23,7 +21,7 @@ type footballEventMarketRequester struct {
 	markets       []string
 }
 
-func (f *footballEventMarketRequester) FindEventMarkets(ctx context.Context, from, to time.Time) <-chan *EventMarket {
+func (f *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time) <-chan *EventMarket {
 	req := statistico.FixtureSearchRequest{
 		SeasonIds:  f.seasons,
 		DateBefore: &wrappers.StringValue{Value: to.Format(time.RFC3339)},
@@ -44,8 +42,9 @@ func (f *footballEventMarketRequester) FindEventMarkets(ctx context.Context, fro
 	return ch
 }
 
-func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket) {
+func (f *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket) {
 	for _, fx := range fixtures {
+		fmt.Printf("Fixture %d\n", fx.Id)
 		date := time.Unix(fx.DateTime.Utc, 0)
 
 		//diff := date.Sub(f.clock.Now()).Minutes()
@@ -54,15 +53,19 @@ func (f *footballEventMarketRequester) buildEventMarkets(ctx context.Context, fi
 		//	continue
 		//}
 
-		q := exchange.Event{
-			Date:   date,
-			Name:   fmt.Sprintf("%s v %s", fx.HomeTeam.Name, fx.AwayTeam.Name),
-			ID:     uint64(fx.Id),
-			Market: f.markets[0],
-		}
+		for _, market := range f.markets {
+			e := exchange.Event{
+				Date:   date,
+				Name:   fmt.Sprintf("%s v %s", fx.HomeTeam.Name, fx.AwayTeam.Name),
+				ID:     uint64(fx.Id),
+				Market: market,
+			}
 
-		for m := range f.builder.Build(ctx, &q) {
-			ch <- convertToEventMarket(m, fx, f.clock.Now())
+			fmt.Printf("Market %s\n", e.Market)
+
+			for m := range f.builder.Build(ctx, &e) {
+				ch <- convertToEventMarket(m, fx, f.clock.Now())
+			}
 		}
 	}
 
@@ -75,7 +78,6 @@ func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp
 		EventID:       m.EventID,
 		CompetitionID: fix.Competition.Id,
 		SeasonID:      fix.Season.Id,
-		Sport:         football,
 		EventDate:     fix.DateTime.Rfc,
 		MarketName:    m.Name,
 		Exchange:      m.Exchange,
@@ -84,15 +86,15 @@ func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp
 	}
 }
 
-func NewFootballEventMarketRequester(
+func NewEventMarketStreamer(
 	f statisticodata.FixtureClient,
 	b exchange.MarketBuilder,
 	l *logrus.Logger,
 	c clockwork.Clock,
 	s []uint64,
 	m []string,
-) EventMarketRequester {
-	return &footballEventMarketRequester{
+) EventMarketStreamer {
+	return &eventMarketStreamer{
 		fixtureClient: f,
 		builder:       b,
 		logger:        l,

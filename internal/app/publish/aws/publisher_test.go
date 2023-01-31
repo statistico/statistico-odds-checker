@@ -5,7 +5,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	paws "github.com/statistico/statistico-odds-checker/internal/app/publish/aws"
-	"github.com/statistico/statistico-odds-checker/internal/app/sport"
+	"github.com/statistico/statistico-odds-checker/internal/app/stream"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"testing"
@@ -21,9 +21,9 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		publisher := paws.NewPublisher(client, topic)
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
-			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
+			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420," +
 				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\"," +
-				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
+				"\"exchange\":\"BETFAIR\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
 				"\"backPrices\":[{\"price\":1.95,\"size\":1461}],\"layPrices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
@@ -49,9 +49,9 @@ func TestPublisher_PublishMarket(t *testing.T) {
 		publisher := paws.NewPublisher(client, topic)
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
-			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420,\"sport\":\"football\"," +
+			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420," +
 				"\"date\":\"2019-01-14T11:00:00Z\",\"name\":\"1X2\"," +
-				"\"exchange\":\"betfair\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
+				"\"exchange\":\"BETFAIR\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
 				"\"backPrices\":[{\"price\":1.95,\"size\":1461}],\"layPrices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
 			assert.Equal(t, ms, *i.Message)
@@ -69,16 +69,15 @@ func TestPublisher_PublishMarket(t *testing.T) {
 	})
 }
 
-func eventMarket() *sport.EventMarket {
-	return &sport.EventMarket{
+func eventMarket() *stream.EventMarket {
+	return &stream.EventMarket{
 		ID:            "1.23712",
 		EventID:       129817121,
 		CompetitionID: 8,
 		SeasonID:      17420,
-		Sport:         "football",
 		EventDate:     "2019-01-14T11:00:00Z",
 		MarketName:    "1X2",
-		Exchange:      "betfair",
+		Exchange:      "BETFAIR",
 		Runners: []*exchange.Runner{
 			{
 				ID:   14571761,
