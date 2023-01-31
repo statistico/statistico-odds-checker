@@ -11,7 +11,12 @@ type Publisher struct {
 }
 
 func (p *Publisher) PublishMarket(m *stream.EventMarket) error {
-	p.logger.Infof("Pretending to publish market for event %d and market %s", m.EventID, m.MarketName)
+	p.logger.Infof(
+		"Pretending to publish market for event %d and market %s and runner %+v",
+		m.EventID,
+		m.MarketName,
+		m.Runners,
+	)
 
 	return nil
 }

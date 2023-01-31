@@ -31,5 +31,5 @@ func (c Container) Publisher() publish.Publisher {
 		return log.NewPublisher(c.Logger)
 	}
 
-	panic("Queue driver provided is not supported")
+	panic("Publisher driver provided is not supported")
 }

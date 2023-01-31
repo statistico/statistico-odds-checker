@@ -29,6 +29,7 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 	return &exchange.Market{
 		ID:       "NONE",
 		Name:     e.Market,
+		EventID:  e.ID,
 		Exchange: "PINNACLE",
 		Runners:  runners,
 	}, nil

@@ -63,10 +63,6 @@ func parseMarketOdds(total []string, odds []sportmonks.Odds) ([]sportmonks.Odds,
 		}
 	}
 
-	if len(runners) == 0 {
-		return nil, nil
-	}
-
 	return runners, nil
 }
 

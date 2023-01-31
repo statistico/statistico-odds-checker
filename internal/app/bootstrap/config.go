@@ -62,8 +62,6 @@ func BuildConfig() *Config {
 		Markets: []string{
 			"BOTH_TEAMS_TO_SCORE",
 			"MATCH_ODDS",
-			"MATCH_SHOTS",
-			"MATCH_SHOTS_TARGET",
 			"OVER_UNDER_05",
 			"OVER_UNDER_15",
 			"OVER_UNDER_25",
