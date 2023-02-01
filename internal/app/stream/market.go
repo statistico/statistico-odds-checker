@@ -48,6 +48,8 @@ func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []
 	var wg sync.WaitGroup
 
 	for _, fx := range fixtures {
+		fmt.Printf("Fetching markets for fixture %d\n", fx.Id)
+
 		wg.Add(1)
 		go e.handleFixture(ctx, fx, &wg, ch)
 	}
