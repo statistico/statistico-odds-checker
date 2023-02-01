@@ -17,7 +17,7 @@ func (c Container) SportmonksOddsParser() sportmonks.OddsParser {
 		Dial: (&net.Dialer{
 			Timeout: 10 * time.Second,
 		}).Dial,
-		ResponseHeaderTimeout: 30 * time.Second,
+		ResponseHeaderTimeout: 120 * time.Second,
 		TLSHandshakeTimeout:   15 * time.Second,
 	}
 
