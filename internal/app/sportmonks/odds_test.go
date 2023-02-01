@@ -217,7 +217,7 @@ var overUnderGoalsOddsResponse = `{
 	"data": [
 		{
 			"id": 38,
-			"name": "Goals Over\/Under 2nd Half",
+			"name": "Over\\/Under",
 			"suspended": false,
 			"bookmaker": {
 				"data": [
