@@ -1,20 +1,20 @@
 package sportmonks
 
-var markets = map[int][]string{
-	1: {
+var markets = map[string][]string{
+	"3Way Result": {
 		"MATCH_ODDS",
 	},
-	12: {
+	"Over\\/Under": {
 		"OVER_UNDER_05",
 		"OVER_UNDER_15",
 		"OVER_UNDER_25",
 		"OVER_UNDER_35",
 		"OVER_UNDER_45",
 	},
-	976105: {
+	"Both Teams To Score": {
 		"BOTH_TEAMS_TO_SCORE",
 	},
-	976384: {
+	"Corners Over Under": {
 		"OVER_UNDER_55_CORNR",
 		"OVER_UNDER_85_CORNR",
 		"OVER_UNDER_95_CORNR",

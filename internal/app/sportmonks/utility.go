@@ -5,16 +5,16 @@ import (
 	"github.com/statistico/statistico-sportmonks-go-client"
 )
 
-func parseMarketId(market string) (int, error) {
-	for id, m := range markets {
+func parseMarketName(market string) (string, error) {
+	for name, m := range markets {
 		for _, mk := range m {
 			if mk == market {
-				return id, nil
+				return name, nil
 			}
 		}
 	}
 
-	return 0, fmt.Errorf("market '%s' is not supported", market)
+	return "", fmt.Errorf("market '%s' is not supported", market)
 }
 
 func parseMarketRunners(market string, exchangeID int, odds []sportmonks.Odds) ([]sportmonks.Odds, error) {
@@ -66,11 +66,13 @@ func parseMarketOdds(total []string, odds []sportmonks.Odds) ([]sportmonks.Odds,
 	return runners, nil
 }
 
-func parseExchangeOdds(exchangeID int, exchanges []sportmonks.MatchOdds) []sportmonks.Odds {
-	for _, market := range exchanges {
-		for _, e := range market.BookmakerOdds() {
-			if e.ID == exchangeID {
-				return e.Odds()
+func parseExchangeMarketOdds(exchangeId int, market string, markets []sportmonks.MatchOdds) []sportmonks.Odds {
+	for _, m := range markets {
+		if m.Name == market {
+			for _, b := range m.BookmakerOdds() {
+				if b.ID == exchangeId {
+					return b.Odds()
+				}
 			}
 		}
 	}
