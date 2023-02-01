@@ -7,6 +7,8 @@ import (
 )
 
 type OddsParser interface {
+	// ParseMarketOdds parses and returns a slice of sportmonks.Odds struct associated to a fixture, exchange
+	// and market.
 	ParseMarketOdds(ctx context.Context, fixtureID, exchangeID int, market string) ([]sportmonks.Odds, error)
 }
 
@@ -28,13 +30,13 @@ func (m *oddsParser) ParseMarketOdds(ctx context.Context, fixtureID, exchangeID 
 	}
 
 	if len(markets) == 0 {
-		return nil, nil
+		return []sportmonks.Odds{}, nil
 	}
 
 	odds := parseExchangeMarketOdds(exchangeID, marketName, markets)
 
 	if odds == nil || len(odds) == 0 {
-		return nil, nil
+		return []sportmonks.Odds{}, nil
 	}
 
 	return parseMarketRunners(market, exchangeID, odds)

@@ -16,7 +16,7 @@ type marketFactory struct {
 func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
 	odds, err := m.parser.ParseMarketOdds(ctx, int(e.ID), exchangeID, e.Market)
 
-	if err != nil {
+	if err != nil || len(odds) == 0 {
 		return nil, err
 	}
 
