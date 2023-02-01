@@ -131,7 +131,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 		assert.Equal(t, "error fetching markets for exchange '1': Request failed with message: The requested endpoint does not exist!, code: 404", err.Error())
 	})
 
-	t.Run("returns nil if no markets are returned for event", func(t *testing.T) {
+	t.Run("returns an empty slice of struct if no markets are returned for event", func(t *testing.T) {
 		server := httpClient(func(req *http.Request) (*http.Response, error) {
 			return &http.Response{
 				StatusCode: 200,
@@ -155,10 +155,10 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		a := assert.New(t)
 
-		a.Nil(odds)
+		a.Equal(0, len(odds))
 	})
 
-	t.Run("returns nil if no market provided for exchange", func(t *testing.T) {
+	t.Run("returns an empty slice of struct if no market provided for exchange", func(t *testing.T) {
 		server := httpClient(func(req *http.Request) (*http.Response, error) {
 			return &http.Response{
 				StatusCode: 200,
@@ -182,10 +182,10 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		a := assert.New(t)
 
-		a.Nil(odds)
+		a.Equal(0, len(odds))
 	})
 
-	t.Run("returns nil if no odds provided for exchange market", func(t *testing.T) {
+	t.Run("returns an empty slice of struct if no odds provided for exchange market", func(t *testing.T) {
 		server := httpClient(func(req *http.Request) (*http.Response, error) {
 			return &http.Response{
 				StatusCode: 200,
@@ -209,7 +209,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		a := assert.New(t)
 
-		a.Nil(odds)
+		a.Equal(0, len(odds))
 	})
 }
 
