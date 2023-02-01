@@ -6,7 +6,7 @@ import (
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"github.com/jonboulle/clockwork"
 	"github.com/sirupsen/logrus"
-	"github.com/statistico/statistico-data-go-grpc-client"
+	"github.com/statistico/statistico-football-data-go-grpc-client"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-proto/go"
 	"sync"
