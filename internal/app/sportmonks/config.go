@@ -4,7 +4,7 @@ var markets = map[string][]string{
 	"3Way Result": {
 		"MATCH_ODDS",
 	},
-	"Over\\/Under": {
+	"Over/Under": {
 		"OVER_UNDER_05",
 		"OVER_UNDER_15",
 		"OVER_UNDER_25",

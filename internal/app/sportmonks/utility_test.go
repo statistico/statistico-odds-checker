@@ -20,23 +20,23 @@ func Test_parseMarketName(t *testing.T) {
 			},
 			{
 				MarketName: "OVER_UNDER_05",
-				Market:     "Over\\/Under",
+				Market:     "Over/Under",
 			},
 			{
 				MarketName: "OVER_UNDER_15",
-				Market:     "Over\\/Under",
+				Market:     "Over/Under",
 			},
 			{
 				MarketName: "OVER_UNDER_25",
-				Market:     "Over\\/Under",
+				Market:     "Over/Under",
 			},
 			{
 				MarketName: "OVER_UNDER_35",
-				Market:     "Over\\/Under",
+				Market:     "Over/Under",
 			},
 			{
 				MarketName: "OVER_UNDER_45",
-				Market:     "Over\\/Under",
+				Market:     "Over/Under",
 			},
 			{
 				MarketName: "BOTH_TEAMS_TO_SCORE",
