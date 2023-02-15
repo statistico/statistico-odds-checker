@@ -95,7 +95,7 @@ func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp
 		EventID:       m.EventID,
 		CompetitionID: fix.Competition.Id,
 		SeasonID:      fix.Season.Id,
-		EventDate:     fix.DateTime.Rfc,
+		EventDate:     fix.DateTime.Utc,
 		MarketName:    m.Name,
 		Exchange:      m.Exchange,
 		Runners:       m.Runners,
