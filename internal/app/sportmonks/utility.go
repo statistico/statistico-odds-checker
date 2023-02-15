@@ -28,7 +28,7 @@ func parseMarketRunners(market string, exchangeID int, odds []sportmonks.Odds) (
 	case "OVER_UNDER_15":
 		return parseMarketOdds([]string{"1.5"}, odds)
 	case "OVER_UNDER_25":
-		return parseMarketOdds([]string{"2.25", "2.5"}, odds)
+		return parseMarketOdds([]string{"2.5"}, odds)
 	case "OVER_UNDER_35":
 		return parseMarketOdds([]string{"3.5"}, odds)
 	case "OVER_UNDER_45":
