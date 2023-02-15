@@ -164,7 +164,7 @@ func Test_parseMarketRunners(t *testing.T) {
 			{
 				Value:            &f,
 				Handicap:         nil,
-				Total:            "2.25",
+				Total:            "2.5",
 				Label:            "Under",
 				Probability:      "35.71%",
 				Dp3:              "2.800",
@@ -178,7 +178,7 @@ func Test_parseMarketRunners(t *testing.T) {
 			{
 				Value:            &f,
 				Handicap:         nil,
-				Total:            "2.25",
+				Total:            "2.5",
 				Label:            "Over",
 				Probability:      "35.71%",
 				Dp3:              "2.800",
