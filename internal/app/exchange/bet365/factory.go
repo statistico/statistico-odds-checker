@@ -16,8 +16,12 @@ type marketFactory struct {
 func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
 	odds, err := m.parser.ParseMarketOdds(ctx, int(e.ID), exchangeID, e.Market)
 
-	if err != nil || len(odds) == 0 {
+	if err != nil {
 		return nil, err
+	}
+
+	if len(odds) == 0 {
+		return nil, fmt.Errorf("no odds returned from Beet365 factory for event %d and market %s", e.ID, e.Market)
 	}
 
 	runners, err := exchange.ConvertOddsToRunners(odds)
@@ -27,10 +31,10 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 	}
 
 	return &exchange.Market{
-		ID:       fmt.Sprintf("PIN-%d-%s", e.ID, e.Market),
+		ID:       fmt.Sprintf("BET365-%d-%s", e.ID, e.Market),
 		Name:     e.Market,
 		EventID:  e.ID,
-		Exchange: "PINNACLE",
+		Exchange: "BET365",
 		Runners:  runners,
 	}, nil
 }

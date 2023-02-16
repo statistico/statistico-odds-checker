@@ -30,7 +30,7 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 		ID:       fmt.Sprintf("PIN-%d-%s", e.ID, e.Market),
 		Name:     e.Market,
 		EventID:  e.ID,
-		Exchange: "PINNACLE",
+		Exchange: "BETCRIS",
 		Runners:  runners,
 	}, nil
 }
