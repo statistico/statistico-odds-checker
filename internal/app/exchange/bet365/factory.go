@@ -1,4 +1,4 @@
-package pinnacle
+package bet365
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/statistico/statistico-odds-checker/internal/app/sportmonks"
 )
 
-var exchangeID = 70
+var exchangeID = 2
 
 type marketFactory struct {
 	parser sportmonks.OddsParser
@@ -21,7 +21,7 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 	}
 
 	if len(odds) == 0 {
-		return nil, fmt.Errorf("no odds returned to Pinnacle factory for event %d and market %s", e.ID, e.Market)
+		return nil, fmt.Errorf("no odds returned to Bet365 factory for event %d and market %s", e.ID, e.Market)
 	}
 
 	runners, err := exchange.ConvertOddsToRunners(odds)
@@ -31,10 +31,10 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 	}
 
 	return &exchange.Market{
-		ID:       fmt.Sprintf("PIN-%d-%s", e.ID, e.Market),
+		ID:       fmt.Sprintf("BET365-%d-%s", e.ID, e.Market),
 		Name:     e.Market,
 		EventID:  e.ID,
-		Exchange: "PINNACLE",
+		Exchange: "BET365",
 		Runners:  runners,
 	}, nil
 }
