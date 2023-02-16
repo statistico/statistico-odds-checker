@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/statistico/statistico-sportmonks-go-client"
 	"strconv"
+	"strings"
 )
 
 func ConvertOddsToRunners(odds []sportmonks.Odds) ([]*Runner, error) {
@@ -17,7 +18,7 @@ func ConvertOddsToRunners(odds []sportmonks.Odds) ([]*Runner, error) {
 		}
 
 		runners = append(runners, &Runner{
-			Name: o.Label,
+			Name: strings.ToUpper(o.Label),
 			BackPrices: []PriceSize{
 				{
 					Price: float32(price),

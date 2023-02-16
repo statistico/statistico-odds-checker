@@ -31,7 +31,7 @@ func TestConvertOddsToRunners(t *testing.T) {
 		expected := []*exchange.Runner{
 			{
 				ID:   0,
-				Name: "Over",
+				Name: "OVER",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 1.98,
@@ -41,7 +41,7 @@ func TestConvertOddsToRunners(t *testing.T) {
 			},
 			{
 				ID:   0,
-				Name: "Under",
+				Name: "UNDER",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 2.55,
