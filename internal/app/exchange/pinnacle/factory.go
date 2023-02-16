@@ -16,8 +16,12 @@ type marketFactory struct {
 func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
 	odds, err := m.parser.ParseMarketOdds(ctx, int(e.ID), exchangeID, e.Market)
 
-	if err != nil || len(odds) == 0 {
+	if err != nil {
 		return nil, err
+	}
+
+	if len(odds) == 0 {
+		return nil, fmt.Errorf("no odds returned to Pinnacle factory for event %d and market %s", e.ID, e.Market)
 	}
 
 	runners, err := exchange.ConvertOddsToRunners(odds)
