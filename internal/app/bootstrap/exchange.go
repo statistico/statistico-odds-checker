@@ -47,8 +47,8 @@ func (c Container) PinnacleMarketFactory() exchange.MarketFactory {
 
 func (c Container) MarketBuilder() exchange.MarketBuilder {
 	factories := []exchange.MarketFactory{
-		c.Bet365MarketFactory(),
-		c.BetCrisMarketFactory(),
+		//c.Bet365MarketFactory(),
+		//c.BetCrisMarketFactory(),
 		c.PinnacleMarketFactory(),
 	}
 
