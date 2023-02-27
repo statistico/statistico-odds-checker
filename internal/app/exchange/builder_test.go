@@ -116,6 +116,52 @@ func TestMarketBuilder_Build(t *testing.T) {
 		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
 		assert.Equal(t, "Error when calling client 'error occurred' for event 1278121 and market OVER_UNDER_25", hook.LastEntry().Message)
 	})
+
+	t.Run("logs info if NoEventMarketError returned when creating market via market factory implementation", func(t *testing.T) {
+		t.Helper()
+
+		factoryOne := new(exchange.MockMarketFactory)
+		factoryTwo := new(exchange.MockMarketFactory)
+		factories := []exchange.MarketFactory{factoryOne, factoryTwo}
+		logger, hook := test.NewNullLogger()
+
+		builder := exchange.NewMarketBuilder(factories, logger)
+
+		date, err := time.Parse(time.RFC3339, "2020-03-12T00:00:00+00:00")
+
+		if err != nil {
+			t.Fatalf("Error parsing date %s", err.Error())
+		}
+
+		event := exchange.Event{
+			Date:   date,
+			Name:   "West Ham United vs Chelsea",
+			ID:     1278121,
+			Market: "OVER_UNDER_25",
+		}
+
+		ctx := context.Background()
+
+		mkOne := bookmakerMarket("1.5670", "PINNACLE")
+
+		e := exchange.NoEventMarketError{
+			Exchange: "PINNACLE",
+			Market:   "OVER_UNDER_25",
+			EventID:  1278121,
+		}
+
+		factoryOne.On("CreateMarket", ctx, &event).Once().Return(&mkOne, nil)
+		factoryTwo.On("CreateMarket", ctx, &event).Once().Return(&exchange.Market{}, &e)
+
+		markets := builder.Build(ctx, &event)
+
+		<-markets
+
+		assert.Equal(t, 0, len(markets))
+		assert.Equal(t, 1, len(hook.Entries))
+		assert.Equal(t, logrus.InfoLevel, hook.LastEntry().Level)
+		assert.Equal(t, "No markets returned for event 1278121 and market OVER_UNDER_25 and exchange PINNACLE", hook.LastEntry().Message)
+	})
 }
 
 func bookmakerMarket(marketId, ex string) exchange.Market {
