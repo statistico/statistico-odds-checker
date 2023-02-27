@@ -21,7 +21,11 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 	}
 
 	if len(odds) == 0 {
-		return nil, fmt.Errorf("no odds returned to Pinnacle factory for event %d and market %s", e.ID, e.Market)
+		return nil, &exchange.NoEventMarketError{
+			Exchange: "PINNACLE",
+			Market:   e.Market,
+			EventID:  e.ID,
+		}
 	}
 
 	runners, err := exchange.ConvertOddsToRunners(odds)

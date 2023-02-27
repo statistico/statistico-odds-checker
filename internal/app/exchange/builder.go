@@ -57,6 +57,7 @@ func (b *marketBuilder) buildMarkets(ctx context.Context, e *Event, factory Mark
 func (b *marketBuilder) logError(e error, eventID uint64, market string) {
 	switch e.(type) {
 	case *NoEventMarketError:
+		b.logger.Info(e.Error())
 		return
 	default:
 		b.logger.Errorf(

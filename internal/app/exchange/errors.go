@@ -28,10 +28,14 @@ func (m *MultipleMarketSelectionError) Error() string {
 	return fmt.Sprintf("Multiple selections returned for market %s and selection %d", m.EventID, m.SelectionID)
 }
 
-type NoEventMarketError struct{}
+type NoEventMarketError struct {
+	Exchange string
+	Market   string
+	EventID  uint64
+}
 
 func (m *NoEventMarketError) Error() string {
-	return fmt.Sprintf("No markets returned for event and market")
+	return fmt.Sprintf("No markets returned for event %d and market %s and exchange %s", m.EventID, m.Market, m.Exchange)
 }
 
 type NoEventError struct {
