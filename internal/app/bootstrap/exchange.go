@@ -45,12 +45,12 @@ func (c Container) PinnacleMarketFactory() exchange.MarketFactory {
 	return pinnacle.NewMarketFactory(c.SportmonksOddsParser())
 }
 
-func (c Container) MarketBuilder() exchange.MarketBuilder {
+func (c Container) MarketFactoryResolver() exchange.MarketFactoryResolver {
 	factories := []exchange.MarketFactory{
 		//c.Bet365MarketFactory(),
 		//c.BetCrisMarketFactory(),
 		c.PinnacleMarketFactory(),
 	}
 
-	return exchange.NewMarketBuilder(factories, c.Logger)
+	return exchange.NewMarketFactoryResolver(factories)
 }

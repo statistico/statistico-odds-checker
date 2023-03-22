@@ -9,7 +9,6 @@ func (c Container) EventMarketStreamer() stream.EventMarketStreamer {
 
 	return stream.NewEventMarketStreamer(
 		c.DataServiceResultClient(),
-		c.MarketBuilder(),
 		c.Logger,
 		c.Clock,
 		config.SupportedSeasons,

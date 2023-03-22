@@ -31,21 +31,12 @@ func main() {
 					return nil
 				},
 				Action: func(c *cli.Context) error {
-					from, err := time.Parse(time.RFC3339, c.String("from"))
-
-					if err != nil {
-						return err
-					}
-
-					to, err := time.Parse(time.RFC3339, c.String("to"))
-
-					if err != nil {
-						return err
-					}
+					from := clock.Now()
+					to := clock.Now().Add(time.Hour * 12)
 
 					ctx := context.Background()
 
-					if err = processor.Process(ctx, from, to); err != nil {
+					if err := processor.Process(ctx, from, to, c.String("exchange")); err != nil {
 						return err
 					}
 
@@ -53,16 +44,9 @@ func main() {
 				},
 				Flags: []cli.Flag{
 					&cli.StringFlag{
-						Name:     "from",
-						Usage:    "Find events with start date/time after value provided",
-						Value:    clock.Now().Format(time.RFC3339),
-						Required: false,
-					},
-					&cli.StringFlag{
-						Name:     "to",
-						Usage:    "Find events with start date/time before value provided",
-						Value:    clock.Now().Add(time.Hour * 12).Format(time.RFC3339),
-						Required: false,
+						Name:     "exchange",
+						Usage:    "Find odds for upcoming events published by provided exchange",
+						Required: true,
 					},
 				},
 			},

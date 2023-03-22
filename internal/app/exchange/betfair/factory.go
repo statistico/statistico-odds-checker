@@ -13,6 +13,10 @@ type marketFactory struct {
 	betfairClient betfair.Client
 }
 
+func (*marketFactory) Exchange() string {
+	return "BETFAIR"
+}
+
 func (m *marketFactory) CreateMarket(ctx context.Context, q *exchange.Event) (*exchange.Market, error) {
 	event, err := m.getEvent(ctx, q)
 
