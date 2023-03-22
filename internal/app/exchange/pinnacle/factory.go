@@ -13,6 +13,10 @@ type marketFactory struct {
 	parser sportmonks.OddsParser
 }
 
+func (*marketFactory) Exchange() string {
+	return "PINNACLE"
+}
+
 func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
 	odds, err := m.parser.ParseMarketOdds(ctx, int(e.ID), exchangeID, e.Market)
 

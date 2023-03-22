@@ -1,4 +1,4 @@
-FROM golang:1.17-rc-alpine
+FROM golang:1.19-rc-alpine
 
 RUN apk update && apk add git gcc g++
 

@@ -14,3 +14,7 @@ func (m *MockMarketFactory) CreateMarket(ctx context.Context, e *exchange.Event)
 	args := m.Called(ctx, e)
 	return args.Get(0).(*exchange.Market), args.Error(1)
 }
+
+func (m *MockMarketFactory) Exchange() string {
+	return "MOCK_FACTORY"
+}

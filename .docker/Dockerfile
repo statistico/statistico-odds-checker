@@ -1,5 +1,5 @@
 # Step 1
-FROM golang:1.17-rc-alpine AS builder
+FROM golang:1.19-alpine AS builder
 RUN apk update && apk add git gcc g++
 WORKDIR /app
 
