@@ -2,6 +2,7 @@ package betfair
 
 import (
 	"github.com/statistico/statistico-betfair-go-client"
+	"strings"
 )
 
 const (
@@ -9,8 +10,10 @@ const (
 	Draw      = "Draw"
 	Home      = "Home"
 	MatchOdds = "MATCH_ODDS"
+	No        = "NO"
 	Over      = "OVER"
 	Under     = "UNDER"
+	Yes       = "YES"
 )
 
 func parseRunnerName(runner *betfair.RunnerCatalogue, market string) string {
@@ -18,12 +21,20 @@ func parseRunnerName(runner *betfair.RunnerCatalogue, market string) string {
 		return handleMatchOddsRunners(runner.SortPriority)
 	}
 
-	if runner.RunnerName == "Under 2.5 Goals" {
+	if strings.HasPrefix(runner.RunnerName, "Under") {
 		return Under
 	}
 
-	if runner.RunnerName == "Over 2.5 Goals" {
+	if strings.HasPrefix(runner.RunnerName, "Over") {
 		return Over
+	}
+
+	if runner.RunnerName == "No" {
+		return No
+	}
+
+	if runner.RunnerName == "Yes" {
+		return Yes
 	}
 
 	return runner.RunnerName
