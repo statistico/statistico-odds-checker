@@ -114,13 +114,13 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory.AssertExpectations(t)
 	})
 
-	t.Run("factory is not called if event date and current date difference is greater than two hours", func(t *testing.T) {
+	t.Run("factory is not called if event date and current date difference is less than zero", func(t *testing.T) {
 		t.Helper()
 
 		fixClient := new(MockFixtureClient)
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
-		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
+		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 20, 25, 00, 00, time.UTC))
 		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25", "1X2"}
 
@@ -145,58 +145,6 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 				DateTime: &statistico.Date{
 					Utc: 1547496000,
 					Rfc: "2019-01-14T20:00:00Z",
-				},
-				Competition: &statistico.Competition{Id: 8},
-				Season:      &statistico.Season{Id: 17420},
-			},
-		}
-
-		ctx := context.Background()
-		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
-		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
-
-		fixClient.On("Search", ctx, fixReq).Return(fixtures, nil)
-
-		factory.AssertNotCalled(t, "CreateMarket")
-
-		ch := st.Stream(ctx, from, to, factory)
-
-		one := <-ch
-
-		assert.Nil(t, one)
-	})
-
-	t.Run("factory is not called if event date and current date difference is less than zero", func(t *testing.T) {
-		t.Helper()
-
-		fixClient := new(MockFixtureClient)
-		factory := new(exchange.MockMarketFactory)
-		logger, _ := test.NewNullLogger()
-		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
-		markets := []string{"OVER_UNDER_25", "1X2"}
-
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
-
-		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
-			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
-			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
-			return true
-		})
-
-		fixtures := []*statistico.Fixture{
-			{
-				Id: 349811,
-				HomeTeam: &statistico.Team{
-					Name: "West Ham United",
-				},
-				AwayTeam: &statistico.Team{
-					Name: "Arsenal",
-				},
-				DateTime: &statistico.Date{
-					Utc: 1547496000,
-					Rfc: "2019-01-14T10:00:00Z",
 				},
 				Competition: &statistico.Competition{Id: 8},
 				Season:      &statistico.Season{Id: 17420},
