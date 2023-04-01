@@ -19,17 +19,10 @@ func (c Container) BetfairMarketFactory() exchange.MarketFactory {
 		Key:      config.Key,
 	}
 
-	urls := bfc.BaseURLs{
-		Accounts: bfc.AccountsURL,
-		Betting:  bfc.BettingURL,
-		Login:    bfc.LoginURL,
-	}
+	store := c.Cache()
 
-	client := bfc.Client{
-		HTTPClient:  &http.Client{},
-		Credentials: creds,
-		BaseURLs:    urls,
-	}
+	client := bfc.NewClient(&http.Client{}, creds, store)
+
 	return betfair.NewMarketFactory(client)
 }
 
@@ -49,6 +42,7 @@ func (c Container) MarketFactoryResolver() exchange.MarketFactoryResolver {
 	factories := []exchange.MarketFactory{
 		//c.Bet365MarketFactory(),
 		//c.BetCrisMarketFactory(),
+		c.BetfairMarketFactory(),
 		c.PinnacleMarketFactory(),
 	}
 

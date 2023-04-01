@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	betfair "github.com/statistico/statistico-betfair-go-client"
+	"github.com/statistico/statistico-odds-checker/internal/app/cache"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	bf "github.com/statistico/statistico-odds-checker/internal/app/exchange/betfair"
 	"github.com/stretchr/testify/assert"
@@ -14,12 +15,6 @@ import (
 )
 
 func TestMarketRequester_Fetch(t *testing.T) {
-	url := betfair.BaseURLs{
-		Accounts: "https://mock.com",
-		Betting:  "https://mock.com",
-		Login:    "https://mock.com/login",
-	}
-
 	e := exchange.Event{
 		Name:   "West Ham United v Manchester City",
 		Date:   time.Date(2020, 10, 24, 12, 30, 00, 0, time.UTC),
@@ -38,7 +33,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listEvents/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listEvents/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(eventsResponse)),
@@ -46,7 +41,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listMarketCatalogue/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listMarketCatalogue/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(marketCatalogueResponse)),
@@ -54,7 +49,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listRunnerBook/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listRunnerBook/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(runnersResponse)),
@@ -62,14 +57,21 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
+			panic(req.URL.Path)
+
 			return nil
 		})
 
-		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
+		store := new(cache.MockStore)
+		ctx := context.Background()
+
+		client := betfair.NewClient(tc, betfair.InteractiveCredentials{}, store)
+
+		store.On("Get", ctx, "betfair-session-token").Return("token", nil)
 
 		factory := bf.NewMarketFactory(client)
 
-		market, err := factory.CreateMarket(context.Background(), &e)
+		market, err := factory.CreateMarket(ctx, &e)
 
 		if err != nil {
 			t.Fatalf("Error: %s", err.Error())
@@ -79,7 +81,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 
 		a.Equal("1.173887003", market.ID)
 		a.Equal(uint64(47972), market.Runners[0].ID)
-		a.Equal("Under 2.5 Goals", market.Runners[0].Name)
+		a.Equal("UNDER", market.Runners[0].Name)
 		a.Equal(float32(2.96), market.Runners[0].BackPrices[0].Price)
 		a.Equal(float32(152.84), market.Runners[0].BackPrices[0].Size)
 		a.Equal(float32(2.9), market.Runners[0].BackPrices[1].Price)
@@ -94,7 +96,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 		a.Equal(float32(91.04), market.Runners[0].LayPrices[2].Size)
 
 		a.Equal(uint64(47973), market.Runners[1].ID)
-		a.Equal("Over 2.5 Goals", market.Runners[1].Name)
+		a.Equal("OVER", market.Runners[1].Name)
 		a.Equal(float32(2.96), market.Runners[0].BackPrices[0].Price)
 		a.Equal(float32(152.84), market.Runners[0].BackPrices[0].Size)
 		a.Equal(float32(2.9), market.Runners[0].BackPrices[1].Price)
@@ -121,7 +123,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listEvents/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listEvents/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(`[]`)),
@@ -132,11 +134,16 @@ func TestMarketRequester_Fetch(t *testing.T) {
 			return nil
 		})
 
-		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
+		store := new(cache.MockStore)
+		ctx := context.Background()
+
+		client := betfair.NewClient(tc, betfair.InteractiveCredentials{}, store)
+
+		store.On("Get", ctx, "betfair-session-token").Return("token", nil)
 
 		factory := bf.NewMarketFactory(client)
 
-		_, err := factory.CreateMarket(context.Background(), &e)
+		_, err := factory.CreateMarket(ctx, &e)
 
 		if err == nil {
 			t.Fatalf("Expected error got nil")
@@ -157,7 +164,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listEvents/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listEvents/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(eventsResponse)),
@@ -165,7 +172,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listMarketCatalogue/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listMarketCatalogue/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(`[{}, {}]`)),
@@ -176,11 +183,16 @@ func TestMarketRequester_Fetch(t *testing.T) {
 			return nil
 		})
 
-		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
+		store := new(cache.MockStore)
+		ctx := context.Background()
+
+		client := betfair.NewClient(tc, betfair.InteractiveCredentials{}, store)
+
+		store.On("Get", ctx, "betfair-session-token").Return("token", nil)
 
 		factory := bf.NewMarketFactory(client)
 
-		_, err := factory.CreateMarket(context.Background(), &e)
+		_, err := factory.CreateMarket(ctx, &e)
 
 		if err == nil {
 			t.Fatalf("Expected error got nil")
@@ -201,7 +213,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listEvents/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listEvents/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(eventsResponse)),
@@ -209,7 +221,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listMarketCatalogue/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listMarketCatalogue/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(marketCatalogueResponse)),
@@ -217,7 +229,7 @@ func TestMarketRequester_Fetch(t *testing.T) {
 				}
 			}
 
-			if req.URL.Path == "/listRunnerBook/" {
+			if req.URL.Path == "/exchange/betting/rest/v1.0/listRunnerBook/" {
 				return &http.Response{
 					StatusCode: 200,
 					Body:       ioutil.NopCloser(bytes.NewBufferString(`[{}, {}]`)),
@@ -228,11 +240,16 @@ func TestMarketRequester_Fetch(t *testing.T) {
 			return nil
 		})
 
-		client := betfair.Client{HTTPClient: tc, BaseURLs: url}
+		store := new(cache.MockStore)
+		ctx := context.Background()
+
+		client := betfair.NewClient(tc, betfair.InteractiveCredentials{}, store)
+
+		store.On("Get", ctx, "betfair-session-token").Return("token", nil)
 
 		factory := bf.NewMarketFactory(client)
 
-		_, err := factory.CreateMarket(context.Background(), &e)
+		_, err := factory.CreateMarket(ctx, &e)
 
 		if err == nil {
 			t.Fatalf("Expected error got nil")

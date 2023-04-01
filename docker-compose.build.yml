@@ -9,6 +9,11 @@ services:
       - statistico_internal
     tty: true
 
+  redis:
+    image: 'redis'
+    networks:
+      - statistico-odds-checker_default
+
   test:
     build:
       dockerfile: ./.docker/test/Dockerfile

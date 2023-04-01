@@ -61,7 +61,7 @@ func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.F
 
 	diff := date.Sub(e.clock.Now()).Minutes()
 
-	if diff >= 70 || diff < 0 {
+	if diff < 0 {
 		wg.Done()
 		return
 	}
