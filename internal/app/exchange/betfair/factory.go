@@ -53,7 +53,11 @@ func (m *marketFactory) parseMarket(ctx context.Context, req betfair.ListMarketC
 	}
 
 	if len(catalogue) == 0 {
-		return nil, &exchange.NoEventMarketError{}
+		return nil, &exchange.NoEventMarketError{
+			Exchange: "BETFAIR",
+			Market:   q.Market,
+			EventID:  q.ID,
+		}
 	}
 
 	if len(catalogue) > 1 {
@@ -62,6 +66,7 @@ func (m *marketFactory) parseMarket(ctx context.Context, req betfair.ListMarketC
 
 	market := exchange.Market{
 		ID:       catalogue[0].MarketID,
+		EventID:  q.ID,
 		Name:     q.Market,
 		Exchange: "BETFAIR",
 	}

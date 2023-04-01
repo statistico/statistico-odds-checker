@@ -8,19 +8,22 @@ require (
 	github.com/golang/protobuf v1.5.2
 	github.com/jonboulle/clockwork v0.2.2
 	github.com/sirupsen/logrus v1.7.0
-	github.com/statistico/statistico-betfair-go-client v0.0.0-20201023150329-c5c14d4fe285
+	github.com/statistico/statistico-betfair-go-client v0.0.0-20230401201635-eeadc95b5c81
 	github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53
 	github.com/statistico/statistico-sportmonks-go-client v0.1.7
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	github.com/urfave/cli v1.22.9
 	google.golang.org/grpc v1.52.3
 )
 
 require (
+	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
+	github.com/redis/go-redis/v9 v9.0.2 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	golang.org/x/sys v0.4.0 // indirect

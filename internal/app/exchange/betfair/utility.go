@@ -9,18 +9,32 @@ const (
 	Draw      = "Draw"
 	Home      = "Home"
 	MatchOdds = "MATCH_ODDS"
+	Over      = "OVER"
+	Under     = "UNDER"
 )
 
 func parseRunnerName(runner *betfair.RunnerCatalogue, market string) string {
-	if market != MatchOdds {
-		return runner.RunnerName
+	if market == MatchOdds {
+		return handleMatchOddsRunners(runner.SortPriority)
 	}
 
-	if runner.SortPriority == 1 {
+	if runner.RunnerName == "Under 2.5 Goals" {
+		return Under
+	}
+
+	if runner.RunnerName == "Over 2.5 Goals" {
+		return Over
+	}
+
+	return runner.RunnerName
+}
+
+func handleMatchOddsRunners(priority int) string {
+	if priority == 1 {
 		return Home
 	}
 
-	if runner.SortPriority == 2 {
+	if priority == 2 {
 		return Away
 	}
 
