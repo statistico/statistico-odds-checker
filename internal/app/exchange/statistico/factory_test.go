@@ -2,6 +2,7 @@ package statistico_test
 
 import (
 	"context"
+	"errors"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange/statistico"
 	sp "github.com/statistico/statistico-proto/go"
@@ -22,7 +23,7 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 
 		event := exchange.Event{
 			ID:     55,
-			Name:   "PINNACLE",
+			Name:   "West Ham vs Chelsea",
 			Date:   time.Time{},
 			Market: "OVER_UNDER_25",
 		}
@@ -46,7 +47,7 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 
 		expectedMarket := &exchange.Market{
 			ID:       "STA-55-OVER_UNDER_25",
-			Exchange: "PINNACLE",
+			Exchange: "STATISTICO",
 			Name:     "OVER_UNDER_25",
 			EventID:  55,
 			Runners: []*exchange.Runner{
@@ -81,6 +82,30 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 
 		assert.Equal(t, expectedMarket, market)
 		compiler.AssertExpectations(t)
+	})
+
+	t.Run("returns an error if error is returned by compiler client", func(t *testing.T) {
+		t.Helper()
+
+		compiler := new(MockOddsClient)
+		factory := statistico.NewMarketFactory(compiler)
+
+		ctx := context.Background()
+
+		event := exchange.Event{
+			ID:     55,
+			Name:   "West Ham vs Chelsea",
+			Date:   time.Time{},
+			Market: "OVER_UNDER_25",
+		}
+
+		compiler.On("GetEventMarket", ctx, event.ID, event.Market).Return(&sp.EventMarket{}, errors.New("oh no"))
+
+		_, err := factory.CreateMarket(ctx, &event)
+
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
 	})
 }
 

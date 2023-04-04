@@ -101,6 +101,7 @@ github.com/statistico/statistico-football-data-go-grpc-client v0.0.0-20210830190
 github.com/statistico/statistico-odds-compiler-go-grpc-client v0.0.2 h1:RPk3imZTVcd3UQNrYPIFqFwRnkZyhM1j0PJwpRVtIG0=
 github.com/statistico/statistico-odds-compiler-go-grpc-client v0.0.2/go.mod h1:1ftCdQ8qPEiR85b0NXoxlVHwVUMTtcLRhrXwHp/DU4s=
 github.com/statistico/statistico-proto v0.0.16 h1:xvZ0yTO9b0mmaSJoeM3qQT6ML4f8IFLP6tBHxK3ydDI=
+github.com/statistico/statistico-proto v0.0.16/go.mod h1:IegjDKIHD0rxW6y2a++xCNNqIGSTxmncB6AempSO6pk=
 github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53 h1:wQrlre/iq4Tv+n02E/TAvpftZM1P6vHVbO50PBQN7YI=
 github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53/go.mod h1:vPyOUzi8uJfwh6QGj2RFFsgLTG2YehvpiN/ziVWEHV0=
 github.com/statistico/statistico-sportmonks-go-client v0.1.7 h1:rwjrbA4kcfqXFgR3w6dMSvklhGixzJJQVAgDej0e1XU=

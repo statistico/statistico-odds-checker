@@ -10,7 +10,6 @@ require (
 	github.com/redis/go-redis/v9 v9.0.2
 	github.com/sirupsen/logrus v1.7.0
 	github.com/statistico/statistico-betfair-go-client v0.0.0-20230401201635-eeadc95b5c81
-	github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53
 	github.com/statistico/statistico-sportmonks-go-client v0.1.7
 	github.com/stretchr/testify v1.8.2
 	github.com/urfave/cli v1.22.9
@@ -26,6 +25,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/statistico/statistico-odds-compiler-go-grpc-client v0.0.2 // indirect
+	github.com/statistico/statistico-proto v0.0.16 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.8.0 // indirect
