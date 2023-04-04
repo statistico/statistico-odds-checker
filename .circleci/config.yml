@@ -83,3 +83,5 @@ jobs:
           rule-name: StatisticoOddsChecker-BetfairMarketFetch
       - aws-ecs/deploy-ecs-scheduled-task:
           rule-name: StatisticoOddsChecker-PinnacleMarketFetch
+      - aws-ecs/deploy-ecs-scheduled-task:
+          rule-name: StatisticoOddsChecker-StatisticoMarketFetch
