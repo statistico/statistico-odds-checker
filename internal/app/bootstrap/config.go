@@ -10,6 +10,7 @@ type Config struct {
 	Sentry
 	SportsMonks
 	StatisticoFootballDataService
+	StatisticoOddsCompilerService
 }
 
 type AwsConfig struct {
@@ -39,6 +40,11 @@ type SportsMonks struct {
 }
 
 type StatisticoFootballDataService struct {
+	Host string
+	Port string
+}
+
+type StatisticoOddsCompilerService struct {
 	Host string
 	Port string
 }
@@ -100,6 +106,11 @@ func BuildConfig() *Config {
 	config.StatisticoFootballDataService = StatisticoFootballDataService{
 		Host: os.Getenv("STATISTICO_FOOTBALL_DATA_SERVICE_HOST"),
 		Port: os.Getenv("STATISTICO_FOOTBALL_DATA_SERVICE_PORT"),
+	}
+
+	config.StatisticoOddsCompilerService = StatisticoOddsCompilerService{
+		Host: os.Getenv("STATISTICO_ODDS_COMPILER_SERVICE_HOST"),
+		Port: os.Getenv("STATISTICO_ODDS_COMPILER_SERVICE_PORT"),
 	}
 
 	return &config
