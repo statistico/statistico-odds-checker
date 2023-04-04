@@ -31,8 +31,10 @@ func main() {
 					return nil
 				},
 				Action: func(c *cli.Context) error {
+					hours := 24 * c.Int("days")
+
 					from := clock.Now()
-					to := clock.Now().Add(time.Hour * 12)
+					to := clock.Now().Add(time.Hour * time.Duration(hours))
 
 					ctx := context.Background()
 
@@ -46,6 +48,11 @@ func main() {
 					&cli.StringFlag{
 						Name:     "exchange",
 						Usage:    "Find odds for upcoming events published by provided exchange",
+						Required: true,
+					},
+					&cli.IntFlag{
+						Name:     "days",
+						Usage:    "Find odds for upcoming fixtures x amount of days ahead",
 						Required: true,
 					},
 				},
