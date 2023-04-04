@@ -13,7 +13,7 @@ type marketFactory struct {
 	betfairClient betfair.Client
 }
 
-func (*marketFactory) Exchange() string {
+func (m *marketFactory) Exchange() string {
 	return "BETFAIR"
 }
 
