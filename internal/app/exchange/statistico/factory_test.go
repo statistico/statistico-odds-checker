@@ -107,6 +107,32 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 			t.Fatal("Expected error, got nil")
 		}
 	})
+
+	t.Run("return a nil market if market is not over under 2.5 goals", func(t *testing.T) {
+		t.Helper()
+
+		compiler := new(MockOddsClient)
+		factory := statistico.NewMarketFactory(compiler)
+
+		ctx := context.Background()
+
+		event := exchange.Event{
+			ID:     55,
+			Name:   "West Ham vs Chelsea",
+			Date:   time.Time{},
+			Market: "OVER_UNDER_45",
+		}
+
+		compiler.AssertNotCalled(t, "GetEventMarket")
+
+		em, err := factory.CreateMarket(ctx, &event)
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Nil(t, em)
+	})
 }
 
 type MockOddsClient struct {

@@ -8,6 +8,8 @@ import (
 	"strings"
 )
 
+const OverUnder25 = "OVER_UNDER_25"
+
 type marketFactory struct {
 	compiler statisticooddscompiler.OddCompilerClient
 }
@@ -17,6 +19,10 @@ func (m *marketFactory) Exchange() string {
 }
 
 func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
+	if e.Market != OverUnder25 {
+		return nil, nil
+	}
+
 	market, err := m.compiler.GetEventMarket(ctx, e.ID, e.Market)
 
 	if err != nil {
