@@ -60,7 +60,7 @@ func BuildConfig() *Config {
 			19793, // England - Championship
 			19794, // England - League One
 			19795, // England - League Two
-			//19917, // England - National League,
+			19917, // England - National League,
 			19726, // Netherlands - Eredivisie
 		},
 		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
