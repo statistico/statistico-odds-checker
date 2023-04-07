@@ -6,6 +6,7 @@ import (
 	"github.com/statistico/statistico-odds-checker/internal/app/cache"
 	"os"
 	"strconv"
+	"time"
 )
 
 func (c Container) Cache() cache.Store {
@@ -17,9 +18,12 @@ func (c Container) Cache() cache.Store {
 		db = 0
 	}
 
+	d, _ := time.ParseDuration("10s")
+
 	client := redis.NewClient(&redis.Options{
-		Addr: addr,
-		DB:   db,
+		Addr:        addr,
+		DB:          db,
+		DialTimeout: d,
 	})
 
 	return cache.NewRedisStore(client)
