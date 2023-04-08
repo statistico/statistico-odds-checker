@@ -2,7 +2,6 @@ package cache
 
 import (
 	"context"
-	"fmt"
 	"github.com/redis/go-redis/v9"
 	"time"
 )
@@ -23,8 +22,6 @@ func (r *redisStore) Set(ctx context.Context, key, value string) error {
 		return err
 	}
 
-	fmt.Printf("Value %s set in cache %s", key, value)
-
 	return nil
 }
 
@@ -38,8 +35,6 @@ func (r *redisStore) Get(ctx context.Context, key string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-
-	fmt.Printf("Fetchd from Redis cache: %s", value)
 
 	return value, nil
 }
