@@ -60,8 +60,9 @@ func BuildConfig() *Config {
 			19793, // England - Championship
 			19794, // England - League One
 			19795, // England - League Two
-			19917, // England - National League,
+			19917, // England - National League
 			19726, // Netherlands - Eredivisie
+			19745, // France - Ligue One
 		},
 		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
 		// other supported exchanges markets using Betfair as a base i.e. OVER_UNDER_25 refers to Over/Under 2.5 goals.
