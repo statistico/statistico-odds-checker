@@ -80,8 +80,12 @@ jobs:
           container-image-name-updates: >
             container=statistico-odds-checker-console,tag=latest
       - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-BetfairMarketFetch
+          rule-name: StatisticoOddsChecker-BetfairMarketFetchOne
       - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-PinnacleMarketFetch
+          rule-name: StatisticoOddsChecker-BetfairMarketFetchTwo
+      - aws-ecs/deploy-ecs-scheduled-task:
+          rule-name: StatisticoOddsChecker-PinnacleMarketFetchOne
+      - aws-ecs/deploy-ecs-scheduled-task:
+          rule-name: StatisticoOddsChecker-PinnacleMarketFetchTwo
       - aws-ecs/deploy-ecs-scheduled-task:
           rule-name: StatisticoOddsChecker-StatisticoMarketFetch
