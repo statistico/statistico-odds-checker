@@ -63,6 +63,7 @@ func BuildConfig() *Config {
 			19917, // England - National League
 			19726, // Netherlands - Eredivisie
 			19745, // France - Ligue One
+			19806, // Italy - Serie A
 			19799, // Spain - LaLiga
 		},
 		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
