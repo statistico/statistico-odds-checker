@@ -65,6 +65,7 @@ func BuildConfig() *Config {
 			19745, // France - Ligue One
 			19806, // Italy - Serie A
 			19799, // Spain - LaLiga
+			19900, // Turkey - Super Lig
 		},
 		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
 		// other supported exchanges markets using Betfair as a base i.e. OVER_UNDER_25 refers to Over/Under 2.5 goals.
