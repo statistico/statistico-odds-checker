@@ -1,6 +1,18 @@
 package betfair
 
 var teams = map[string]string{
+	"Ascoli":                   "Ascoli",
+	"Bari 1908":                "SSD Bari",
+	"Brescia":                  "Brescia",
+	"Cittadella":               "Cittadella",
+	"Cosenza":                  "Cosenza",gi
+	"Palermo":                  "Palermo",
+	"Perugia":                  "Perugia",
+	"Pisa":                     "Pisa",
+	"SPAL":                     "Spal",
+	"Südtirol":                 "Sudtirol",
+	"Como":                     "Como",
+	"Ternana":                  "Ternana",
 	"FC Augsburg":              "Augsburg",
 	"VfL Bochum 1848":          "Bochum",
 	"Borussia Dortmund":        "Dortmund",
