@@ -5,7 +5,7 @@ var teams = map[string]string{
 	"Bari 1908":                "SSD Bari",
 	"Brescia":                  "Brescia",
 	"Cittadella":               "Cittadella",
-	"Cosenza":                  "Cosenza",gi
+	"Cosenza":                  "Cosenza",
 	"Palermo":                  "Palermo",
 	"Perugia":                  "Perugia",
 	"Pisa":                     "Pisa",
