@@ -65,6 +65,7 @@ func BuildConfig() *Config {
 			19745, // France - Ligue One
 			19744, // Germany - Bundesliga
 			19806, // Italy - Serie A
+			20080, // Italy - Serie B
 			19799, // Spain - LaLiga
 			19900, // Turkey - Super Lig
 		},
