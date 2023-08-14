@@ -52,6 +52,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 				},
 				Competition: &statistico.Competition{Id: 8},
 				Season:      &statistico.Season{Id: 17420},
+				Round:       &statistico.Round{Name: "5"},
 			},
 		}
 
@@ -104,6 +105,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		a.Equal(uint64(349811), emOne.EventID)
 		a.Equal(uint64(8), emOne.CompetitionID)
 		a.Equal(uint64(17420), emOne.SeasonID)
+		a.Equal(uint64(5), emOne.Round)
 		a.Equal(int64(1547465400), emOne.EventDate)
 		a.Equal("OVER_UNDER_25", emOne.MarketName)
 		a.Equal("BETFAIR", emOne.Exchange)

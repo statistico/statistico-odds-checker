@@ -15,6 +15,7 @@ type EventMarket struct {
 	EventID       uint64             `json:"eventId"`
 	CompetitionID uint64             `json:"competitionId"`
 	SeasonID      uint64             `json:"seasonId"`
+	Round         uint64             `json:"round"`
 	EventDate     int64              `json:"eventDate"`
 	MarketName    string             `json:"name"`
 	Exchange      string             `json:"exchange"`
