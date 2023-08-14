@@ -22,7 +22,7 @@ func TestPublisher_PublishMarket(t *testing.T) {
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
 			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420," +
-				"\"eventDate\":1604430059,\"name\":\"1X2\"," +
+				"\"round\":5,\"eventDate\":1604430059,\"name\":\"1X2\"," +
 				"\"exchange\":\"BETFAIR\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
 				"\"backPrices\":[{\"price\":1.95,\"size\":1461}],\"layPrices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
@@ -50,7 +50,7 @@ func TestPublisher_PublishMarket(t *testing.T) {
 
 		input := mock.MatchedBy(func(i *sns.PublishInput) bool {
 			ms := "{\"id\":\"1.23712\",\"eventId\":129817121,\"competitionId\":8,\"seasonId\":17420," +
-				"\"eventDate\":1604430059,\"name\":\"1X2\"," +
+				"\"round\":5,\"eventDate\":1604430059,\"name\":\"1X2\"," +
 				"\"exchange\":\"BETFAIR\",\"runners\":[{\"id\":14571761,\"name\":\"Over 2.5 Goals\"," +
 				"\"backPrices\":[{\"price\":1.95,\"size\":1461}],\"layPrices\":[{\"price\":1.95,\"size\":1461}]}],\"timestamp\":1604430059}"
 
@@ -75,6 +75,7 @@ func eventMarket() *stream.EventMarket {
 		EventID:       129817121,
 		CompetitionID: 8,
 		SeasonID:      17420,
+		Round:         5,
 		EventDate:     1604430059,
 		MarketName:    "1X2",
 		Exchange:      "BETFAIR",

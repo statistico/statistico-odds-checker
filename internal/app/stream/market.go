@@ -9,6 +9,7 @@ import (
 	"github.com/statistico/statistico-football-data-go-grpc-client"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-proto/go"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -113,11 +114,18 @@ func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.F
 }
 
 func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp time.Time) *EventMarket {
+	var r uint64
+
+	if fix.Round != nil {
+		r, _ = strconv.ParseUint(fix.Round.Name, 10, 64)
+	}
+
 	return &EventMarket{
 		ID:            m.ID,
 		EventID:       m.EventID,
 		CompetitionID: fix.Competition.Id,
 		SeasonID:      fix.Season.Id,
+		Round:         r,
 		EventDate:     fix.DateTime.Utc,
 		MarketName:    m.Name,
 		Exchange:      m.Exchange,
