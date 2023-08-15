@@ -11,7 +11,6 @@ func (c Container) EventMarketStreamer() stream.EventMarketStreamer {
 		c.DataServiceResultClient(),
 		c.Logger,
 		c.Clock,
-		config.SupportedSeasons,
 		config.Markets,
 	)
 }
