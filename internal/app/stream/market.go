@@ -18,13 +18,11 @@ type eventMarketStreamer struct {
 	fixtureClient statisticodata.FixtureClient
 	logger        *logrus.Logger
 	clock         clockwork.Clock
-	seasons       []uint64
 	markets       []string
 }
 
 func (e *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time, fc exchange.MarketFactory) <-chan *EventMarket {
 	req := statistico.FixtureSearchRequest{
-		SeasonIds:  e.seasons,
 		DateBefore: &wrappers.StringValue{Value: to.Format(time.RFC3339)},
 		DateAfter:  &wrappers.StringValue{Value: from.Format(time.RFC3339)},
 	}
@@ -138,14 +136,12 @@ func NewEventMarketStreamer(
 	f statisticodata.FixtureClient,
 	l *logrus.Logger,
 	c clockwork.Clock,
-	s []uint64,
 	m []string,
 ) EventMarketStreamer {
 	return &eventMarketStreamer{
 		fixtureClient: f,
 		logger:        l,
 		clock:         c,
-		seasons:       s,
 		markets:       m,
 	}
 }

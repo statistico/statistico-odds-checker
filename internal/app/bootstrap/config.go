@@ -27,8 +27,7 @@ type BetFair struct {
 }
 
 type FootballConfig struct {
-	SupportedSeasons []uint64
-	Markets          []string
+	Markets []string
 }
 
 type Sentry struct {
@@ -55,20 +54,6 @@ func BuildConfig() *Config {
 	config.Publisher = os.Getenv("PUBLISHER")
 
 	config.FootballConfig = FootballConfig{
-		SupportedSeasons: []uint64{
-			19734, // England - Premier League
-			19793, // England - Championship
-			19794, // England - League One
-			19795, // England - League Two
-			19917, // England - National League
-			19726, // Netherlands - Eredivisie
-			19745, // France - Ligue One
-			19744, // Germany - Bundesliga
-			19806, // Italy - Serie A
-			20080, // Italy - Serie B
-			19799, // Spain - LaLiga
-			19900, // Turkey - Super Lig
-		},
 		// Betfair market terminology is used as our blueprint and standard. Internally we need to parse and handle
 		// other supported exchanges markets using Betfair as a base i.e. OVER_UNDER_25 refers to Over/Under 2.5 goals.
 		// Some markets may refer to this market a different way, so this needs to be handled that internally.

@@ -23,15 +23,13 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25", "1X2"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
 
 		ctx := context.Background()
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
@@ -123,13 +121,11 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 20, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25", "1X2"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
@@ -175,13 +171,11 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25", "1X2"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
@@ -211,15 +205,13 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
 
 		ctx := context.Background()
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
@@ -293,15 +285,13 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
 
 		ctx := context.Background()
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
@@ -371,15 +361,13 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		seasons := []uint64{1234, 5678}
 		markets := []string{"OVER_UNDER_25"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, seasons, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
 
 		ctx := context.Background()
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
-			assert.Equal(t, []uint64{1234, 5678}, r.SeasonIds)
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
 			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
 			return true
