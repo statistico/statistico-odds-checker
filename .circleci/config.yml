@@ -60,7 +60,7 @@ jobs:
       - run:
           name: Build / Store Application
           command: |
-            chmod +x ./.circleci/deploy/build-store.sh
+            chmod +x ./.circleci/deploy/build-store.sh && ./.circleci/deploy/build-store.sh
       - persist_to_workspace:
           root: *workspace_root
           paths:
