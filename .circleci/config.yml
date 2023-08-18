@@ -19,6 +19,9 @@ workflows:
           context: aws
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: master
       - release-images:
           context: aws
           requires:
