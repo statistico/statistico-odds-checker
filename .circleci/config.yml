@@ -74,7 +74,7 @@ jobs:
       - aws-cli/setup
       - run:
           name: Deploy Artifacts to S3
-          command: aws s3 sync --exclude="*" --include="*.zip" /tmp/workspace/artifacts/ s3://statistico-lambda --acl public-read
+          command: aws s3 sync --exclude="*" --include="*.zip" /tmp/workspace/artifacts/ s3://statistico-lambda
       - run:
           name: Update Lambda Function
           command: aws lambda update-function-code --function-name statistico-odds-checker --s3-bucket statistico-lambda --s3-key statistico-odds-checker.zip
