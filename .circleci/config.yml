@@ -56,7 +56,6 @@ jobs:
           name: Cache Built Images
           command: |
             chmod +x ./.circleci/deploy/docker-save.sh && ./.circleci/deploy/docker-save.sh
-            zip statistico-odds-checker.zip statistico-odds-checker
       - run:
           name: Build / Store Application
           command: |
