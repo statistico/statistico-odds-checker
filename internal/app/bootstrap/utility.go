@@ -45,6 +45,8 @@ func (a *awsClient) getSsmParameter(v string) string {
 		panic(err.Error())
 	}
 
+	fmt.Println(response.parameter.value)
+
 	return response.parameter.value
 }
 
