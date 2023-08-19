@@ -7,9 +7,9 @@ import (
 	"os"
 )
 
-type parameterStoreValue struct {
-	parameter struct {
-		value string
+type ParameterStoreValue struct {
+	Parameter struct {
+		Value string
 	}
 }
 
@@ -35,13 +35,11 @@ func getSsmParameter(v string) string {
 		panic(err.Error())
 	}
 
-	response := parameterStoreValue{}
+	response := ParameterStoreValue{}
 
 	if err := json.NewDecoder(res.Body).Decode(&response); err != nil {
 		panic(err.Error())
 	}
 
-	fmt.Println(response.parameter.value)
-
-	return response.parameter.value
+	return response.Parameter.Value
 }
