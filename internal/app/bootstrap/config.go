@@ -7,6 +7,7 @@ type Config struct {
 	BetFair
 	FootballConfig
 	Publisher string
+	RedisConfig
 	Sentry
 	SportsMonks
 	StatisticoFootballDataService
@@ -30,6 +31,12 @@ type FootballConfig struct {
 	Markets []string
 }
 
+type RedisConfig struct {
+	Host     string
+	Port     string
+	Database string
+}
+
 type Sentry struct {
 	DSN string
 }
@@ -50,6 +57,8 @@ type StatisticoOddsCompilerService struct {
 
 func BuildConfig() *Config {
 	config := Config{}
+
+	awsClient := newAwsClient()
 
 	config.Publisher = os.Getenv("PUBLISHER")
 
@@ -79,19 +88,25 @@ func BuildConfig() *Config {
 		Key:      os.Getenv("AWS_KEY"),
 		Secret:   os.Getenv("AWS_SECRET"),
 		Region:   os.Getenv("AWS_REGION"),
-		TopicArn: os.Getenv("AWS_TOPIC_ARN"),
+		TopicArn: awsClient.getSsmParameter("AWS_TOPIC_ARN"),
 	}
 
 	config.BetFair = BetFair{
-		Username: os.Getenv("BETFAIR_USERNAME"),
-		Password: os.Getenv("BETFAIR_PASSWORD"),
-		Key:      os.Getenv("BETFAIR_KEY"),
+		Username: awsClient.getSsmParameter("BETFAIR_USERNAME"),
+		Password: awsClient.getSsmParameter("BETFAIR_PASSWORD"),
+		Key:      awsClient.getSsmParameter("BETFAIR_KEY"),
 	}
 
-	config.Sentry = Sentry{DSN: os.Getenv("SENTRY_DSN")}
+	config.RedisConfig = RedisConfig{
+		Host:     awsClient.getSsmParameter("REDIS_HOST"),
+		Port:     os.Getenv("REDIS_PORT"),
+		Database: os.Getenv("REDIS_DATABASE"),
+	}
+
+	config.Sentry = Sentry{DSN: awsClient.getSsmParameter("SENTRY_DSN")}
 
 	config.SportsMonks = SportsMonks{
-		ApiKey: os.Getenv("SPORTMONKS_API_KEY"),
+		ApiKey: awsClient.getSsmParameter("SPORTMONKS_API_KEY"),
 	}
 
 	config.StatisticoFootballDataService = StatisticoFootballDataService{
