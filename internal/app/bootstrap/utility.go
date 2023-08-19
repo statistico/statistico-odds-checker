@@ -13,11 +13,7 @@ type parameterStoreValue struct {
 	}
 }
 
-type awsClient struct {
-	httpClient *http.Client
-}
-
-func (a *awsClient) getSsmParameter(v string) string {
+func getSsmParameter(v string) string {
 	url := fmt.Sprintf(
 		"http://localhost:2773/systemsmanager/parameters/get/?name=%s&withDecryption=true",
 		v,
@@ -31,7 +27,9 @@ func (a *awsClient) getSsmParameter(v string) string {
 
 	req.Header.Set("X-Aws-Parameters-Secrets-Token", os.Getenv("AWS_SESSION_TOKEN"))
 
-	res, err := a.httpClient.Do(req)
+	client := &http.Client{}
+
+	res, err := client.Do(req)
 
 	if err != nil {
 		panic(err.Error())
@@ -46,8 +44,4 @@ func (a *awsClient) getSsmParameter(v string) string {
 	fmt.Println(response.parameter.value)
 
 	return response.parameter.value
-}
-
-func newAwsClient() *awsClient {
-	return &awsClient{httpClient: &http.Client{}}
 }

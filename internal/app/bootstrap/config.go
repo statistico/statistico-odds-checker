@@ -58,8 +58,6 @@ type StatisticoOddsCompilerService struct {
 func BuildConfig() *Config {
 	config := Config{}
 
-	awsClient := newAwsClient()
-
 	config.Publisher = os.Getenv("PUBLISHER")
 
 	config.FootballConfig = FootballConfig{
@@ -86,25 +84,25 @@ func BuildConfig() *Config {
 
 	config.AwsConfig = AwsConfig{
 		Region:   os.Getenv("AWS_REGION"),
-		TopicArn: awsClient.getSsmParameter("statistico-odds-checker-AWS_TOPIC_ARN"),
+		TopicArn: getSsmParameter("statistico-odds-checker-AWS_TOPIC_ARN"),
 	}
 
 	config.BetFair = BetFair{
-		Username: awsClient.getSsmParameter("statistico-odds-checker-BETFAIR_USERNAME"),
-		Password: awsClient.getSsmParameter("statistico-odds-checker-BETFAIR_PASSWORD"),
-		Key:      awsClient.getSsmParameter("statistico-odds-checker-BETFAIR_KEY"),
+		Username: getSsmParameter("statistico-odds-checker-BETFAIR_USERNAME"),
+		Password: getSsmParameter("statistico-odds-checker-BETFAIR_PASSWORD"),
+		Key:      getSsmParameter("statistico-odds-checker-BETFAIR_KEY"),
 	}
 
 	config.RedisConfig = RedisConfig{
-		Host:     awsClient.getSsmParameter("statistico-odds-checker-REDIS_HOST"),
+		Host:     getSsmParameter("statistico-odds-checker-REDIS_HOST"),
 		Port:     os.Getenv("REDIS_PORT"),
 		Database: os.Getenv("REDIS_DATABASE"),
 	}
 
-	config.Sentry = Sentry{DSN: awsClient.getSsmParameter("statistico-odds-checker-SENTRY_DSN")}
+	config.Sentry = Sentry{DSN: getSsmParameter("statistico-odds-checker-SENTRY_DSN")}
 
 	config.SportsMonks = SportsMonks{
-		ApiKey: awsClient.getSsmParameter("statistico-odds-checker-SPORTMONKS_API_KEY"),
+		ApiKey: getSsmParameter("statistico-odds-checker-SPORTMONKS_API_KEY"),
 	}
 
 	config.StatisticoFootballDataService = StatisticoFootballDataService{
