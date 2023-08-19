@@ -23,8 +23,6 @@ func (c Container) Cache() cache.Store {
 		DB:       db,
 		PoolSize: 50,
 	})
-
-	defer client.Close()
-
+	
 	return cache.NewRedisStore(client)
 }
