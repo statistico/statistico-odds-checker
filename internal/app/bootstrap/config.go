@@ -85,8 +85,6 @@ func BuildConfig() *Config {
 	}
 
 	config.AwsConfig = AwsConfig{
-		Key:      os.Getenv("AWS_KEY"),
-		Secret:   os.Getenv("AWS_SECRET"),
 		Region:   os.Getenv("AWS_REGION"),
 		TopicArn: awsClient.getSsmParameter("statistico-odds-checker-AWS_TOPIC_ARN"),
 	}
