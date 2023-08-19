@@ -31,9 +31,7 @@ func (a *awsClient) getSsmParameter(v string) string {
 
 	req.Header.Set("X-Aws-Parameters-Secrets-Token", os.Getenv("AWS_SESSION_TOKEN"))
 
-	client := &http.Client{}
-
-	res, err := client.Do(req)
+	res, err := a.httpClient.Do(req)
 
 	if err != nil {
 		panic(err.Error())
