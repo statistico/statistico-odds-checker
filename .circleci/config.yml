@@ -15,6 +15,13 @@ workflows:
   build-test-deploy:
     jobs:
       - build-and-test
+      - deploy:
+          context: aws
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: master
       - release-images:
           context: aws
           requires:
@@ -52,10 +59,28 @@ jobs:
           name: Cache Built Images
           command: |
             chmod +x ./.circleci/deploy/docker-save.sh && ./.circleci/deploy/docker-save.sh
+      - run:
+          name: Build / Store Application
+          command: |
+            chmod +x ./.circleci/deploy/build-store.sh && ./.circleci/deploy/build-store.sh
       - persist_to_workspace:
           root: *workspace_root
           paths:
             - docker-cache
+            - artifacts
+
+  deploy:
+    executor: aws-cli/default
+    steps:
+      - checkout
+      - *attach_workspace
+      - aws-cli/setup
+      - run:
+          name: Deploy Artifacts to S3
+          command: aws s3 sync --exclude="*" --include="*.zip" /tmp/workspace/artifacts/ s3://statistico-lambda
+      - run:
+          name: Update Lambda Function
+          command: aws lambda update-function-code --function-name statistico-odds-checker --s3-bucket statistico-lambda --s3-key statistico-odds-checker.zip
 
   release-images:
     executor: aws-cli/default
