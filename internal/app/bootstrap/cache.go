@@ -5,7 +5,6 @@ import (
 	"github.com/redis/go-redis/v9"
 	"github.com/statistico/statistico-odds-checker/internal/app/cache"
 	"strconv"
-	"time"
 )
 
 func (c Container) Cache() cache.Store {
@@ -19,13 +18,13 @@ func (c Container) Cache() cache.Store {
 		db = 0
 	}
 
-	d, _ := time.ParseDuration("10s")
-
 	client := redis.NewClient(&redis.Options{
-		Addr:        addr,
-		DB:          db,
-		DialTimeout: d,
+		Addr:     addr,
+		DB:       db,
+		PoolSize: 50,
 	})
+
+	defer client.Close()
 
 	return cache.NewRedisStore(client)
 }
