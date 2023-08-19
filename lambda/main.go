@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/statistico/statistico-odds-checker/internal/app/bootstrap"
+	"time"
 )
 
 type MyEvent struct {
@@ -15,25 +16,21 @@ type MyEvent struct {
 func HandleRequest(ctx context.Context, event MyEvent) (string, error) {
 	fmt.Println("[INFO] Building and publishing markets")
 
-	config := bootstrap.BuildConfig()
+	app := bootstrap.BuildContainer(bootstrap.BuildConfig())
 
-	return fmt.Sprintf("Exchange is %s Redis host is %s and sportmonks key is %s", event.Exchange, config.RedisConfig.Host, config.SportsMonks.ApiKey), nil
+	processor := app.Processor()
+	clock := app.Clock
 
-	//app := bootstrap.BuildContainer(bootstrap.BuildConfig())
+	hours := 24 * event.Days
 
-	//processor := app.Processor()
-	//clock := app.Clock
+	from := clock.Now()
+	to := clock.Now().Add(time.Hour * time.Duration(hours))
 
-	//hours := 24 * event.Days
+	if err := processor.Process(ctx, from, to, event.Exchange); err != nil {
+		return fmt.Sprintf("[ERROR] %s\n", err.Error()), err
+	}
 
-	//from := clock.Now()
-	//to := clock.Now().Add(time.Hour * time.Duration(hours))
-
-	//if err := processor.Process(ctx, from, to, event.Exchange); err != nil {
-	//	return fmt.Sprintf("[ERROR] %s\n", err.Error()), err
-	//}
-
-	//return fmt.Sprintf("[INFO] Completed for exchange %s", event.Exchange), nil
+	return fmt.Sprintf("[INFO] Completed for exchange %s", event.Exchange), nil
 }
 
 func main() {
