@@ -60,8 +60,6 @@ func BuildConfig() *Config {
 
 	awsClient := newAwsClient()
 
-	panic(awsClient.getSsmParameter("statistico-odds-checker-REDIS_HOST"))
-
 	config.Publisher = os.Getenv("PUBLISHER")
 
 	config.FootballConfig = FootballConfig{
