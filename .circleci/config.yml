@@ -22,21 +22,6 @@ workflows:
           filters:
             branches:
               only: master
-      - release-images:
-          context: aws
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only: master
-      - deploy-to-production:
-          context: aws
-          requires:
-            - build-and-test
-            - release-images
-          filters:
-            branches:
-              only: master
 
 jobs:
   build-and-test:
@@ -81,36 +66,3 @@ jobs:
       - run:
           name: Update Lambda Function
           command: aws lambda update-function-code --function-name statistico-odds-checker --s3-bucket statistico-lambda --s3-key statistico-odds-checker.zip
-
-  release-images:
-    executor: aws-cli/default
-    steps:
-      - checkout
-      - *attach_workspace
-      - setup_remote_docker
-      - aws-cli/setup
-      - run:
-          name: Push images to ECR
-          command: |
-            chmod +x ./.circleci/deploy/docker-load.sh && ./.circleci/deploy/docker-load.sh
-            chmod +x ./.circleci/deploy/docker-push.sh && ./.circleci/deploy/docker-push.sh
-
-  deploy-to-production:
-    docker:
-      - image: 'circleci/python:3.7.1'
-    steps:
-      - aws-cli/setup
-      - aws-ecs/update-task-definition:
-          family: 'statistico-odds-checker-console'
-          container-image-name-updates: >
-            container=statistico-odds-checker-console,tag=latest
-      - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-BetfairMarketFetchOne
-      - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-BetfairMarketFetchTwo
-      - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-PinnacleMarketFetchOne
-      - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-PinnacleMarketFetchTwo
-      - aws-ecs/deploy-ecs-scheduled-task:
-          rule-name: StatisticoOddsChecker-StatisticoMarketFetch
