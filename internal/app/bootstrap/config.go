@@ -7,6 +7,7 @@ type Config struct {
 	BetFair
 	FootballConfig
 	Publisher string
+	RedisConfig
 	Sentry
 	SportsMonks
 	StatisticoFootballDataService
@@ -28,6 +29,12 @@ type BetFair struct {
 
 type FootballConfig struct {
 	Markets []string
+}
+
+type RedisConfig struct {
+	Host     string
+	Port     string
+	Database string
 }
 
 type Sentry struct {
@@ -76,22 +83,26 @@ func BuildConfig() *Config {
 	}
 
 	config.AwsConfig = AwsConfig{
-		Key:      os.Getenv("AWS_KEY"),
-		Secret:   os.Getenv("AWS_SECRET"),
 		Region:   os.Getenv("AWS_REGION"),
-		TopicArn: os.Getenv("AWS_TOPIC_ARN"),
+		TopicArn: getSsmParameter("statistico-odds-checker-AWS_TOPIC_ARN"),
 	}
 
 	config.BetFair = BetFair{
-		Username: os.Getenv("BETFAIR_USERNAME"),
-		Password: os.Getenv("BETFAIR_PASSWORD"),
-		Key:      os.Getenv("BETFAIR_KEY"),
+		Username: getSsmParameter("statistico-odds-checker-BETFAIR_USERNAME"),
+		Password: getSsmParameter("statistico-odds-checker-BETFAIR_PASSWORD"),
+		Key:      getSsmParameter("statistico-odds-checker-BETFAIR_KEY"),
 	}
 
-	config.Sentry = Sentry{DSN: os.Getenv("SENTRY_DSN")}
+	config.RedisConfig = RedisConfig{
+		Host:     getSsmParameter("statistico-odds-checker-REDIS_HOST"),
+		Port:     os.Getenv("REDIS_PORT"),
+		Database: os.Getenv("REDIS_DATABASE"),
+	}
+
+	config.Sentry = Sentry{DSN: getSsmParameter("statistico-odds-checker-SENTRY_DSN")}
 
 	config.SportsMonks = SportsMonks{
-		ApiKey: os.Getenv("SPORTMONKS_API_KEY"),
+		ApiKey: getSsmParameter("statistico-odds-checker-SPORTMONKS_API_KEY"),
 	}
 
 	config.StatisticoFootballDataService = StatisticoFootballDataService{

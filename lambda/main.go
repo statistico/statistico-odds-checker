@@ -4,19 +4,33 @@ import (
 	"context"
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
-	"os"
+	"github.com/statistico/statistico-odds-checker/internal/app/bootstrap"
+	"time"
 )
 
 type MyEvent struct {
-	Name string `json:"name"`
+	Exchange string `json:"exchange"`
+	Days     int    `json:"days"`
 }
 
-func HandleRequest(ctx context.Context, name MyEvent) (string, error) {
-	return fmt.Sprintf(
-		"Hello %s! Your publisher is %s and your football data host is %s",
-		name.Name, os.Getenv("PUBLISHER"),
-		os.Getenv("STATISTICO_FOOTBALL_DATA_SERVICE_HOST"),
-	), nil
+func HandleRequest(ctx context.Context, event MyEvent) (string, error) {
+	fmt.Println("[INFO] Building and publishing markets")
+
+	app := bootstrap.BuildContainer(bootstrap.BuildConfig())
+
+	processor := app.Processor()
+	clock := app.Clock
+
+	hours := 24 * event.Days
+
+	from := clock.Now()
+	to := clock.Now().Add(time.Hour * time.Duration(hours))
+
+	if err := processor.Process(ctx, from, to, event.Exchange); err != nil {
+		return fmt.Sprintf("[ERROR] %s\n", err.Error()), err
+	}
+
+	return fmt.Sprintf("[INFO] Completed for exchange %s", event.Exchange), nil
 }
 
 func main() {

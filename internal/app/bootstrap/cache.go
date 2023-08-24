@@ -4,27 +4,25 @@ import (
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"github.com/statistico/statistico-odds-checker/internal/app/cache"
-	"os"
 	"strconv"
-	"time"
 )
 
 func (c Container) Cache() cache.Store {
-	addr := fmt.Sprintf("%s:%s", os.Getenv("REDIS_HOST"), os.Getenv("REDIS_PORT"))
+	config := c.Config.RedisConfig
 
-	db, err := strconv.Atoi(os.Getenv("REDIS_DATABASE"))
+	addr := fmt.Sprintf("%s:%s", config.Host, config.Port)
+
+	db, err := strconv.Atoi(config.Database)
 
 	if err != nil {
 		db = 0
 	}
 
-	d, _ := time.ParseDuration("10s")
-
 	client := redis.NewClient(&redis.Options{
-		Addr:        addr,
-		DB:          db,
-		DialTimeout: d,
+		Addr:     addr,
+		DB:       db,
+		PoolSize: 50,
 	})
-
+	
 	return cache.NewRedisStore(client)
 }

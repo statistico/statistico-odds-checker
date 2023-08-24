@@ -2,7 +2,6 @@ package bootstrap
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/statistico/statistico-odds-checker/internal/app/publish"
@@ -12,12 +11,8 @@ import (
 
 func (c Container) Publisher() publish.Publisher {
 	if c.Config.Publisher == "aws" {
-		key := c.Config.AwsConfig.Key
-		secret := c.Config.AwsConfig.Secret
-
 		sess, err := session.NewSession(&aws.Config{
-			Credentials: credentials.NewStaticCredentials(key, secret, ""),
-			Region:      aws.String(c.Config.AwsConfig.Region),
+			Region: aws.String(c.Config.AwsConfig.Region),
 		})
 
 		if err != nil {
