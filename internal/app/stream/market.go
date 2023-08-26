@@ -66,8 +66,6 @@ func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.F
 	}
 
 	for _, market := range e.markets {
-		wg.Add(1)
-
 		ev := exchange.Event{
 			Date:   date,
 			Name:   fmt.Sprintf("%s v %s", f.HomeTeam.Name, f.AwayTeam.Name),
@@ -75,37 +73,32 @@ func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.F
 			Market: market,
 		}
 
-		go func(wg *sync.WaitGroup) {
-			m, err := fc.CreateMarket(ctx, &ev)
+		m, err := fc.CreateMarket(ctx, &ev)
 
-			if err != nil {
-				switch err.(type) {
-				case *exchange.NoEventMarketError:
-					e.logger.Info(err.Error())
-					break
-				default:
-					e.logger.Errorf(
-						"error when calling factory '%s' for event %d and market %s and exchange %s",
-						err.Error(),
-						ev.ID,
-						ev.Market,
-						fc.Exchange(),
-					)
-					break
-				}
-
-				wg.Done()
-				return
+		if err != nil {
+			switch err.(type) {
+			case *exchange.NoEventMarketError:
+				e.logger.Info(err.Error())
+				break
+			default:
+				e.logger.Errorf(
+					"error when calling factory '%s' for event %d and market %s and exchange %s",
+					err.Error(),
+					ev.ID,
+					ev.Market,
+					fc.Exchange(),
+				)
+				break
 			}
 
-			if m == nil || len(m.Runners) == 0 {
-				wg.Done()
-				return
-			}
+			continue
+		}
 
-			ch <- convertToEventMarket(m, f, e.clock.Now())
-			wg.Done()
-		}(wg)
+		if m == nil || len(m.Runners) == 0 {
+			continue
+		}
+
+		ch <- convertToEventMarket(m, f, e.clock.Now())
 	}
 
 	wg.Done()
