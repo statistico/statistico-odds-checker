@@ -29,7 +29,7 @@ func (p *Processor) Process(ctx context.Context, from, to time.Time, exchange st
 		err := p.publisher.PublishMarket(m)
 
 		if err != nil {
-			p.logger.Errorf("Error publishing market %q", err)
+			p.logger.Errorf("Error publishing market %s for fixture %d: %q", m.MarketName, m.EventID, err)
 		}
 	}
 
