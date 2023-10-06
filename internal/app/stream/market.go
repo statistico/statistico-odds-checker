@@ -18,10 +18,9 @@ type eventMarketStreamer struct {
 	fixtureClient statisticodata.FixtureClient
 	logger        *logrus.Logger
 	clock         clockwork.Clock
-	markets       []string
 }
 
-func (e *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time, fc exchange.MarketFactory) <-chan *EventMarket {
+func (e *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time, fc exchange.MarketFactory, market string) <-chan *EventMarket {
 	req := statistico.FixtureSearchRequest{
 		DateBefore: &wrappers.StringValue{Value: to.Format(time.RFC3339)},
 		DateAfter:  &wrappers.StringValue{Value: from.Format(time.RFC3339)},
@@ -36,12 +35,12 @@ func (e *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time, fc
 
 	ch := make(chan *EventMarket, len(fixtures))
 
-	go e.buildEventMarkets(ctx, fixtures, ch, fc)
+	go e.buildEventMarkets(ctx, fixtures, ch, fc, market)
 
 	return ch
 }
 
-func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket, fc exchange.MarketFactory) {
+func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []*statistico.Fixture, ch chan<- *EventMarket, fc exchange.MarketFactory, market string) {
 	defer close(ch)
 	var wg sync.WaitGroup
 
@@ -49,13 +48,13 @@ func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []
 		fmt.Printf("Fetching markets for fixture %d\n", fx.Id)
 
 		wg.Add(1)
-		go e.handleFixture(ctx, fx, &wg, ch, fc)
+		go e.handleFixture(ctx, fx, &wg, ch, fc, market)
 	}
 
 	wg.Wait()
 }
 
-func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.Fixture, wg *sync.WaitGroup, ch chan<- *EventMarket, fc exchange.MarketFactory) {
+func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.Fixture, wg *sync.WaitGroup, ch chan<- *EventMarket, fc exchange.MarketFactory, market string) {
 	date := time.Unix(f.DateTime.Utc, 0)
 
 	diff := date.Sub(e.clock.Now()).Minutes()
@@ -65,41 +64,40 @@ func (e *eventMarketStreamer) handleFixture(ctx context.Context, f *statistico.F
 		return
 	}
 
-	for _, market := range e.markets {
-		ev := exchange.Event{
-			Date:   date,
-			Name:   fmt.Sprintf("%s v %s", f.HomeTeam.Name, f.AwayTeam.Name),
-			ID:     uint64(f.Id),
-			Market: market,
-		}
-
-		m, err := fc.CreateMarket(ctx, &ev)
-
-		if err != nil {
-			switch err.(type) {
-			case *exchange.NoEventMarketError:
-				e.logger.Info(err.Error())
-				break
-			default:
-				e.logger.Errorf(
-					"error when calling factory '%s' for event %d and market %s and exchange %s",
-					err.Error(),
-					ev.ID,
-					ev.Market,
-					fc.Exchange(),
-				)
-				break
-			}
-
-			continue
-		}
-
-		if m == nil || len(m.Runners) == 0 {
-			continue
-		}
-
-		ch <- convertToEventMarket(m, f, e.clock.Now())
+	ev := exchange.Event{
+		Date:   date,
+		Name:   fmt.Sprintf("%s v %s", f.HomeTeam.Name, f.AwayTeam.Name),
+		ID:     uint64(f.Id),
+		Market: market,
 	}
+
+	m, err := fc.CreateMarket(ctx, &ev)
+
+	if err != nil {
+		switch err.(type) {
+		case *exchange.NoEventMarketError:
+			e.logger.Info(err.Error())
+			wg.Done()
+			return
+		default:
+			e.logger.Errorf(
+				"error when calling factory '%s' for event %d and market %s and exchange %s",
+				err.Error(),
+				ev.ID,
+				ev.Market,
+				fc.Exchange(),
+			)
+			wg.Done()
+			return
+		}
+	}
+
+	if m == nil || len(m.Runners) == 0 {
+		wg.Done()
+		return
+	}
+
+	ch <- convertToEventMarket(m, f, e.clock.Now())
 
 	wg.Done()
 }
@@ -129,12 +127,10 @@ func NewEventMarketStreamer(
 	f statisticodata.FixtureClient,
 	l *logrus.Logger,
 	c clockwork.Clock,
-	m []string,
 ) EventMarketStreamer {
 	return &eventMarketStreamer{
 		fixtureClient: f,
 		logger:        l,
 		clock:         c,
-		markets:       m,
 	}
 }
