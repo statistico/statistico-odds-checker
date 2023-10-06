@@ -1,7 +1,7 @@
 package statistico
 
 func marketIsSupported(market string) bool {
-	markets := []string{OverUnder05, OverUnder15, OverUnder25, OverUnder35}
+	markets := []string{OverUnder25}
 
 	for _, m := range markets {
 		if m == market {

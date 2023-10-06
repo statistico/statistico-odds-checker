@@ -5,9 +5,12 @@ import (
 )
 
 func (c Container) EventMarketStreamer() stream.EventMarketStreamer {
+	config := c.Config.FootballConfig
+
 	return stream.NewEventMarketStreamer(
 		c.DataServiceResultClient(),
 		c.Logger,
 		c.Clock,
+		config.Markets,
 	)
 }

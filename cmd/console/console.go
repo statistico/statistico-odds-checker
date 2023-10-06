@@ -38,7 +38,7 @@ func main() {
 
 					ctx := context.Background()
 
-					if err := processor.Process(ctx, from, to, c.String("exchange"), "PLACEHOLDER"); err != nil {
+					if err := processor.Process(ctx, from, to, c.String("exchange")); err != nil {
 						fmt.Printf("[ERROR] %s\n", err.Error())
 					}
 
