@@ -7,7 +7,7 @@ import (
 )
 
 type EventMarketStreamer interface {
-	Stream(ctx context.Context, from, to time.Time, fc exchange.MarketFactory, market string) <-chan *EventMarket
+	Stream(ctx context.Context, from, to time.Time, fc exchange.MarketFactory) <-chan *EventMarket
 }
 
 type EventMarket struct {
