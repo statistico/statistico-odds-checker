@@ -16,14 +16,14 @@ type Processor struct {
 	logger    *logrus.Logger
 }
 
-func (p *Processor) Process(ctx context.Context, from, to time.Time, exchange string) error {
+func (p *Processor) Process(ctx context.Context, from, to time.Time, exchange, market string) error {
 	f, err := p.resolver.Resolve(exchange)
 
 	if err != nil {
 		return err
 	}
 
-	markets := p.streamer.Stream(ctx, from, to, f)
+	markets := p.streamer.Stream(ctx, from, to, f, market)
 
 	for m := range markets {
 		err := p.publisher.PublishMarket(m)

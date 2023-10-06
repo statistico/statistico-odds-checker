@@ -10,6 +10,7 @@ import (
 
 type MyEvent struct {
 	Exchange string `json:"exchange"`
+	Market   string `json:"market"`
 	Days     int    `json:"days"`
 }
 
@@ -26,7 +27,7 @@ func HandleRequest(ctx context.Context, event MyEvent) (string, error) {
 	from := clock.Now()
 	to := clock.Now().Add(time.Hour * time.Duration(hours))
 
-	if err := processor.Process(ctx, from, to, event.Exchange); err != nil {
+	if err := processor.Process(ctx, from, to, event.Exchange, event.Market); err != nil {
 		return fmt.Sprintf("[ERROR] %s\n", err.Error()), err
 	}
 

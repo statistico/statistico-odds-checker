@@ -23,9 +23,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		markets := []string{"OVER_UNDER_25", "1X2"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock)
 
 		ctx := context.Background()
 
@@ -91,7 +90,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_25")
 
 		emOne := <-ch
 
@@ -121,9 +120,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 20, 25, 00, 00, time.UTC))
-		markets := []string{"OVER_UNDER_25", "1X2"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock)
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
@@ -157,7 +155,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 
 		factory.AssertNotCalled(t, "CreateMarket")
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_25")
 
 		one := <-ch
 
@@ -171,9 +169,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		markets := []string{"OVER_UNDER_25", "1X2"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock)
 
 		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
 			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
@@ -188,7 +185,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_25")
 
 		assert.Nil(t, ch)
 		assert.Equal(t, 1, len(hook.Entries))
@@ -205,9 +202,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		markets := []string{"OVER_UNDER_25"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock)
 
 		ctx := context.Background()
 
@@ -261,7 +257,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_25")
 
 		emOne := <-ch
 
@@ -285,9 +281,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, hook := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		markets := []string{"OVER_UNDER_25"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock)
 
 		ctx := context.Background()
 
@@ -337,7 +332,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_25")
 
 		emOne := <-ch
 
@@ -361,9 +356,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		factory := new(exchange.MockMarketFactory)
 		logger, _ := test.NewNullLogger()
 		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
-		markets := []string{"OVER_UNDER_25"}
 
-		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock)
 
 		ctx := context.Background()
 
@@ -421,7 +415,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_25")
 
 		emOne := <-ch
 
