@@ -91,7 +91,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "")
 
 		emOne := <-ch
 
@@ -106,6 +106,97 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		a.Equal(uint64(5), emOne.Round)
 		a.Equal(int64(1547465400), emOne.EventDate)
 		a.Equal("OVER_UNDER_25", emOne.MarketName)
+		a.Equal("BETFAIR", emOne.Exchange)
+		a.Equal(marketOne.Runners, emOne.Runners)
+		a.Equal(int64(1547465100), emOne.Timestamp)
+
+		fixClient.AssertExpectations(t)
+		factory.AssertExpectations(t)
+	})
+
+	t.Run("parses fixtures and markets and pushes them into the provided channel by overriding default markets", func(t *testing.T) {
+		t.Helper()
+
+		fixClient := new(MockFixtureClient)
+		factory := new(exchange.MockMarketFactory)
+		logger, _ := test.NewNullLogger()
+		clock := clockwork.NewFakeClockAt(time.Date(2019, 01, 14, 11, 25, 00, 00, time.UTC))
+		markets := []string{"OVER_UNDER_25", "1X2"}
+
+		st := stream.NewEventMarketStreamer(fixClient, logger, clock, markets)
+
+		ctx := context.Background()
+
+		fixReq := mock.MatchedBy(func(r *statistico.FixtureSearchRequest) bool {
+			assert.Equal(t, "2019-01-14T10:00:00Z", r.DateAfter.GetValue())
+			assert.Equal(t, "2019-01-14T12:00:00Z", r.DateBefore.GetValue())
+			return true
+		})
+
+		fixtures := []*statistico.Fixture{
+			{
+				Id: 349811,
+				HomeTeam: &statistico.Team{
+					Name: "West Ham United",
+				},
+				AwayTeam: &statistico.Team{
+					Name: "Arsenal",
+				},
+				DateTime: &statistico.Date{
+					Utc: 1547465400,
+					Rfc: "2019-01-14T12:00:00Z",
+				},
+				Competition: &statistico.Competition{Id: 8},
+				Season:      &statistico.Season{Id: 17420},
+				Round:       &statistico.Round{Name: "5"},
+			},
+		}
+
+		fixClient.On("Search", ctx, fixReq).Return(fixtures, nil)
+
+		event := mock.MatchedBy(func(e *exchange.Event) bool {
+			assert.Equal(t, "OVER_UNDER_35", e.Market)
+			assert.Equal(t, time.Unix(1547465400, 0), e.Date)
+			assert.Equal(t, "West Ham United v Arsenal", e.Name)
+			assert.Equal(t, uint64(349811), e.ID)
+			return true
+		})
+
+		marketOne := exchange.Market{
+			ID:       "1.254912",
+			EventID:  349811,
+			Name:     "OVER_UNDER_35",
+			Exchange: "BETFAIR",
+			Runners: []*exchange.Runner{
+				{
+					ID:         0,
+					Name:       "OVER",
+					BackPrices: nil,
+					LayPrices:  nil,
+				},
+			},
+		}
+
+		factory.On("CreateMarket", ctx, event).Return(&marketOne, nil)
+
+		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
+		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
+
+		ch := st.Stream(ctx, from, to, factory, "OVER_UNDER_35")
+
+		emOne := <-ch
+
+		<-ch
+
+		a := assert.New(t)
+
+		a.Equal("1.254912", emOne.ID)
+		a.Equal(uint64(349811), emOne.EventID)
+		a.Equal(uint64(8), emOne.CompetitionID)
+		a.Equal(uint64(17420), emOne.SeasonID)
+		a.Equal(uint64(5), emOne.Round)
+		a.Equal(int64(1547465400), emOne.EventDate)
+		a.Equal("OVER_UNDER_35", emOne.MarketName)
 		a.Equal("BETFAIR", emOne.Exchange)
 		a.Equal(marketOne.Runners, emOne.Runners)
 		a.Equal(int64(1547465100), emOne.Timestamp)
@@ -157,7 +248,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 
 		factory.AssertNotCalled(t, "CreateMarket")
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "")
 
 		one := <-ch
 
@@ -188,7 +279,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "")
 
 		assert.Nil(t, ch)
 		assert.Equal(t, 1, len(hook.Entries))
@@ -261,7 +352,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "")
 
 		emOne := <-ch
 
@@ -337,7 +428,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "")
 
 		emOne := <-ch
 
@@ -421,7 +512,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		from := time.Date(2019, 01, 14, 10, 00, 00, 00, time.UTC)
 		to := time.Date(2019, 01, 14, 12, 00, 00, 00, time.UTC)
 
-		ch := st.Stream(ctx, from, to, factory)
+		ch := st.Stream(ctx, from, to, factory, "")
 
 		emOne := <-ch
 
