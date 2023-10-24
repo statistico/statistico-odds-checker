@@ -296,6 +296,8 @@ var teams = map[string]string{
 	"Rotherham United":         "Rotherham",
 	"Cardiff City":             "Cardiff",
 	"Sheffield Wednesday":      "Sheff Wed",
+	"Wrexham":                  "Wrexham",
+	"Sutton United":            "Sutton Utd",
 	"OH Leuven":                "Oud-Heverlee Leuven",
 	"Kortrijk":                 "Kortrijk",
 	"Sporting Charleroi":       "Charleroi",
