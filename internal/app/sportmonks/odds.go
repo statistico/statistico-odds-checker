@@ -23,7 +23,7 @@ func (m *oddsParser) ParseMarketOdds(ctx context.Context, fixtureID, exchangeID 
 		return nil, fmt.Errorf("error handling market for exchange '%d': market '%s' is not supported", exchangeID, market)
 	}
 
-	markets, _, err := m.client.OddsByFixtureAndMarket(ctx, fixtureID, marketID)
+	markets, _, err := m.client.OddsByFixtureAndMarket(ctx, fixtureID, marketID, []string{"bookmaker", "market"})
 
 	if err != nil {
 		return nil, fmt.Errorf("error fetching markets for exchange '%d': %s", exchangeID, err.Error())
