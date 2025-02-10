@@ -3,6 +3,11 @@ orbs:
   aws-cli: circleci/aws-cli@0.1.20
   aws-ecs: circleci/aws-ecs@3.1.0
 
+executors:
+  machine-executor:
+    machine:
+      image: ubuntu-2004:2023.10.1
+
 references:
   workspace_root: &workspace_root
     /tmp/workspace
@@ -26,25 +31,28 @@ workflows:
 jobs:
   build-and-test:
     working_directory: ~/go/src/github.com/statistico/statistico-odds-checker
-    machine: true
+    executor: machine-executor
     environment:
       GOPATH: /home/circleci/go
     steps:
+      - *attach_workspace
       - checkout
       - run:
           name: Build Release Image
           command: |
-            docker network create statistico_internal
-            docker-compose -f docker-compose.build.yml up -d --build
+            make docker-build
       - run:
           name: Test Release Image
           command: |
-            docker-compose -f docker-compose.build.yml run test gotestsum -f short-verbose
+            make test
+      - run:
+          name: Cache Built Images
+          command: |
+            chmod +x ./.circleci/deploy/docker-save.sh && ./.circleci/deploy/docker-save.sh
       - persist_to_workspace:
           root: *workspace_root
           paths:
             - docker-cache
-            - artifacts
 
 #  deploy:
 #    executor: aws-cli/default
