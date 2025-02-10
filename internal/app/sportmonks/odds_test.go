@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
+	"time"
 )
 
 func TestOddsParser_ParseMarketOdds(t *testing.T) {
@@ -30,50 +31,86 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 1, "OVER_UNDER_25")
+		odds, err := parser.ParseMarketOdds(context.Background(), 152, 2, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
 		}
 
-		underOdds := spClient.FlexFloat(1.91)
-		overOdds := spClient.FlexFloat(2.65)
+		labelOne := "1"
+		labelTwo := "2"
+
+		created, _ := time.Parse(time.RFC3339, "2025-01-26T14:57:19.000000Z")
 
 		expectedOdds := []spClient.Odds{
 			{
-				Value:            &underOdds,
-				Handicap:         nil,
-				Total:            "2.5",
-				Label:            "Under",
-				Probability:      "52.36%",
-				Dp3:              "1.910",
-				American:         -110,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             true,
-				BookmakerEventID: nil,
-				LastUpdate: spClient.DateTime{
-					Date:         "2019-10-05 13:01:00.227530",
-					TimezoneType: 3,
-					Timezone:     "UTC",
+				ID:                    151577019200,
+				FixtureID:             19155301,
+				MarketID:              1,
+				BookmakerID:           2,
+				Label:                 "Home",
+				Value:                 "3.75",
+				Name:                  &labelOne,
+				SortOrder:             nil,
+				MarketDescription:     "Full Time Result",
+				Probability:           "26.67%",
+				DP3:                   "1.750",
+				Fractional:            "15/4",
+				American:              "275",
+				Winning:               false,
+				Stopped:               false,
+				Total:                 nil,
+				Handicap:              nil,
+				Participants:          nil,
+				CreatedAt:             created,
+				OriginalLabel:         nil,
+				LatestBookmakerUpdate: "2025-02-10 14:10:51",
+				Bookmaker: &spClient.Bookmaker{
+					ID:       2,
+					LegacyID: 2,
+					Name:     "bet365",
+				},
+				Market: &spClient.Market{
+					ID:                     1,
+					LegacyID:               1,
+					Name:                   "Fulltime Result",
+					DeveloperName:          "FULLTIME_RESULT",
+					HasWinningCalculations: false,
 				},
 			},
 			{
-				Value:            &overOdds,
-				Handicap:         nil,
-				Total:            "2.5",
-				Label:            "Over",
-				Probability:      "52.36%",
-				Dp3:              "1.910",
-				American:         -110,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             true,
-				BookmakerEventID: nil,
-				LastUpdate: spClient.DateTime{
-					Date:         "2019-10-05 13:01:00.227530",
-					TimezoneType: 2,
-					Timezone:     "UTC",
+				ID:                    151577019200,
+				FixtureID:             19155301,
+				MarketID:              1,
+				BookmakerID:           2,
+				Label:                 "Away",
+				Value:                 "3.75",
+				Name:                  &labelTwo,
+				SortOrder:             nil,
+				MarketDescription:     "Full Time Result",
+				Probability:           "26.67%",
+				DP3:                   "3.750",
+				Fractional:            "15/4",
+				American:              "275",
+				Winning:               false,
+				Stopped:               false,
+				Total:                 nil,
+				Handicap:              nil,
+				Participants:          nil,
+				CreatedAt:             created,
+				OriginalLabel:         nil,
+				LatestBookmakerUpdate: "2025-02-10 14:10:51",
+				Bookmaker: &spClient.Bookmaker{
+					ID:       2,
+					LegacyID: 2,
+					Name:     "bet365",
+				},
+				Market: &spClient.Market{
+					ID:                     1,
+					LegacyID:               1,
+					Name:                   "Fulltime Result",
+					DeveloperName:          "FULLTIME_RESULT",
+					HasWinningCalculations: false,
 				},
 			},
 		}
@@ -95,13 +132,13 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		_, err := parser.ParseMarketOdds(context.Background(), 152, 1, "ASIAN_HANDICAP")
+		_, err := parser.ParseMarketOdds(context.Background(), 152, 2, "ASIAN_HANDICAP")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
 		}
 
-		assert.Equal(t, "error handling market for exchange '1': market 'ASIAN_HANDICAP' is not supported", err.Error())
+		assert.Equal(t, "error handling market for exchange '2': market 'ASIAN_HANDICAP' is not supported", err.Error())
 	})
 
 	t.Run("return an error if error returned by sportmonks client", func(t *testing.T) {
@@ -122,13 +159,13 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		_, err := parser.ParseMarketOdds(context.Background(), 152, 1, "OVER_UNDER_25")
+		_, err := parser.ParseMarketOdds(context.Background(), 152, 2, "MATCH_ODDS")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
 		}
 
-		assert.Equal(t, "error fetching markets for exchange '1': Request failed with message: The requested endpoint does not exist!, code: 404", err.Error())
+		assert.Equal(t, "error fetching markets for exchange '2': Request failed with the message: The requested endpoint does not exist!", err.Error())
 	})
 
 	t.Run("returns an empty slice of struct if no markets are returned for event", func(t *testing.T) {
@@ -147,7 +184,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 1, "OVER_UNDER_25")
+		odds, err := parser.ParseMarketOdds(context.Background(), 152, 1, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -174,7 +211,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 111, "OVER_UNDER_25")
+		odds, err := parser.ParseMarketOdds(context.Background(), 152, 111, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -201,7 +238,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 123, "OVER_UNDER_45")
+		odds, err := parser.ParseMarketOdds(context.Background(), 152, 123, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -216,56 +253,73 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 var overUnderGoalsOddsResponse = `{
 	"data": [
 		{
-			"id": 38,
-			"name": "Over/Under",
-			"suspended": false,
+			"id": 151577019200,
+			"fixture_id": 19155301,
+			"market_id": 1,
+			"bookmaker_id": 2,
+			"label": "Home",
+			"value": "3.75",
+			"name": "1",
+			"sort_order": null,
+			"market_description": "Full Time Result",
+			"probability": "26.67%",
+			"dp3": "1.750",
+			"fractional": "15\/4",
+			"american": "275",
+			"winning": false,
+			"stopped": false,
+			"total": null,
+			"handicap": null,
+			"participants": null,
+			"created_at": "2025-01-26T14:57:19.000000Z",
+			"original_label": null,
+			"latest_bookmaker_update": "2025-02-10 14:10:51",
 			"bookmaker": {
-				"data": [
-					{
-						"id": 1,
-            			"name": "10Bet",
-						"odds": {
-							"data": [
-								{
-									"value": "1.91",
-									"handicap": null,
-									"total": "2.5",
-									"label": "Under",
-									"probability": "52.36%",
-									"dp3": "1.910",
-									"american": -110,
-									"factional": null,
-									"winning": null,
-									"stop": true,
-									"bookmaker_event_id": null,
-									"last_update": {
-										"date": "2019-10-05 13:01:00.227530",
-										"timezone_type": 3,
-										"timezone": "UTC"
-									}
-								},
-								{
-									"value": "2.65",
-									"handicap": null,
-									"total": "2.5",
-									"label": "Over",
-									"probability": "52.36%",
-									"dp3": "1.910",
-									"american": -110,
-									"factional": null,
-									"winning": null,
-									"stop": true,
-									"bookmaker_event_id": null,
-									"last_update": {
-										"date": "2019-10-05 13:01:00.227530",
-										"timezone_type": 2,
-										"timezone": "UTC"
-									}
-								}
-							]
-						}
-					}
-				]
+				"id": 2,
+				"legacy_id": 2,
+				"name": "bet365"
+			},
+			"market": {
+				"id": 1,
+				"legacy_id": 1,
+				"name": "Fulltime Result",
+				"developer_name": "FULLTIME_RESULT",
+				"has_winning_calculations": false
+			}
+		},
+		{
+			"id": 151577019200,
+			"fixture_id": 19155301,
+			"market_id": 1,
+			"bookmaker_id": 2,
+			"label": "Away",
+			"value": "3.75",
+			"name": "2",
+			"sort_order": null,
+			"market_description": "Full Time Result",
+			"probability": "26.67%",
+			"dp3": "3.750",
+			"fractional": "15\/4",
+			"american": "275",
+			"winning": false,
+			"stopped": false,
+			"total": null,
+			"handicap": null,
+			"participants": null,
+			"created_at": "2025-01-26T14:57:19.000000Z",
+			"original_label": null,
+			"latest_bookmaker_update": "2025-02-10 14:10:51",
+			"bookmaker": {
+				"id": 2,
+				"legacy_id": 2,
+				"name": "bet365"
+			},
+			"market": {
+				"id": 1,
+				"legacy_id": 1,
+				"name": "Fulltime Result",
+				"developer_name": "FULLTIME_RESULT",
+				"has_winning_calculations": false
 			}
 		}
 	]
@@ -276,10 +330,8 @@ var EmptyOddsResponse = `{
 }`
 
 var errorResponse = `{
-	"error": {
-		"message": "The requested endpoint does not exist!",
-		"code": 404
-	}
+	"message": "The requested endpoint does not exist!",
+	"code": 404
 }`
 
 func httpClient(fn roundTripFunc) *http.Client {

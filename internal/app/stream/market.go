@@ -30,7 +30,7 @@ func (e *eventMarketStreamer) Stream(ctx context.Context, from, to time.Time, fc
 	fixtures, err := e.fixtureClient.Search(ctx, &req)
 
 	if err != nil {
-		e.logger.Errorf("Error %q fetching fixtures in football market requester", err.Error())
+		e.logger.Errorf("error %q fetching fixtures in football market requester", err.Error())
 		return nil
 	}
 
@@ -46,8 +46,6 @@ func (e *eventMarketStreamer) buildEventMarkets(ctx context.Context, fixtures []
 	var wg sync.WaitGroup
 
 	for _, fx := range fixtures {
-		fmt.Printf("Fetching markets for fixture %d\n", fx.Id)
-
 		wg.Add(1)
 		go e.handleFixture(ctx, fx, &wg, ch, fc, market)
 	}

@@ -32,11 +32,11 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 		odds := []sp.Odds{
 			{
 				Label: "Over",
-				Dp3:   "1.95",
+				DP3:   "1.95",
 			},
 			{
 				Label: "Under",
-				Dp3:   "2.08",
+				DP3:   "2.08",
 			},
 		}
 
@@ -150,11 +150,11 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 		odds := []sp.Odds{
 			{
 				Label: "Over",
-				Dp3:   "Hello",
+				DP3:   "Hello",
 			},
 			{
 				Label: "Under",
-				Dp3:   "2.08",
+				DP3:   "2.08",
 			},
 		}
 
