@@ -14,11 +14,11 @@ func TestConvertOddsToRunners(t *testing.T) {
 		odds := []sportmonks.Odds{
 			{
 				Label: "Over",
-				Dp3:   "1.98",
+				DP3:   "1.98",
 			},
 			{
 				Label: "Under",
-				Dp3:   "2.55",
+				DP3:   "2.55",
 			},
 		}
 
@@ -60,11 +60,11 @@ func TestConvertOddsToRunners(t *testing.T) {
 		odds := []sportmonks.Odds{
 			{
 				Label: "Over",
-				Dp3:   "1.98",
+				DP3:   "1.98",
 			},
 			{
 				Label: "Under",
-				Dp3:   "HeeeHeee",
+				DP3:   "HeeeHeee",
 			},
 		}
 

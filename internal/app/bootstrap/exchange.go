@@ -4,9 +4,7 @@ import (
 	bfc "github.com/statistico/statistico-betfair-go-client"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange/bet365"
-	"github.com/statistico/statistico-odds-checker/internal/app/exchange/betcris"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange/betfair"
-	"github.com/statistico/statistico-odds-checker/internal/app/exchange/pinnacle"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange/statistico"
 	"net/http"
 )
@@ -31,25 +29,15 @@ func (c Container) Bet365MarketFactory() exchange.MarketFactory {
 	return bet365.NewMarketFactory(c.SportmonksOddsParser())
 }
 
-func (c Container) BetCrisMarketFactory() exchange.MarketFactory {
-	return betcris.NewMarketFactory(c.SportmonksOddsParser())
-}
-
-func (c Container) PinnacleMarketFactory() exchange.MarketFactory {
-	return pinnacle.NewMarketFactory(c.SportmonksOddsParser())
-}
-
 func (c Container) StatisticoMarketFactory() exchange.MarketFactory {
 	return statistico.NewMarketFactory(c.OddsCompilerClient())
 }
 
 func (c Container) MarketFactoryResolver() exchange.MarketFactoryResolver {
 	factories := []exchange.MarketFactory{
-		//c.Bet365MarketFactory(),
-		//c.BetCrisMarketFactory(),
-		c.BetfairMarketFactory(),
-		c.PinnacleMarketFactory(),
-		c.StatisticoMarketFactory(),
+		c.Bet365MarketFactory(),
+		//c.BetfairMarketFactory(),
+		//c.StatisticoMarketFactory(),
 	}
 
 	return exchange.NewMarketFactoryResolver(factories)

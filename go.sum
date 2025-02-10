@@ -110,6 +110,8 @@ github.com/statistico/statistico-proto v0.0.16/go.mod h1:IegjDKIHD0rxW6y2a++xCNN
 github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53/go.mod h1:vPyOUzi8uJfwh6QGj2RFFsgLTG2YehvpiN/ziVWEHV0=
 github.com/statistico/statistico-sportmonks-go-client v0.1.7 h1:rwjrbA4kcfqXFgR3w6dMSvklhGixzJJQVAgDej0e1XU=
 github.com/statistico/statistico-sportmonks-go-client v0.1.7/go.mod h1:qaTCU6vpRcPUMZ8eVVBw4+I38ZcuDDWtofyDzl/WiPE=
+github.com/statistico/statistico-sportmonks-go-client v0.2.14 h1:ppIEMM1DB8DEsbNdz69KUWA8w3Wf9iGGkI8DfV8Xp0o=
+github.com/statistico/statistico-sportmonks-go-client v0.2.14/go.mod h1:KJZKCm57MGWMo800qDDW/JlaVcXQZq4yOZA5zDd2q8w=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/objx v0.4.0/go.mod h1:YvHI0jy2hoMjB+UWwv71VJQ9isScKT/TqJzVSSt89Yw=
 github.com/stretchr/objx v0.5.0 h1:1zr/of2m5FGMsad5YfcqgdqdWrIhu+EBEJRhR1U7z/c=

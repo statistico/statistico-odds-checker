@@ -1,277 +1,159 @@
 package sportmonks
 
 import (
-	"github.com/statistico/statistico-sportmonks-go-client"
+	spClient "github.com/statistico/statistico-sportmonks-go-client"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
-func Test_parseMarketName(t *testing.T) {
-	t.Run("successfully parses name for the given market", func(t *testing.T) {
-		t.Helper()
-
-		markets := []struct {
-			MarketName string
-			Market     string
-		}{
-			{
-				MarketName: "MATCH_ODDS",
-				Market:     "3Way Result",
-			},
-			{
-				MarketName: "OVER_UNDER_05",
-				Market:     "Over/Under",
-			},
-			{
-				MarketName: "OVER_UNDER_15",
-				Market:     "Over/Under",
-			},
-			{
-				MarketName: "OVER_UNDER_25",
-				Market:     "Over/Under",
-			},
-			{
-				MarketName: "OVER_UNDER_35",
-				Market:     "Over/Under",
-			},
-			{
-				MarketName: "OVER_UNDER_45",
-				Market:     "Over/Under",
-			},
-			{
-				MarketName: "BOTH_TEAMS_TO_SCORE",
-				Market:     "Both Teams To Score",
-			},
-			{
-				MarketName: "OVER_UNDER_55_CORNR",
-				Market:     "Corners Over Under",
-			},
-			{
-				MarketName: "OVER_UNDER_85_CORNR",
-				Market:     "Corners Over Under",
-			},
-			{
-				MarketName: "OVER_UNDER_95_CORNR",
-				Market:     "Corners Over Under",
-			},
-			{
-				MarketName: "OVER_UNDER_105_CORNR",
-				Market:     "Corners Over Under",
-			},
-			{
-				MarketName: "OVER_UNDER_115_CORNR",
-				Market:     "Corners Over Under",
-			},
-			{
-				MarketName: "OVER_UNDER_125_CORNR",
-				Market:     "Corners Over Under",
-			},
-			{
-				MarketName: "OVER_UNDER_135_CORNR",
-				Market:     "Corners Over Under",
-			},
-		}
-
-		for _, m := range markets {
-			marketId, err := parseMarketName(m.MarketName)
-
-			if err != nil {
-				t.Fatalf("Expected nil, got %s", err.Error())
-			}
-
-			assert.Equal(t, m.Market, marketId)
-		}
-	})
-
-	t.Run("returns an error if market is not supported", func(t *testing.T) {
-		t.Helper()
-
-		_, err := parseMarketName("ASIAN_HANDICAP")
-
-		if err == nil {
-			t.Fatal("Expected error, got nil")
-		}
-
-		assert.Equal(t, "market 'ASIAN_HANDICAP' is not supported", err.Error())
-	})
-}
-
-func Test_parseMarketRunners(t *testing.T) {
-	f := sportmonks.FlexFloat(2.80)
-
-	t.Run("parses odds for both teams to score market", func(t *testing.T) {
-		t.Helper()
-
-		odds := []sportmonks.Odds{
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "",
-				Label:            "Yes",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-		}
-
-		parsed, err := parseMarketRunners("BOTH_TEAMS_TO_SCORE", 70, odds)
-
-		if err != nil {
-			t.Fatalf("Expected nil, got %s", err.Error())
-		}
-
-		assert.Equal(t, odds, parsed)
-	})
+func Test_parseExchangeMarketOdds(t *testing.T) {
+	//t.Run("parses odds for both teams to score market", func(t *testing.T) {
+	//	t.Helper()
+	//
+	//	odds := []sportmonks.Odds{
+	//		{
+	//			Value:            &f,
+	//			Handicap:         nil,
+	//			Total:            "",
+	//			Label:            "Yes",
+	//			Probability:      "35.71%",
+	//			Dp3:              "2.800",
+	//			American:         0,
+	//			Fractional:       nil,
+	//			Winning:          nil,
+	//			Stop:             false,
+	//			BookmakerEventID: nil,
+	//			LastUpdate:       sportmonks.DateTime{},
+	//		},
+	//	}
+	//
+	//	parsed, err := parseMarketRunners("BOTH_TEAMS_TO_SCORE", 70, odds)
+	//
+	//	if err != nil {
+	//		t.Fatalf("Expected nil, got %s", err.Error())
+	//	}
+	//
+	//	assert.Equal(t, odds, parsed)
+	//})
 
 	t.Run("parses odds for match odds market", func(t *testing.T) {
 		t.Helper()
 
-		odds := []sportmonks.Odds{
+		labelOne := "1"
+		labelTwo := "2"
+		created, _ := time.Parse(time.RFC3339, "2025-01-26T14:57:19.000000Z")
+
+		odds := []spClient.Odds{
 			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "",
-				Label:            "X",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
+				ID:                    151577019200,
+				FixtureID:             19155301,
+				MarketID:              1,
+				BookmakerID:           2,
+				Label:                 "Home",
+				Value:                 "3.75",
+				Name:                  &labelOne,
+				SortOrder:             nil,
+				MarketDescription:     "Full Time Result",
+				Probability:           "26.67%",
+				DP3:                   "1.750",
+				Fractional:            "15/4",
+				American:              "275",
+				Winning:               false,
+				Stopped:               false,
+				Total:                 nil,
+				Handicap:              nil,
+				Participants:          nil,
+				CreatedAt:             created,
+				OriginalLabel:         nil,
+				LatestBookmakerUpdate: "2025-02-10 14:10:51",
+				Bookmaker: &spClient.Bookmaker{
+					ID:       2,
+					LegacyID: 2,
+					Name:     "bet365",
+				},
+				Market: &spClient.Market{
+					ID:                     1,
+					LegacyID:               1,
+					Name:                   "Fulltime Result",
+					DeveloperName:          "FULLTIME_RESULT",
+					HasWinningCalculations: false,
+				},
+			},
+			{
+				ID:                    151577019200,
+				FixtureID:             19155301,
+				MarketID:              1,
+				BookmakerID:           2,
+				Label:                 "Away",
+				Value:                 "3.75",
+				Name:                  &labelTwo,
+				SortOrder:             nil,
+				MarketDescription:     "Full Time Result",
+				Probability:           "26.67%",
+				DP3:                   "3.750",
+				Fractional:            "15/4",
+				American:              "275",
+				Winning:               false,
+				Stopped:               false,
+				Total:                 nil,
+				Handicap:              nil,
+				Participants:          nil,
+				CreatedAt:             created,
+				OriginalLabel:         nil,
+				LatestBookmakerUpdate: "2025-02-10 14:10:51",
+				Bookmaker: &spClient.Bookmaker{
+					ID:       2,
+					LegacyID: 2,
+					Name:     "bet365",
+				},
+				Market: &spClient.Market{
+					ID:                     1,
+					LegacyID:               1,
+					Name:                   "Fulltime Result",
+					DeveloperName:          "FULLTIME_RESULT",
+					HasWinningCalculations: false,
+				},
+			},
+			{
+				ID:                    151577019200,
+				FixtureID:             19155301,
+				MarketID:              1,
+				BookmakerID:           5,
+				Label:                 "Away",
+				Value:                 "3.75",
+				Name:                  &labelTwo,
+				SortOrder:             nil,
+				MarketDescription:     "Full Time Result",
+				Probability:           "26.67%",
+				DP3:                   "3.750",
+				Fractional:            "15/4",
+				American:              "275",
+				Winning:               false,
+				Stopped:               false,
+				Total:                 nil,
+				Handicap:              nil,
+				Participants:          nil,
+				CreatedAt:             created,
+				OriginalLabel:         nil,
+				LatestBookmakerUpdate: "2025-02-10 14:10:51",
+				Bookmaker: &spClient.Bookmaker{
+					ID:       5,
+					LegacyID: 7,
+					Name:     "888Bet",
+				},
+				Market: &spClient.Market{
+					ID:                     1,
+					LegacyID:               1,
+					Name:                   "Fulltime Result",
+					DeveloperName:          "FULLTIME_RESULT",
+					HasWinningCalculations: false,
+				},
 			},
 		}
 
-		parsed, err := parseMarketRunners("MATCH_ODDS", 70, odds)
+		parsed := parseExchangeMarketOdds(2, odds)
 
-		if err != nil {
-			t.Fatalf("Expected nil, got %s", err.Error())
-		}
-
-		assert.Equal(t, odds, parsed)
-	})
-
-	t.Run("parses odds for over under 25 market", func(t *testing.T) {
-		t.Helper()
-
-		odds := []sportmonks.Odds{
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "2.5",
-				Label:            "Under",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "2.5",
-				Label:            "Over",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "1.50",
-				Label:            "Under",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-		}
-
-		expected := []sportmonks.Odds{odds[0], odds[1]}
-
-		parsed, err := parseMarketRunners("OVER_UNDER_25", 70, odds)
-
-		if err != nil {
-			t.Fatalf("Expected nil, got %s", err.Error())
-		}
-
-		assert.Equal(t, expected, parsed)
-	})
-
-	t.Run("parses odds for over under 25 market using the alternative total", func(t *testing.T) {
-		t.Helper()
-
-		odds := []sportmonks.Odds{
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "2.5",
-				Label:            "Under",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "2.5",
-				Label:            "Over",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-			{
-				Value:            &f,
-				Handicap:         nil,
-				Total:            "1.50",
-				Label:            "Under",
-				Probability:      "35.71%",
-				Dp3:              "2.800",
-				American:         0,
-				Fractional:       nil,
-				Winning:          nil,
-				Stop:             false,
-				BookmakerEventID: nil,
-				LastUpdate:       sportmonks.DateTime{},
-			},
-		}
-
-		expected := []sportmonks.Odds{odds[0], odds[1]}
-
-		parsed, err := parseMarketRunners("OVER_UNDER_25", 70, odds)
-
-		if err != nil {
-			t.Fatalf("Expected nil, got %s", err.Error())
-		}
-
-		assert.Equal(t, expected, parsed)
+		assert.Equal(t, []spClient.Odds{odds[0], odds[1]}, parsed)
 	})
 }

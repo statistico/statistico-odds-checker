@@ -26,31 +26,35 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 			ID:     55,
 			Name:   "BET365",
 			Date:   time.Time{},
-			Market: "OVER_UNDER_25",
+			Market: "MATCH_ODDS",
 		}
 
 		odds := []sp.Odds{
 			{
-				Label: "Over",
-				Dp3:   "1.95",
+				Label: "Home",
+				DP3:   "1.95",
 			},
 			{
-				Label: "Under",
-				Dp3:   "2.08",
+				Label: "Away",
+				DP3:   "2.08",
+			},
+			{
+				Label: "Draw",
+				DP3:   "2.75",
 			},
 		}
 
-		parser.On("ParseMarketOdds", ctx, 55, 2, "OVER_UNDER_25").Return(odds, nil)
+		parser.On("ParseMarketOdds", ctx, 55, 2, "MATCH_ODDS").Return(odds, nil)
 
 		expectedMarket := &exchange.Market{
-			ID:       "BET365-55-OVER_UNDER_25",
+			ID:       "BET365-55-MATCH_ODDS",
 			Exchange: "BET365",
-			Name:     "OVER_UNDER_25",
+			Name:     "MATCH_ODDS",
 			EventID:  55,
 			Runners: []*exchange.Runner{
 				{
 					ID:   0,
-					Name: "OVER",
+					Name: "HOME",
 					BackPrices: []exchange.PriceSize{
 						{
 							Price: 1.95,
@@ -60,10 +64,20 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 				},
 				{
 					ID:   0,
-					Name: "UNDER",
+					Name: "AWAY",
 					BackPrices: []exchange.PriceSize{
 						{
 							Price: 2.08,
+							Size:  0,
+						},
+					},
+				},
+				{
+					ID:   0,
+					Name: "DRAW",
+					BackPrices: []exchange.PriceSize{
+						{
+							Price: 2.75,
 							Size:  0,
 						},
 					},
@@ -150,11 +164,11 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 		odds := []sp.Odds{
 			{
 				Label: "Over",
-				Dp3:   "Hello",
+				DP3:   "Hello",
 			},
 			{
 				Label: "Under",
-				Dp3:   "2.08",
+				DP3:   "2.08",
 			},
 		}
 

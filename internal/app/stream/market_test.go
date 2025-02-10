@@ -284,7 +284,7 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 		assert.Nil(t, ch)
 		assert.Equal(t, 1, len(hook.Entries))
 		assert.Equal(t, logrus.ErrorLevel, hook.LastEntry().Level)
-		assert.Equal(t, "Error \"error fetching fixtures\" fetching fixtures in football market requester", hook.LastEntry().Message)
+		assert.Equal(t, "error \"error fetching fixtures\" fetching fixtures in football market requester", hook.LastEntry().Message)
 
 		factory.AssertNotCalled(t, "CreateMarket")
 	})
