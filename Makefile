@@ -21,6 +21,9 @@ docker-up: check-network
 docker-down:
 	docker compose -f docker-compose.build.yml -f docker-compose.dev.yml down -v
 
+docker-run-console:
+	docker compose -f docker-compose.build.yml -f docker-compose.dev.yml run console ./console $(args)
+
 test:
 	docker compose -f docker-compose.build.yml run test gotestsum -f short-verbose $(args)
 

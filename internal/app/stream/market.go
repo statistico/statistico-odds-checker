@@ -15,7 +15,7 @@ import (
 )
 
 type eventMarketStreamer struct {
-	fixtureClient statisticodata.FixtureClient
+	fixtureClient statisticofootballdata.FixtureClient
 	logger        *logrus.Logger
 	clock         clockwork.Clock
 	markets       []string
@@ -130,7 +130,7 @@ func convertToEventMarket(m *exchange.Market, fix *statistico.Fixture, timestamp
 }
 
 func NewEventMarketStreamer(
-	f statisticodata.FixtureClient,
+	f statisticofootballdata.FixtureClient,
 	l *logrus.Logger,
 	c clockwork.Clock,
 	m []string,
