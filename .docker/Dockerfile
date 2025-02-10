@@ -1,9 +1,7 @@
 # Step 1
-FROM golang:1.19-alpine AS builder
+FROM golang:1.23.3-alpine AS builder
 RUN apk update && apk add git gcc g++
 WORKDIR /app
-
-RUN go install github.com/pressly/goose/v3/cmd/goose@latest
 
 COPY go.mod .
 COPY go.sum .
@@ -17,8 +15,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo ./cmd/console
 FROM alpine
 RUN apk --no-cache add ca-certificates
 WORKDIR /opt
-COPY ./bin ./bin
-COPY ./.docker/wait-for-it.sh .
 COPY --from=builder /app/console .
 
 CMD ["/bin/sh"]
