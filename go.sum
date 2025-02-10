@@ -8,7 +8,9 @@ github.com/aws/aws-lambda-go v1.41.0/go.mod h1:jwFe2KmMsHmffA1X2R09hH6lFzJQxzI8q
 github.com/aws/aws-sdk-go v1.38.21 h1:D08DXWI4QRaawLaW+OtsIEClOI90I6eheJs1GwXTQVI=
 github.com/aws/aws-sdk-go v1.38.21/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/bsm/ginkgo/v2 v2.5.0 h1:aOAnND1T40wEdAtkGSkvSICWeQ8L3UASX7YVCqQx+eQ=
+github.com/bsm/ginkgo/v2 v2.5.0/go.mod h1:AiKlXPm7ItEHNc/2+OkrNG4E0ITzojb9/xWzvQ9XZ9w=
 github.com/bsm/gomega v1.20.0 h1:JhAwLmtRzXFTx2AkALSLa8ijZafntmhSoU63Ok18Uq8=
+github.com/bsm/gomega v1.20.0/go.mod h1:JifAceMQ4crZIWYUKrlGcmbN3bqHogVTADMD2ATsbwk=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/certifi/gocertifi v0.0.0-20200922220541-2c3bb06c6054 h1:uH66TXeswKn5PW5zdZ39xEwfS9an067BirqA+P4QaLI=
 github.com/certifi/gocertifi v0.0.0-20200922220541-2c3bb06c6054/go.mod h1:sGbDF6GwGcLpkNXPUTkMRoywsNa/ol15pxFe6ERfguA=
@@ -63,6 +65,7 @@ github.com/google/go-cmp v0.4.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/
 github.com/google/go-cmp v0.5.0/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
+github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
 github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
 github.com/jmespath/go-jmespath v0.4.0 h1:BEgLn5cpjn8UN1mAw4NjwDrS35OdebyEtFe+9YPoQUg=
@@ -104,7 +107,6 @@ github.com/statistico/statistico-odds-compiler-go-grpc-client v0.0.2 h1:RPk3imZT
 github.com/statistico/statistico-odds-compiler-go-grpc-client v0.0.2/go.mod h1:1ftCdQ8qPEiR85b0NXoxlVHwVUMTtcLRhrXwHp/DU4s=
 github.com/statistico/statistico-proto v0.0.16 h1:xvZ0yTO9b0mmaSJoeM3qQT6ML4f8IFLP6tBHxK3ydDI=
 github.com/statistico/statistico-proto v0.0.16/go.mod h1:IegjDKIHD0rxW6y2a++xCNNqIGSTxmncB6AempSO6pk=
-github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53 h1:wQrlre/iq4Tv+n02E/TAvpftZM1P6vHVbO50PBQN7YI=
 github.com/statistico/statistico-proto/go v0.0.0-20210830174534-915e650fbe53/go.mod h1:vPyOUzi8uJfwh6QGj2RFFsgLTG2YehvpiN/ziVWEHV0=
 github.com/statistico/statistico-sportmonks-go-client v0.1.7 h1:rwjrbA4kcfqXFgR3w6dMSvklhGixzJJQVAgDej0e1XU=
 github.com/statistico/statistico-sportmonks-go-client v0.1.7/go.mod h1:qaTCU6vpRcPUMZ8eVVBw4+I38ZcuDDWtofyDzl/WiPE=
