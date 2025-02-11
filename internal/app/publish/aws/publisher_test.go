@@ -2,7 +2,6 @@ package aws_test
 
 import (
 	"errors"
-	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	paws "github.com/statistico/statistico-odds-checker/internal/app/publish/aws"
@@ -32,7 +31,7 @@ func TestPublisher_PublishMarket(t *testing.T) {
 			return true
 		})
 
-		client.On("Publish", input).Return(&sns.PublishOutput{MessageId: aws.String("123")}, nil)
+		client.On("Publish", input).Return(&sns.PublishOutput{}, nil)
 
 		err := publisher.PublishMarket(eventMarket())
 

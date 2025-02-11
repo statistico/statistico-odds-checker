@@ -2,7 +2,6 @@ package aws
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/aws/aws-sdk-go/service/sns/snsiface"
@@ -27,13 +26,9 @@ func (p *Publisher) PublishMarket(m *stream.EventMarket) error {
 		TopicArn: aws.String(p.topicArn),
 	}
 
-	mess, err := p.client.Publish(&input)
-
-	if err != nil {
+	if _, err = p.client.Publish(&input); err != nil {
 		return err
 	}
-
-	fmt.Printf("Published message %s", *mess.MessageId)
 
 	return nil
 }
