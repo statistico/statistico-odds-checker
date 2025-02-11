@@ -35,6 +35,8 @@ Resources:
       NetworkMode: awsvpc
       ExecutionRoleArn:
         Fn::ImportValue: !Sub ${EnvironmentName}:EcsTaskRoleArn
+      TaskRoleArn:
+        Fn::ImportValue: !Sub ${EnvironmentName}:EcsTaskRoleArn
       ContainerDefinitions:
         - Name: !Sub ${ServiceName}-console
           Image: !Ref EcrImageUri
