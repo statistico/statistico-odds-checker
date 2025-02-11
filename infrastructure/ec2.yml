@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EC2 related services for the statistico-odds-checker application.
+Parameters:
+  ServiceName:
+    Type: String
+    Default: statistico-odds-checker
+  EnvironmentName:
+    Type: String
+    Default: statistico-production
+  GroupName:
+    Type: String
+    Default: statistic-odds-checker-ecs-security-group
+Resources:
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupName: !Ref GroupName
+      GroupDescription: Security group for the statistico football data ecs services
+      VpcId:
+        Fn::ImportValue: !Sub ${EnvironmentName}:VpcId
+      Tags:
+        - Key: Name
+          Value: !Ref GroupName
+
+  OutboundRule:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      GroupId: !GetAtt SecurityGroup.GroupId
+      IpProtocol: -1
+      CidrIp: 0.0.0.0/0
+
+Outputs:
+  SecurityGroupId:
+    Description: ARN for the security group provisioned in this stack.
+    Value: !GetAtt SecurityGroup.GroupId
+    Export:
+      Name: !Sub ${ServiceName}:SecurityGroupId
