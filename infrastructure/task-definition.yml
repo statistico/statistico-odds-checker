@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Task definition for the statistico-odds-checker service.
+Parameters:
+  ServiceName:
+    Type: String
+    Default: statistico-odds-checker
+  EnvironmentName:
+    Type: String
+    Default: statistico-production
+  EcrImageUri:
+    Type: String
+    Description: The full URI for the statistico-odds-checker image within ECR.
+    Default: "396921332736.dkr.ecr.eu-west-2.amazonaws.com/statistico-odds-checker:latest"
+  Cpu:
+    Type: Number
+    Default: 256
+  Memory:
+    Type: Number
+    Default: 512
+Resources:
+  ConsoleLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub ${AWS::StackName}-console-log-group
+      RetentionInDays: 7
+
+  ConsoleTaskDefinition:
+    Type: "AWS::ECS::TaskDefinition"
+    Properties:
+      Family: !Sub ${ServiceName}-console
+      Cpu: !Ref Cpu
+      Memory: !Ref Memory
+      RequiresCompatibilities:
+        - FARGATE
+      NetworkMode: awsvpc
+      ExecutionRoleArn:
+        Fn::ImportValue: !Sub ${EnvironmentName}:EcsTaskRoleArn
+      ContainerDefinitions:
+        - Name: !Sub ${ServiceName}-console
+          Image: !Ref EcrImageUri
+          Memory: !Ref Memory
+          Essential: true
+          Secrets:
+            - Name: AWS_TOPIC_ARN
+              ValueFrom: arn:aws:ssm:eu-west-2:396921332736:parameter/statistico-odds-checker-AWS_TOPIC_ARN
+            - Name: SPORTMONKS_API_KEY
+              ValueFrom: arn:aws:ssm:eu-west-2:396921332736:parameter/statistico-odds-checker-SPORTMONKS_API_KEY
+            - Name: SENTRY_DSN
+              ValueFrom: arn:aws:ssm:eu-west-2:396921332736:parameter/statistico-odds-checker-SENTRY_DSN
+          Environment:
+            - Name: PUBLISHER
+              Value: "aws"
+            - Name: AWS_REGION
+              Value: "eu-west-2"
+            - Name: STATISTICO_FOOTBALL_DATA_SERVICE_HOST
+              Value: "statistico-football-data.statistico.internal"
+            - Name: STATISTICO_FOOTBALL_DATA_SERVICE_PORT
+              Value: "50051"
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref ConsoleLogGroup
+              awslogs-stream-prefix: !Sub ${ServiceName}-console
+
+Outputs:
+  ConsoleTaskDefinitionArn:
+    Description: ARN of the console task definition which was created.
+    Value: !GetAtt ConsoleTaskDefinition.TaskDefinitionArn
+    Export:
+      Name: !Sub ${ServiceName}:ConsoleTaskDefinitionArn

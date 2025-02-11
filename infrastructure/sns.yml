@@ -1,0 +1,18 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation Template for statistico-odds-checker sns topic
+Parameters:
+  ServiceName:
+    Type: String
+    Default: statistico-odds-checker
+Resources:
+  SnsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      FifoTopic: false
+      TopicName: !Ref ServiceName
+Outputs:
+  TopicURL:
+    Description: URL of Statistico Odds Checker SNS topic
+    Value: !Ref SnsTopic
+    Export:
+      Name: !Sub ${ServiceName}:TopicArn

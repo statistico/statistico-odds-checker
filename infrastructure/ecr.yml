@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: ECR repositories for statistico-odds-checker application
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: statistico-production
+Resources:
+  Repository:
+    Type: AWS::ECR::Repository
+    Properties:
+      EncryptionConfiguration:
+        EncryptionType: AES256
+      ImageTagMutability: MUTABLE
+      RepositoryName: statistico-odds-checker
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowPushPullFromStatisticoAccount
+            Effect: Allow
+            Principal:
+              AWS:
+                - "148702565284"
+            Action:
+              - "ecr:GetDownloadUrlForLayer"
+              - "ecr:BatchGetImage"
+              - "ecr:BatchCheckLayerAvailability"
+              - "ecr:PutImage"
+              - "ecr:InitiateLayerUpload"
+              - "ecr:UploadLayerPart"
+              - "ecr:CompleteLayerUpload"
+      Tags:
+        - Key: Name
+          Value: statistico-odds-warehouse
+
+Outputs:
+  RepositoryUri:
+    Value: !GetAtt Repository.RepositoryUri
+    Export:
+      Name: !Sub ${EnvironmentName}:StatisticoOddsCheckerRepositoryUri
