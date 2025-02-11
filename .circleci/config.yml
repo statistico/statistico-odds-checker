@@ -24,7 +24,6 @@ workflows:
           context: aws
           requires:
             - build-and-test
-            - production-deploy-infrastructure
           filters:
             branches:
               only: master
@@ -32,6 +31,7 @@ workflows:
           context: aws
           requires:
             - build-and-test
+            - production-deploy-infrastructure
           filters:
             branches:
               only: master
