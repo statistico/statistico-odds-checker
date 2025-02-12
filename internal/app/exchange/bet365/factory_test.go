@@ -30,8 +30,8 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 
 		runners := []*exchange.Runner{
 			{
-				ID:   0,
-				Name: "HOME",
+				ID:    0,
+				Label: "HOME",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 1.95,
@@ -40,8 +40,8 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 				},
 			},
 			{
-				ID:   0,
-				Name: "AWAY",
+				ID:    0,
+				Label: "AWAY",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 2.08,
@@ -50,8 +50,8 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 				},
 			},
 			{
-				ID:   0,
-				Name: "DRAW",
+				ID:    0,
+				Label: "DRAW",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 2.75,
