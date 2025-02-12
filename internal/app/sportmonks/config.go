@@ -1,26 +1,14 @@
 package sportmonks
 
-var markets = map[string][]string{
-	"3Way Result": {
-		"MATCH_ODDS",
-	},
-	"Over/Under": {
-		"OVER_UNDER_05",
-		"OVER_UNDER_15",
-		"OVER_UNDER_25",
-		"OVER_UNDER_35",
-		"OVER_UNDER_45",
-	},
-	"Both Teams To Score": {
-		"BOTH_TEAMS_TO_SCORE",
-	},
-	"Corners Over Under": {
-		"OVER_UNDER_55_CORNR",
-		"OVER_UNDER_85_CORNR",
-		"OVER_UNDER_95_CORNR",
-		"OVER_UNDER_105_CORNR",
-		"OVER_UNDER_115_CORNR",
-		"OVER_UNDER_125_CORNR",
-		"OVER_UNDER_135_CORNR",
-	},
+var marketIDs = map[string]int{
+	"BOTH_TEAMS_TO_SCORE":     14,
+	"MATCH_CORNERS":           69,
+	"MATCH_GOALS":             81,
+	"MATCH_ODDS":              1,
+	"PLAYER_TO_SCORE_ANYTIME": 90,
+	"PLAYER_TOTAL_SHOTS":      268,
+	"TEAM_CARDS":              281,
+	"TEAM_CORNERS":            74,
+	"TEAM_SHOTS":              285,
+	"TEAM_SHOTS_ON_TARGET":    284,
 }
