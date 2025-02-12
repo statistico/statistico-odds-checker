@@ -44,6 +44,8 @@ func convertOddsToRunners(odds []sportmonks.Odds, market string) ([]*exchange.Ru
 		return convertTeamOverUnderMarket(odds)
 	case "TEAM_CORNERS":
 		return convertTeamOverUnderMarket(odds)
+	case "TEAM_GOALS":
+		return convertTeamOverUnderMarket(odds)
 	case "TEAM_SHOTS":
 		return convertTeamOverUnderMarket(odds)
 	case "TEAM_SHOTS_ON_TARGET":

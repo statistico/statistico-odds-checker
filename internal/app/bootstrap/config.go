@@ -72,6 +72,7 @@ func BuildConfig() *Config {
 			"PLAYER_TOTAL_SHOTS",
 			"TEAM_CARDS",
 			"TEAM_CORNERS",
+			"TEAM_GOALS",
 			"TEAM_SHOTS",
 			"TEAM_SHOTS_ON_TARGET",
 		},
