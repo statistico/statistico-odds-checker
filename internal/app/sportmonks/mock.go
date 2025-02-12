@@ -2,7 +2,7 @@ package sportmonks
 
 import (
 	"context"
-	sportmonks "github.com/statistico/statistico-sportmonks-go-client"
+	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/stretchr/testify/mock"
 )
 
@@ -10,7 +10,7 @@ type MockOddsParser struct {
 	mock.Mock
 }
 
-func (m *MockOddsParser) ParseMarketOdds(ctx context.Context, fixtureID, exchangeID int, market string) ([]sportmonks.Odds, error) {
+func (m *MockOddsParser) ParseMarketRunners(ctx context.Context, fixtureID, exchangeID int, market string) ([]*exchange.Runner, error) {
 	args := m.Called(ctx, fixtureID, exchangeID, market)
-	return args.Get(0).([]sportmonks.Odds), args.Error(1)
+	return args.Get(0).([]*exchange.Runner), args.Error(1)
 }

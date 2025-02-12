@@ -18,24 +18,18 @@ func (*marketFactory) Exchange() string {
 }
 
 func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*exchange.Market, error) {
-	odds, err := m.parser.ParseMarketOdds(ctx, int(e.ID), exchangeID, e.Market)
+	runners, err := m.parser.ParseMarketRunners(ctx, int(e.ID), exchangeID, e.Market)
 
 	if err != nil {
 		return nil, err
 	}
 
-	if len(odds) == 0 {
+	if len(runners) == 0 {
 		return nil, &exchange.NoEventMarketError{
 			Exchange: "BET365",
 			Market:   e.Market,
 			EventID:  e.ID,
 		}
-	}
-
-	runners, err := exchange.ConvertOddsToRunners(odds)
-
-	if err != nil {
-		return nil, fmt.Errorf("error converting odds to runners in Pinnacle exchange: %s", err.Error())
 	}
 
 	return &exchange.Market{
