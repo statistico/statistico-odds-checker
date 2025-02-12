@@ -8,17 +8,6 @@ import (
 	"strings"
 )
 
-var marketIDs = map[string]int{
-	"BOTH_TEAMS_TO_SCORE":     14,
-	"MATCH_ODDS":              1,
-	"PLAYER_TO_SCORE_ANYTIME": 90,
-	"PLAYER_TOTAL_SHOTS":      268,
-	"TEAM_CARDS":              281,
-	"TEAM_CORNERS":            74,
-	"TEAM_SHOTS":              285,
-	"TEAM_SHOTS_ON_TARGET":    284,
-}
-
 func parseExchangeMarketOdds(exchangeId int, markets []sportmonks.Odds) []sportmonks.Odds {
 	var odds []sportmonks.Odds
 
@@ -35,6 +24,10 @@ func convertOddsToRunners(odds []sportmonks.Odds, market string) ([]*exchange.Ru
 	switch market {
 	case "BOTH_TEAMS_TO_SCORE":
 		return convertStandardOdds(odds)
+	case "MATCH_CORNERS":
+		return convertMatchOverUnderMarket(odds)
+	case "MATCH_GOALS":
+		return convertMatchOverUnderMarket(odds)
 	case "MATCH_ODDS":
 		return convertStandardOdds(odds)
 	case "PLAYER_TO_SCORE_ANYTIME":
@@ -42,13 +35,13 @@ func convertOddsToRunners(odds []sportmonks.Odds, market string) ([]*exchange.Ru
 	case "PLAYER_TOTAL_SHOTS":
 		return convertPlayerShots(odds, strings.ToUpper("Player Shots Over\\/Under"))
 	case "TEAM_CARDS":
-		return convertOverUnderMarket(odds)
+		return convertTeamOverUnderMarket(odds)
 	case "TEAM_CORNERS":
-		return convertOverUnderMarket(odds)
+		return convertTeamOverUnderMarket(odds)
 	case "TEAM_SHOTS":
-		return convertOverUnderMarket(odds)
+		return convertTeamOverUnderMarket(odds)
 	case "TEAM_SHOTS_ON_TARGET":
-		return convertOverUnderMarket(odds)
+		return convertTeamOverUnderMarket(odds)
 	default:
 		return nil, fmt.Errorf("market %s is not supported", market)
 	}
@@ -78,7 +71,38 @@ func convertStandardOdds(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
 	return runners, nil
 }
 
-func convertOverUnderMarket(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
+func convertMatchOverUnderMarket(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
+	var runners []*exchange.Runner
+
+	for _, o := range odds {
+		price, err := strconv.ParseFloat(o.Value, 32)
+
+		if err != nil {
+			return nil, fmt.Errorf("price '%s' is not a valid floating point number", o.Value)
+		}
+
+		total, err := strconv.ParseFloat(*o.Total, 32)
+
+		if err != nil {
+			return nil, fmt.Errorf("total '%s' is not a valid floating point number", o.DP3)
+		}
+
+		runners = append(runners, &exchange.Runner{
+			Label: strings.ToUpper(o.Label),
+			Value: &total,
+			BackPrices: []exchange.PriceSize{
+				{
+					Price: float32(price),
+					Size:  0,
+				},
+			},
+		})
+	}
+
+	return runners, nil
+}
+
+func convertTeamOverUnderMarket(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
 	var runners []*exchange.Runner
 
 	for _, o := range odds {
