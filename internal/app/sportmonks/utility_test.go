@@ -8,35 +8,6 @@ import (
 )
 
 func Test_parseExchangeMarketOdds(t *testing.T) {
-	//t.Run("parses odds for both teams to score market", func(t *testing.T) {
-	//	t.Helper()
-	//
-	//	odds := []sportmonks.Odds{
-	//		{
-	//			Value:            &f,
-	//			Handicap:         nil,
-	//			Total:            "",
-	//			Label:            "Yes",
-	//			Probability:      "35.71%",
-	//			Dp3:              "2.800",
-	//			American:         0,
-	//			Fractional:       nil,
-	//			Winning:          nil,
-	//			Stop:             false,
-	//			BookmakerEventID: nil,
-	//			LastUpdate:       sportmonks.DateTime{},
-	//		},
-	//	}
-	//
-	//	parsed, err := parseMarketRunners("BOTH_TEAMS_TO_SCORE", 70, odds)
-	//
-	//	if err != nil {
-	//		t.Fatalf("Expected nil, got %s", err.Error())
-	//	}
-	//
-	//	assert.Equal(t, odds, parsed)
-	//})
-
 	t.Run("parses odds for match odds market", func(t *testing.T) {
 		t.Helper()
 
@@ -155,5 +126,35 @@ func Test_parseExchangeMarketOdds(t *testing.T) {
 		parsed := parseExchangeMarketOdds(2, odds)
 
 		assert.Equal(t, []spClient.Odds{odds[0], odds[1]}, parsed)
+	})
+}
+
+func Test_convertOddsToRunners(t *testing.T) {
+	t.Run("converts odds to runners for BOTH_TEAMS_TO_SCORE market", func(t *testing.T) {
+		t.Helper()
+
+		labelOne := "1"
+		labelTwo := "2"
+
+		odds := []spClient.Odds{
+			{
+				Label: "Home",
+				Value: "3.75",
+				Name:  &labelOne,
+			},
+			{
+				Label: "Away",
+				Value: "3.75",
+				Name:  &labelTwo,
+			},
+		}
+
+		runners, err := convertOddsToRunners(odds, "BOTH_TEAMS_TO_SCORE")
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Len(t, runners, 2)
 	})
 }

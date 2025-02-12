@@ -3,20 +3,21 @@ package sportmonks
 import (
 	"context"
 	"fmt"
+	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-sportmonks-go-client"
 )
 
 type OddsParser interface {
-	// ParseMarketOdds parses and returns a slice of sportmonks.Odds struct associated to a fixture, exchange
+	// ParseMarketRunners parses and returns a slice of exchange.Runner struct associated to a fixture, exchange
 	// and market.
-	ParseMarketOdds(ctx context.Context, fixtureID, exchangeID int, market string) ([]sportmonks.Odds, error)
+	ParseMarketRunners(ctx context.Context, fixtureID, exchangeID int, market string) ([]*exchange.Runner, error)
 }
 
 type oddsParser struct {
 	client *sportmonks.HTTPClient
 }
 
-func (m *oddsParser) ParseMarketOdds(ctx context.Context, fixtureID, exchangeID int, market string) ([]sportmonks.Odds, error) {
+func (m *oddsParser) ParseMarketRunners(ctx context.Context, fixtureID, exchangeID int, market string) ([]*exchange.Runner, error) {
 	marketID, ok := marketIDs[market]
 
 	if !ok {
@@ -30,16 +31,16 @@ func (m *oddsParser) ParseMarketOdds(ctx context.Context, fixtureID, exchangeID 
 	}
 
 	if len(markets) == 0 {
-		return []sportmonks.Odds{}, nil
+		return []*exchange.Runner{}, nil
 	}
 
 	odds := parseExchangeMarketOdds(exchangeID, markets)
 
 	if odds == nil || len(odds) == 0 {
-		return []sportmonks.Odds{}, nil
+		return []*exchange.Runner{}, nil
 	}
 
-	return parseMarketRunners(market, exchangeID, odds)
+	return convertOddsToRunners(odds, market)
 }
 
 func NewOddsParser(c *sportmonks.HTTPClient) OddsParser {

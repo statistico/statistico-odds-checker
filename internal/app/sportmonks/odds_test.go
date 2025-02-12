@@ -3,13 +3,13 @@ package sportmonks_test
 import (
 	"bytes"
 	"context"
+	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
 	"github.com/statistico/statistico-odds-checker/internal/app/sportmonks"
 	spClient "github.com/statistico/statistico-sportmonks-go-client"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"net/http"
 	"testing"
-	"time"
 )
 
 func TestOddsParser_ParseMarketOdds(t *testing.T) {
@@ -31,94 +31,39 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 2, "MATCH_ODDS")
+		runners, err := parser.ParseMarketRunners(context.Background(), 152, 2, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
 		}
 
-		labelOne := "1"
-		labelTwo := "2"
-
-		created, _ := time.Parse(time.RFC3339, "2025-01-26T14:57:19.000000Z")
-
-		expectedOdds := []spClient.Odds{
+		expected := []*exchange.Runner{
 			{
-				ID:                    151577019200,
-				FixtureID:             19155301,
-				MarketID:              1,
-				BookmakerID:           2,
-				Label:                 "Home",
-				Value:                 "3.75",
-				Name:                  &labelOne,
-				SortOrder:             nil,
-				MarketDescription:     "Full Time Result",
-				Probability:           "26.67%",
-				DP3:                   "1.750",
-				Fractional:            "15/4",
-				American:              "275",
-				Winning:               false,
-				Stopped:               false,
-				Total:                 nil,
-				Handicap:              nil,
-				Participants:          nil,
-				CreatedAt:             created,
-				OriginalLabel:         nil,
-				LatestBookmakerUpdate: "2025-02-10 14:10:51",
-				Bookmaker: &spClient.Bookmaker{
-					ID:       2,
-					LegacyID: 2,
-					Name:     "bet365",
-				},
-				Market: &spClient.Market{
-					ID:                     1,
-					LegacyID:               1,
-					Name:                   "Fulltime Result",
-					DeveloperName:          "FULLTIME_RESULT",
-					HasWinningCalculations: false,
+				ID:   0,
+				Name: "HOME",
+				BackPrices: []exchange.PriceSize{
+					{
+						Price: 3.75,
+						Size:  0,
+					},
 				},
 			},
 			{
-				ID:                    151577019200,
-				FixtureID:             19155301,
-				MarketID:              1,
-				BookmakerID:           2,
-				Label:                 "Away",
-				Value:                 "3.75",
-				Name:                  &labelTwo,
-				SortOrder:             nil,
-				MarketDescription:     "Full Time Result",
-				Probability:           "26.67%",
-				DP3:                   "3.750",
-				Fractional:            "15/4",
-				American:              "275",
-				Winning:               false,
-				Stopped:               false,
-				Total:                 nil,
-				Handicap:              nil,
-				Participants:          nil,
-				CreatedAt:             created,
-				OriginalLabel:         nil,
-				LatestBookmakerUpdate: "2025-02-10 14:10:51",
-				Bookmaker: &spClient.Bookmaker{
-					ID:       2,
-					LegacyID: 2,
-					Name:     "bet365",
-				},
-				Market: &spClient.Market{
-					ID:                     1,
-					LegacyID:               1,
-					Name:                   "Fulltime Result",
-					DeveloperName:          "FULLTIME_RESULT",
-					HasWinningCalculations: false,
+				ID:   0,
+				Name: "AWAY",
+				BackPrices: []exchange.PriceSize{
+					{
+						Price: 1.83,
+						Size:  0,
+					},
 				},
 			},
 		}
 
 		a := assert.New(t)
 
-		a.Equal(2, len(odds))
-		a.Equal(expectedOdds, odds)
+		a.Equal(2, len(runners))
+		a.Equal(expected, runners)
 	})
 
 	t.Run("returns an error if unable to parse market id", func(t *testing.T) {
@@ -132,7 +77,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		_, err := parser.ParseMarketOdds(context.Background(), 152, 2, "ASIAN_HANDICAP")
+		_, err := parser.ParseMarketRunners(context.Background(), 152, 2, "ASIAN_HANDICAP")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -159,7 +104,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		_, err := parser.ParseMarketOdds(context.Background(), 152, 2, "MATCH_ODDS")
+		_, err := parser.ParseMarketRunners(context.Background(), 152, 2, "MATCH_ODDS")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -184,7 +129,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 1, "MATCH_ODDS")
+		runners, err := parser.ParseMarketRunners(context.Background(), 152, 1, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -192,7 +137,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		a := assert.New(t)
 
-		a.Equal(0, len(odds))
+		a.Equal(0, len(runners))
 	})
 
 	t.Run("returns an empty slice of struct if no market provided for exchange", func(t *testing.T) {
@@ -211,7 +156,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 111, "MATCH_ODDS")
+		odds, err := parser.ParseMarketRunners(context.Background(), 152, 111, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -238,7 +183,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketOdds(context.Background(), 152, 123, "MATCH_ODDS")
+		odds, err := parser.ParseMarketRunners(context.Background(), 152, 123, "MATCH_ODDS")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -293,12 +238,12 @@ var overUnderGoalsOddsResponse = `{
 			"market_id": 1,
 			"bookmaker_id": 2,
 			"label": "Away",
-			"value": "3.75",
+			"value": "1.83",
 			"name": "2",
 			"sort_order": null,
 			"market_description": "Full Time Result",
 			"probability": "26.67%",
-			"dp3": "3.750",
+			"dp3": "1.83",
 			"fractional": "15\/4",
 			"american": "275",
 			"winning": false,
