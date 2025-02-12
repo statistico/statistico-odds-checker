@@ -157,4 +157,43 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 2)
 	})
+
+	t.Run("converts odds to runners for PLAYER_TO_SCORE_ANYTIME market", func(t *testing.T) {
+		t.Helper()
+
+		labelOne := "Mohammed Kudus"
+		labelTwo := "Mo Salah"
+		labelThree := "Cole Palmer"
+
+		odds := []spClient.Odds{
+			{
+				Label: "Anytime",
+				Value: "19",
+				Name:  &labelOne,
+			},
+			{
+				Label: "Anytime",
+				Value: "3.75",
+				Name:  &labelTwo,
+			},
+			{
+				Label: "First",
+				Value: "13.75",
+				Name:  &labelThree,
+			},
+		}
+
+		runners, err := convertOddsToRunners(odds, "PLAYER_TO_SCORE_ANYTIME")
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Len(t, runners, 2)
+
+		assert.Equal(t, "Mohammed Kudus", runners[0].Name)
+		assert.Equal(t, float32(19.00), runners[0].BackPrices[0].Price)
+		assert.Equal(t, "Mo Salah", runners[1].Name)
+		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
+	})
 }
