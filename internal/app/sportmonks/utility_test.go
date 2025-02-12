@@ -270,7 +270,7 @@ func Test_convertOddsToRunners(t *testing.T) {
 			},
 		}
 
-		runners, err := convertOddsToRunners(odds, "PLAYER_TOTAL_SHOTS")
+		runners, err := convertOddsToRunners(odds, "PLAYER_SHOTS_TOTAL")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
