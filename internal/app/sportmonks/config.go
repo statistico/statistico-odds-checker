@@ -6,6 +6,7 @@ var marketIDs = map[string]int{
 	"MATCH_GOALS":             81,
 	"MATCH_ODDS":              1,
 	"PLAYER_SHOTS_ON_TARGET":  267,
+	"PLAYER_TACKLES":          287,
 	"PLAYER_TO_SCORE_ANYTIME": 90,
 	"PLAYER_TOTAL_SHOTS":      268,
 	"TEAM_CARDS":              281,
