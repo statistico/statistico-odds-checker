@@ -30,14 +30,16 @@ func convertOddsToRunners(odds []sportmonks.Odds, market string) ([]*exchange.Ru
 		return convertMatchOverUnderMarket(odds)
 	case "MATCH_ODDS":
 		return convertStandardOdds(odds)
+	case "PLAYER_CARDS":
+		return convertPlayerCards(odds, "BOOKED")
 	case "PLAYER_SHOTS_ON_TARGET":
-		return convertPlayerShots(odds, "Player Shots On Target Over\\/Under")
+		return convertPlayerOverUnder(odds, "Player Shots On Target Over\\/Under")
 	case "PLAYER_TACKLES":
-		return convertPlayerShots(odds, "Player Tackles")
+		return convertPlayerOverUnder(odds, "Player Tackles")
 	case "PLAYER_TO_SCORE_ANYTIME":
 		return convertPlayerToScore(odds, "ANYTIME")
 	case "PLAYER_TOTAL_SHOTS":
-		return convertPlayerShots(odds, strings.ToUpper("Player Shots Over\\/Under"))
+		return convertPlayerOverUnder(odds, strings.ToUpper("Player Shots Over\\/Under"))
 	case "TEAM_CARDS":
 		return convertTeamOverUnderMarket(odds)
 	case "TEAM_CORNERS":
@@ -150,6 +152,35 @@ func convertTeamOverUnderMarket(odds []sportmonks.Odds) ([]*exchange.Runner, err
 	return runners, nil
 }
 
+func convertPlayerCards(odds []sportmonks.Odds, label string) ([]*exchange.Runner, error) {
+	var runners []*exchange.Runner
+
+	for _, o := range odds {
+		if strings.ToUpper(o.Label) != label {
+			continue
+		}
+
+		price, err := strconv.ParseFloat(o.Value, 32)
+
+		if err != nil {
+			return nil, fmt.Errorf("value '%s' is not a valid floating point number", o.DP3)
+		}
+
+		runners = append(runners, &exchange.Runner{
+			Name:  o.Name,
+			Label: strings.ToUpper(label),
+			BackPrices: []exchange.PriceSize{
+				{
+					Price: float32(price),
+					Size:  0,
+				},
+			},
+		})
+	}
+
+	return runners, nil
+}
+
 func convertPlayerToScore(odds []sportmonks.Odds, label string) ([]*exchange.Runner, error) {
 	var runners []*exchange.Runner
 
@@ -179,7 +210,7 @@ func convertPlayerToScore(odds []sportmonks.Odds, label string) ([]*exchange.Run
 	return runners, nil
 }
 
-func convertPlayerShots(odds []sportmonks.Odds, description string) ([]*exchange.Runner, error) {
+func convertPlayerOverUnder(odds []sportmonks.Odds, description string) ([]*exchange.Runner, error) {
 	var runners []*exchange.Runner
 
 	for _, o := range odds {

@@ -330,4 +330,45 @@ func Test_convertOddsToRunners(t *testing.T) {
 		assert.Equal(t, 1.5, *runners[2].Value)
 		assert.Equal(t, float32(13.75), runners[2].BackPrices[0].Price)
 	})
+
+	t.Run("converts odds to runners for PLAYER_CARDS booked market", func(t *testing.T) {
+		t.Helper()
+
+		nameOne := "Mohammed Kudus"
+		nameTwo := "Mo Salah"
+		nameThree := "Cole Palmer"
+
+		odds := []spClient.Odds{
+			{
+				Label: "Booked",
+				Value: "2.75",
+				Name:  &nameOne,
+			},
+			{
+				Label: "1st Card",
+				Value: "3.75",
+				Name:  &nameTwo,
+			},
+			{
+				Label: "Booked",
+				Value: "13.75",
+				Name:  &nameThree,
+			},
+		}
+
+		runners, err := convertOddsToRunners(odds, "PLAYER_CARDS")
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Len(t, runners, 2)
+
+		assert.Equal(t, "Mohammed Kudus", *runners[0].Name)
+		assert.Equal(t, "BOOKED", runners[0].Label)
+		assert.Equal(t, float32(2.75), runners[0].BackPrices[0].Price)
+		assert.Equal(t, "Cole Palmer", *runners[1].Name)
+		assert.Equal(t, "BOOKED", runners[1].Label)
+		assert.Equal(t, float32(13.75), runners[1].BackPrices[0].Price)
+	})
 }

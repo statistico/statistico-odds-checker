@@ -65,6 +65,7 @@ func BuildConfig() *Config {
 			"MATCH_CORNERS",
 			"MATCH_GOALS",
 			"MATCH_ODDS",
+			"PLAYER_CARDS",
 			"PLAYER_SHOTS_ON_TARGET",
 			"PLAYER_TACKLES",
 			"PLAYER_TO_SCORE_ANYTIME",
