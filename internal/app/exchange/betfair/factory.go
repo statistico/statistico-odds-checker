@@ -80,7 +80,7 @@ func (m *marketFactory) parseMarket(ctx context.Context, req betfair.ListMarketC
 
 		r := &exchange.Runner{
 			ID:         runner.SelectionID,
-			Name:       parseRunnerName(&runner, q.Market),
+			Label:      parseRunnerName(&runner, q.Market),
 			BackPrices: back,
 			LayPrices:  lay,
 		}

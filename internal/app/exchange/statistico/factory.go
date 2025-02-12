@@ -36,7 +36,7 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 
 	for _, o := range market.Odds {
 		r := exchange.Runner{
-			Name: strings.ToUpper(o.Selection),
+			Label: strings.ToUpper(o.Selection),
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: o.Price,

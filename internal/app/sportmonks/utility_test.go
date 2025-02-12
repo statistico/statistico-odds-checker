@@ -130,6 +130,43 @@ func Test_parseExchangeMarketOdds(t *testing.T) {
 }
 
 func Test_convertOddsToRunners(t *testing.T) {
+	t.Run("converts odds to runners for TEAM_CARDS market", func(t *testing.T) {
+		t.Helper()
+
+		totalOne := "Over 2.5"
+		totalTwo := "Under 1.5"
+
+		odds := []spClient.Odds{
+			{
+				Label: "1",
+				Value: "3.75",
+				Total: &totalOne,
+			},
+			{
+				Label: "2",
+				Value: "2.00",
+				Total: &totalTwo,
+			},
+		}
+
+		runners, err := convertOddsToRunners(odds, "TEAM_CARDS")
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Len(t, runners, 2)
+
+		assert.Equal(t, "HOME", *runners[0].Name)
+		assert.Equal(t, "OVER", runners[0].Label)
+		assert.Equal(t, 2.5, *runners[0].Value)
+		assert.Equal(t, float32(3.75), runners[0].BackPrices[0].Price)
+		assert.Equal(t, "AWAY", *runners[1].Name)
+		assert.Equal(t, "UNDER", runners[1].Label)
+		assert.Equal(t, 1.5, *runners[1].Value)
+		assert.Equal(t, float32(2.00), runners[1].BackPrices[0].Price)
+	})
+
 	t.Run("converts odds to runners for BOTH_TEAMS_TO_SCORE market", func(t *testing.T) {
 		t.Helper()
 
@@ -191,9 +228,63 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 2)
 
-		assert.Equal(t, "Mohammed Kudus", runners[0].Name)
+		assert.Equal(t, "Mohammed Kudus", *runners[0].Name)
+		assert.Equal(t, "ANYTIME", runners[0].Label)
 		assert.Equal(t, float32(19.00), runners[0].BackPrices[0].Price)
-		assert.Equal(t, "Mo Salah", runners[1].Name)
+		assert.Equal(t, "Mo Salah", *runners[1].Name)
+		assert.Equal(t, "ANYTIME", runners[1].Label)
+		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
+	})
+
+	t.Run("converts odds to runners for PLAYER_TOTAL_SHOTS market", func(t *testing.T) {
+		t.Helper()
+
+		nameOne := "Mohammed Kudus"
+		nameTwo := "Mo Salah"
+		nameThree := "Cole Palmer"
+
+		totalOne := "0.5"
+		totalTwo := "1.5"
+
+		odds := []spClient.Odds{
+			{
+				Label:             "Over",
+				Value:             "2.75",
+				Name:              &nameOne,
+				Total:             &totalOne,
+				MarketDescription: "Player Shots Over\\/Under",
+			},
+			{
+				Label:             "Under",
+				Value:             "3.75",
+				Name:              &nameTwo,
+				Total:             &totalTwo,
+				MarketDescription: "Player Shots Over\\/Under",
+			},
+			{
+				Label:             "First",
+				Value:             "13.75",
+				Name:              &nameThree,
+				Total:             &totalOne,
+				MarketDescription: "Player Shots On Target On Over\\/Under",
+			},
+		}
+
+		runners, err := convertOddsToRunners(odds, "PLAYER_TOTAL_SHOTS")
+
+		if err != nil {
+			t.Fatalf("Expected nil, got %s", err.Error())
+		}
+
+		assert.Len(t, runners, 2)
+
+		assert.Equal(t, "Mohammed Kudus", *runners[0].Name)
+		assert.Equal(t, "OVER", runners[0].Label)
+		assert.Equal(t, 0.5, *runners[0].Value)
+		assert.Equal(t, float32(2.75), runners[0].BackPrices[0].Price)
+		assert.Equal(t, "Mo Salah", *runners[1].Name)
+		assert.Equal(t, "UNDER", runners[1].Label)
+		assert.Equal(t, 1.5, *runners[1].Value)
 		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
 	})
 }
