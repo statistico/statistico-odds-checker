@@ -31,7 +31,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		runners, err := parser.ParseMarketRunners(context.Background(), 152, 2, "MATCH_ODDS")
+		runners, err := parser.ParseMarketRunners(context.Background(), 152, 2, "MATCH_RESULT")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -104,7 +104,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		_, err := parser.ParseMarketRunners(context.Background(), 152, 2, "MATCH_ODDS")
+		_, err := parser.ParseMarketRunners(context.Background(), 152, 2, "MATCH_RESULT")
 
 		if err == nil {
 			t.Fatal("Expected error, got nil")
@@ -129,7 +129,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		runners, err := parser.ParseMarketRunners(context.Background(), 152, 1, "MATCH_ODDS")
+		runners, err := parser.ParseMarketRunners(context.Background(), 152, 1, "MATCH_RESULT")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -156,7 +156,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketRunners(context.Background(), 152, 111, "MATCH_ODDS")
+		odds, err := parser.ParseMarketRunners(context.Background(), 152, 111, "MATCH_RESULT")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
@@ -183,7 +183,7 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		parser := sportmonks.NewOddsParser(&client)
 
-		odds, err := parser.ParseMarketRunners(context.Background(), 152, 123, "MATCH_ODDS")
+		odds, err := parser.ParseMarketRunners(context.Background(), 152, 123, "MATCH_RESULT")
 
 		if err != nil {
 			t.Fatalf("Expected nil, got %s", err.Error())
