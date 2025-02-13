@@ -37,9 +37,9 @@ func convertOddsToRunners(odds []sportmonks.Odds, market string) ([]*exchange.Ru
 	case "PLAYER_CARDS":
 		return convertPlayerCards(odds, "BOOKED")
 	case "PLAYER_SHOTS_ON_TARGET":
-		return convertPlayerOverUnder(odds, "Player Shots On Target")
+		return convertPlayerOverUnder(odds, "PLAYER SHOTS ON TARGET")
 	case "PLAYER_SHOTS_TOTAL":
-		return convertPlayerOverUnder(odds, strings.ToUpper("Player Shots"))
+		return convertPlayerOverUnder(odds, "PLAYER SHOTS")
 	case "PLAYER_TACKLES":
 		return convertPlayerOverUnder(odds, "Player Tackles")
 	case "PLAYER_TO_SCORE_ANYTIME":
