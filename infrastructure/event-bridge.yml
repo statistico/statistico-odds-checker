@@ -13,7 +13,7 @@ Resources:
     Properties:
       Description: Schedule for the bet365 market:fetch command to run
       Name: OddsChecker-MarketFetch-Bet365
-      ScheduleExpression: "cron(0 0 4 * ? *)"
+      ScheduleExpression: "cron(0 4 * * ? *)"
       State: ENABLED
       RoleArn:
         Fn::ImportValue: !Sub ${EnvironmentName}:EventsRoleArn
