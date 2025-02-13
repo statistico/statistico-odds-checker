@@ -241,30 +241,24 @@ func Test_convertOddsToRunners(t *testing.T) {
 		nameTwo := "Mo Salah"
 		nameThree := "Cole Palmer"
 
-		totalOne := "0.5"
-		totalTwo := "1.5"
-
 		odds := []spClient.Odds{
 			{
-				Label:             "Over",
+				Label:             "0.5",
 				Value:             "2.75",
 				Name:              &nameOne,
-				Total:             &totalOne,
-				MarketDescription: "Player Shots Over\\/Under",
+				MarketDescription: "Player Shots",
 			},
 			{
-				Label:             "Under",
+				Label:             "1.5",
 				Value:             "3.75",
 				Name:              &nameTwo,
-				Total:             &totalTwo,
-				MarketDescription: "Player Shots Over\\/Under",
+				MarketDescription: "Player Shots",
 			},
 			{
-				Label:             "First",
+				Label:             "1.5",
 				Value:             "13.75",
 				Name:              &nameThree,
-				Total:             &totalOne,
-				MarketDescription: "Player Shots On Target On Over\\/Under",
+				MarketDescription: "Player Shots On Target",
 			},
 		}
 
@@ -280,7 +274,7 @@ func Test_convertOddsToRunners(t *testing.T) {
 		assert.Equal(t, "OVER 0.5", *runners[0].Label)
 		assert.Equal(t, float32(2.75), runners[0].BackPrices[0].Price)
 		assert.Equal(t, "Mo Salah", runners[1].Name)
-		assert.Equal(t, "UNDER 1.5", *runners[1].Label)
+		assert.Equal(t, "OVER 1.5", *runners[1].Label)
 		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
 	})
 
