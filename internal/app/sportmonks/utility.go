@@ -37,9 +37,9 @@ func convertOddsToRunners(odds []sportmonks.Odds, market string) ([]*exchange.Ru
 	case "PLAYER_CARDS":
 		return convertPlayerCards(odds, "BOOKED")
 	case "PLAYER_SHOTS_ON_TARGET":
-		return convertPlayerOverUnder(odds, "Player Shots On Target Over\\/Under")
+		return convertPlayerOverUnder(odds, "PLAYER SHOTS ON TARGET")
 	case "PLAYER_SHOTS_TOTAL":
-		return convertPlayerOverUnder(odds, strings.ToUpper("Player Shots Over\\/Under"))
+		return convertPlayerOverUnder(odds, "PLAYER SHOTS")
 	case "PLAYER_TACKLES":
 		return convertPlayerOverUnder(odds, "Player Tackles")
 	case "PLAYER_TO_SCORE_ANYTIME":
@@ -221,7 +221,7 @@ func convertPlayerOverUnder(odds []sportmonks.Odds, description string) ([]*exch
 			return nil, fmt.Errorf("price '%s' is not a valid floating point number", o.DP3)
 		}
 
-		label := fmt.Sprintf("%s %s", strings.ToUpper(o.Label), *o.Total)
+		label := fmt.Sprintf("OVER %s", o.Label)
 
 		runners = append(runners, &exchange.Runner{
 			ID:    strconv.Itoa(o.ID),
