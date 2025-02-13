@@ -83,6 +83,7 @@ jobs:
             aws cloudformation deploy --template-file infrastructure/ec2.yml --stack-name statistico-odds-checker-ec2 --no-fail-on-empty-changeset
             aws cloudformation deploy --template-file infrastructure/task-definition.yml --stack-name statistico-odds-checker-task-definition --no-fail-on-empty-changeset
             aws cloudformation deploy --template-file infrastructure/sns.yml --stack-name statistico-odds-checker-sns --no-fail-on-empty-changeset
+            aws cloudformation deploy --template-file infrastructure/event-bridge.yml --stack-name statistico-odds-checker-event-bridge --no-fail-on-empty-changeset
 
   release-images:
     executor: aws-cli/default
