@@ -22,7 +22,7 @@ type Market struct {
 	Runners  []*Runner `json:"runners"`
 }
 
-func (m Market) Value() (driver.Value, error) {
+func (m *Market) Value() (driver.Value, error) {
 	return json.Marshal(m)
 }
 
@@ -36,10 +36,9 @@ func (m *Market) Scan(value interface{}) error {
 }
 
 type Runner struct {
-	ID         uint64      `json:"id"`
-	Name       *string     `json:"name"`
-	Label      string      `json:"label"`
-	Value      *float64    `json:"value"`
+	ID         string      `json:"id"`
+	Name       string      `json:"name"`
+	Label      *string     `json:"label"`
 	BackPrices []PriceSize `json:"backPrices"`
 	LayPrices  []PriceSize `json:"layPrices"`
 }

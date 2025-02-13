@@ -78,8 +78,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 			Exchange: "BETFAIR",
 			Runners: []*exchange.Runner{
 				{
-					ID:         0,
-					Label:      "OVER",
+					ID:         "0",
+					Name:       "OVER",
 					BackPrices: nil,
 					LayPrices:  nil,
 				},
@@ -169,8 +169,8 @@ func TestEventMarketStreamer_Stream(t *testing.T) {
 			Exchange: "BETFAIR",
 			Runners: []*exchange.Runner{
 				{
-					ID:         0,
-					Label:      "OVER",
+					ID:         "0",
+					Name:       "OVER",
 					BackPrices: nil,
 					LayPrices:  nil,
 				},

@@ -70,7 +70,8 @@ func convertStandardOdds(odds []sportmonks.Odds) ([]*exchange.Runner, error) {
 		}
 
 		runners = append(runners, &exchange.Runner{
-			Label: strings.ToUpper(o.Label),
+			ID:   strconv.Itoa(o.ID),
+			Name: strings.ToUpper(o.Label),
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: float32(price),
@@ -93,15 +94,9 @@ func convertMatchOverUnderMarket(odds []sportmonks.Odds) ([]*exchange.Runner, er
 			return nil, fmt.Errorf("price '%s' is not a valid floating point number", o.Value)
 		}
 
-		total, err := strconv.ParseFloat(*o.Total, 32)
-
-		if err != nil {
-			return nil, fmt.Errorf("total '%s' is not a valid floating point number", o.DP3)
-		}
-
 		runners = append(runners, &exchange.Runner{
-			Label: strings.ToUpper(o.Label),
-			Value: &total,
+			ID:   strconv.Itoa(o.ID),
+			Name: fmt.Sprintf("%s %s", strings.ToUpper(o.Label), *o.Total),
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: float32(price),
@@ -130,22 +125,16 @@ func convertTeamOverUnderMarket(odds []sportmonks.Odds) ([]*exchange.Runner, err
 			return nil, err
 		}
 
-		parts := strings.Fields(*o.Total)
+		var label string
 
-		if len(parts) != 2 {
-			return nil, fmt.Errorf("market details are not in the correct format '%s'", *o.Total)
-		}
-
-		val, err := strconv.ParseFloat(parts[1], 32)
-
-		if err != nil {
-			return nil, fmt.Errorf("value '%s' is not a valid floating point number", parts[1])
+		if o.Total != nil {
+			label = strings.ToUpper(*o.Total)
 		}
 
 		runners = append(runners, &exchange.Runner{
-			Name:  &team,
-			Label: strings.ToUpper(parts[0]),
-			Value: &val,
+			ID:    strconv.Itoa(o.ID),
+			Name:  team,
+			Label: &label,
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: float32(price),
@@ -173,8 +162,9 @@ func convertPlayerCards(odds []sportmonks.Odds, label string) ([]*exchange.Runne
 		}
 
 		runners = append(runners, &exchange.Runner{
-			Name:  o.Name,
-			Label: strings.ToUpper(label),
+			ID:    strconv.Itoa(o.ID),
+			Name:  *o.Name,
+			Label: &label,
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: float32(price),
@@ -202,8 +192,9 @@ func convertPlayerToScore(odds []sportmonks.Odds, label string) ([]*exchange.Run
 		}
 
 		runners = append(runners, &exchange.Runner{
-			Name:  o.Name,
-			Label: strings.ToUpper(label),
+			ID:    strconv.Itoa(o.ID),
+			Name:  *o.Name,
+			Label: &label,
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: float32(price),
@@ -230,16 +221,12 @@ func convertPlayerOverUnder(odds []sportmonks.Odds, description string) ([]*exch
 			return nil, fmt.Errorf("price '%s' is not a valid floating point number", o.DP3)
 		}
 
-		val, err := strconv.ParseFloat(*o.Total, 32)
-
-		if err != nil {
-			return nil, fmt.Errorf("value '%s' is not a valid floating point number", o.DP3)
-		}
+		label := fmt.Sprintf("%s %s", strings.ToUpper(o.Label), *o.Total)
 
 		runners = append(runners, &exchange.Runner{
-			Name:  o.Name,
-			Label: strings.ToUpper(o.Label),
-			Value: &val,
+			ID:    strconv.Itoa(o.ID),
+			Name:  *o.Name,
+			Label: &label,
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: float32(price),

@@ -39,8 +39,8 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 
 		expected := []*exchange.Runner{
 			{
-				ID:    0,
-				Label: "HOME",
+				ID:   "151577019200",
+				Name: "HOME",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 3.75,
@@ -49,8 +49,8 @@ func TestOddsParser_ParseMarketOdds(t *testing.T) {
 				},
 			},
 			{
-				ID:    0,
-				Label: "AWAY",
+				ID:   "151577019200",
+				Name: "AWAY",
 				BackPrices: []exchange.PriceSize{
 					{
 						Price: 1.83,

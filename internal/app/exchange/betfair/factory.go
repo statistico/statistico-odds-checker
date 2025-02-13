@@ -5,6 +5,7 @@ import (
 	"fmt"
 	betfair "github.com/statistico/statistico-betfair-go-client"
 	"github.com/statistico/statistico-odds-checker/internal/app/exchange"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -79,8 +80,8 @@ func (m *marketFactory) parseMarket(ctx context.Context, req betfair.ListMarketC
 		}
 
 		r := &exchange.Runner{
-			ID:         runner.SelectionID,
-			Label:      parseRunnerName(&runner, q.Market),
+			ID:         strconv.Itoa(int(runner.SelectionID)),
+			Name:       parseRunnerName(&runner, q.Market),
 			BackPrices: back,
 			LayPrices:  lay,
 		}
