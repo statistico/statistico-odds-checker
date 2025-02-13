@@ -36,7 +36,9 @@ func (m *marketFactory) CreateMarket(ctx context.Context, e *exchange.Event) (*e
 
 	for _, o := range market.Odds {
 		r := exchange.Runner{
-			Label: strings.ToUpper(o.Selection),
+			// Update this once we integrate Statistico odds again.
+			ID:   "0",
+			Name: strings.ToUpper(o.Selection),
 			BackPrices: []exchange.PriceSize{
 				{
 					Price: o.Price,

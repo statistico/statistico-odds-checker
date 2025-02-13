@@ -52,8 +52,8 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 			EventID:  55,
 			Runners: []*exchange.Runner{
 				{
-					ID:    0,
-					Label: "OVER",
+					ID:   "0",
+					Name: "OVER",
 					BackPrices: []exchange.PriceSize{
 						{
 							Price: 1.54,
@@ -62,8 +62,8 @@ func TestMarketFactory_CreateMarket(t *testing.T) {
 					},
 				},
 				{
-					ID:    0,
-					Label: "UNDER",
+					ID:   "0",
+					Name: "UNDER",
 					BackPrices: []exchange.PriceSize{
 						{
 							Price: 2.34,

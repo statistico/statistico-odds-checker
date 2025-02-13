@@ -157,13 +157,11 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 2)
 
-		assert.Equal(t, "HOME", *runners[0].Name)
-		assert.Equal(t, "OVER", runners[0].Label)
-		assert.Equal(t, 2.5, *runners[0].Value)
+		assert.Equal(t, "HOME", runners[0].Name)
+		assert.Equal(t, "OVER 2.5", *runners[0].Label)
 		assert.Equal(t, float32(3.75), runners[0].BackPrices[0].Price)
-		assert.Equal(t, "AWAY", *runners[1].Name)
-		assert.Equal(t, "UNDER", runners[1].Label)
-		assert.Equal(t, 1.5, *runners[1].Value)
+		assert.Equal(t, "AWAY", runners[1].Name)
+		assert.Equal(t, "UNDER 1.5", *runners[1].Label)
 		assert.Equal(t, float32(2.00), runners[1].BackPrices[0].Price)
 	})
 
@@ -228,11 +226,11 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 2)
 
-		assert.Equal(t, "Mohammed Kudus", *runners[0].Name)
-		assert.Equal(t, "ANYTIME", runners[0].Label)
+		assert.Equal(t, "Mohammed Kudus", runners[0].Name)
+		assert.Equal(t, "ANYTIME", *runners[0].Label)
 		assert.Equal(t, float32(19.00), runners[0].BackPrices[0].Price)
-		assert.Equal(t, "Mo Salah", *runners[1].Name)
-		assert.Equal(t, "ANYTIME", runners[1].Label)
+		assert.Equal(t, "Mo Salah", runners[1].Name)
+		assert.Equal(t, "ANYTIME", *runners[1].Label)
 		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
 	})
 
@@ -278,13 +276,11 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 2)
 
-		assert.Equal(t, "Mohammed Kudus", *runners[0].Name)
-		assert.Equal(t, "OVER", runners[0].Label)
-		assert.Equal(t, 0.5, *runners[0].Value)
+		assert.Equal(t, "Mohammed Kudus", runners[0].Name)
+		assert.Equal(t, "OVER 0.5", *runners[0].Label)
 		assert.Equal(t, float32(2.75), runners[0].BackPrices[0].Price)
-		assert.Equal(t, "Mo Salah", *runners[1].Name)
-		assert.Equal(t, "UNDER", runners[1].Label)
-		assert.Equal(t, 1.5, *runners[1].Value)
+		assert.Equal(t, "Mo Salah", runners[1].Name)
+		assert.Equal(t, "UNDER 1.5", *runners[1].Label)
 		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
 	})
 
@@ -320,14 +316,11 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 3)
 
-		assert.Equal(t, "OVER", runners[0].Label)
-		assert.Equal(t, 0.5, *runners[0].Value)
+		assert.Equal(t, "OVER 0.5", runners[0].Name)
 		assert.Equal(t, float32(2.75), runners[0].BackPrices[0].Price)
-		assert.Equal(t, "UNDER", runners[1].Label)
-		assert.Equal(t, 1.5, *runners[1].Value)
+		assert.Equal(t, "UNDER 1.5", runners[1].Name)
 		assert.Equal(t, float32(3.75), runners[1].BackPrices[0].Price)
-		assert.Equal(t, "OVER", runners[2].Label)
-		assert.Equal(t, 1.5, *runners[2].Value)
+		assert.Equal(t, "OVER 1.5", runners[2].Name)
 		assert.Equal(t, float32(13.75), runners[2].BackPrices[0].Price)
 	})
 
@@ -364,11 +357,11 @@ func Test_convertOddsToRunners(t *testing.T) {
 
 		assert.Len(t, runners, 2)
 
-		assert.Equal(t, "Mohammed Kudus", *runners[0].Name)
-		assert.Equal(t, "BOOKED", runners[0].Label)
+		assert.Equal(t, "Mohammed Kudus", runners[0].Name)
+		assert.Equal(t, "BOOKED", *runners[0].Label)
 		assert.Equal(t, float32(2.75), runners[0].BackPrices[0].Price)
-		assert.Equal(t, "Cole Palmer", *runners[1].Name)
-		assert.Equal(t, "BOOKED", runners[1].Label)
+		assert.Equal(t, "Cole Palmer", runners[1].Name)
+		assert.Equal(t, "BOOKED", *runners[1].Label)
 		assert.Equal(t, float32(13.75), runners[1].BackPrices[0].Price)
 	})
 }
