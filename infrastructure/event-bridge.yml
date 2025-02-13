@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Scheduled tasks for the statistico-odds-checker ECS tasks.
+Parameters:
+  EnvironmentName:
+    Type: String
+    Default: statistico-production
+  ServiceName:
+    Type: String
+    Default: statistico-odds-checker
+Resources:
+  Competition:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Schedule for the bet365 market:fetch command to run
+      Name: OddsChecker-MarketFetch-Bet365
+      ScheduleExpression: "cron(0 4 * * ? *)"
+      State: ENABLED
+      RoleArn:
+        Fn::ImportValue: !Sub ${EnvironmentName}:EventsRoleArn
+      Targets:
+        - Id: OddsChecker-MarketFetch-Bet365
+          Arn:
+            Fn::ImportValue: !Sub ${EnvironmentName}:TaskEcsClusterArn
+          RoleArn:
+            Fn::ImportValue: !Sub ${EnvironmentName}:EventsRoleArn
+          Input: !Sub '{ "containerOverrides": [{"name": "statistico-odds-checker-console", "command": [ "./console", "market:fetch", "--exchange=BET365", "--days=2" ]}]}'
+          EcsParameters:
+            LaunchType: FARGATE
+            TaskCount: 1
+            NetworkConfiguration:
+              AwsVpcConfiguration:
+                AssignPublicIp: DISABLED
+                SecurityGroups:
+                  - Fn::ImportValue: !Sub ${ServiceName}:SecurityGroupId
+                Subnets:
+                  - Fn::ImportValue: !Sub ${EnvironmentName}:PrivateSubnetOne
+            TaskDefinitionArn:
+              Fn::ImportValue:
+                !Sub ${ServiceName}:ConsoleTaskDefinitionArn
